@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/components/Button"
+import { Button } from "@/components/shared/Button"
 import { Plus } from "lucide-react"
 
 export default function Home() {
