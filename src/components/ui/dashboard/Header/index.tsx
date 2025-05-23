@@ -1,13 +1,39 @@
-import { Menu, Settings, Sun, User, Wallet } from "lucide-react";
+import { useMenu } from "@/context/menuContext";
+import { Menu, Moon, Settings, Sun, User, Wallet } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export const Header = () => {
+   const [darkMode, setDarkMode] = useState(false)
+
+  const { toggleMenu } = useMenu();
+
+  const toggleDarkMode = () => {
+    if (darkMode) {
+      document.documentElement.classList.remove("dark")
+      localStorage.theme = "light"
+    } else {
+      document.documentElement.classList.add("dark")
+      localStorage.theme = "dark"
+    }
+    setDarkMode(!darkMode)
+  }
+
+  useEffect(() => {
+      if (
+        localStorage.theme === "dark" ||
+        (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        setDarkMode(true)
+      }
+    }, [])
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur">
       <div className="flex h-14 items-center pl-4 pr-6">
         <div className="mr-4 flex items-center">
           <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            onClick={() => toggleMenu()}
             className="mr-2 p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
           >
             <Menu className="h-5 w-5" />
@@ -21,7 +47,7 @@ export const Header = () => {
         <div className="flex md:hidden">
           {/* Mobile menu button */}
           <button
-            onClick={() => setIsMobileMenuOpen(true)}
+            onClick={() => toggleMenu()}
             className="p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
           >
             <Menu className="h-5 w-5" />

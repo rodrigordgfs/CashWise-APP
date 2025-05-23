@@ -3,9 +3,11 @@
 import type React from "react"
 
 import Link from "next/link"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { usePathname } from "next/navigation"
-import { BarChart3, CreditCard, Home, LogOut, Menu, Moon, PieChart, Settings, Sun, User, Wallet, X } from "lucide-react"
+import { BarChart3, CreditCard, Home, LogOut, Moon, PieChart, Settings, Sun, User, Wallet, X } from "lucide-react"
+import { Header } from "@/components/ui/dashboard/Header"
+import { useTheme } from "@/context/darkModeContext"
 
 interface NavItemProps {
   href: string
@@ -39,75 +41,12 @@ export default function DashboardLayout({
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const [darkMode, setDarkMode] = useState(false)
 
-  useEffect(() => {
-    // Check if dark mode is enabled on initial load
-    if (
-      localStorage.theme === "dark" ||
-      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      setDarkMode(true)
-    }
-  }, [])
-
-  const toggleDarkMode = () => {
-    if (darkMode) {
-      document.documentElement.classList.remove("dark")
-      localStorage.theme = "light"
-    } else {
-      document.documentElement.classList.add("dark")
-      localStorage.theme = "dark"
-    }
-    setDarkMode(!darkMode)
-  }
+  const { isDarkMode, toggleTheme } = useTheme()
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur">
-        <div className="flex h-14 items-center pl-4 pr-6">
-          <div className="mr-4 flex items-center">
-            <button
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="mr-2 p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-            >
-              <Menu className="h-5 w-5" />
-              <span className="sr-only">Toggle sidebar</span>
-            </button>
-            <Link href="/" className="flex items-center space-x-2">
-              <Wallet className="h-6 w-6 text-emerald-600 dark:text-emerald-500" />
-              <span className="font-bold">CashWise</span>
-            </Link>
-          </div>
-          <div className="flex md:hidden">
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-            >
-              <Menu className="h-5 w-5" />
-              <span className="sr-only">Open menu</span>
-            </button>
-          </div>
-          <div className="flex flex-1 items-center justify-end space-x-2">
-            <button
-              onClick={toggleDarkMode}
-              className="p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-            >
-              {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-              <span className="sr-only">Toggle theme</span>
-            </button>
-            <button className="p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100">
-              <User className="h-5 w-5" />
-              <span className="sr-only">Perfil</span>
-            </button>
-            <button className="p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100">
-              <Settings className="h-5 w-5" />
-              <span className="sr-only">Configurações</span>
-            </button>
-          </div>
-        </div>
-      </header>
+      <Header />
       <div className="flex flex-1">
         {/* Sidebar for desktop */}
         <aside
@@ -213,11 +152,11 @@ export default function DashboardLayout({
                 />
                 <div className="pt-4">
                   <button
-                    onClick={toggleDarkMode}
+                    onClick={toggleTheme}
                     className="w-full flex items-center px-3 py-2 rounded-md text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100"
                   >
-                    {darkMode ? <Sun className="mr-2 h-5 w-5" /> : <Moon className="mr-2 h-5 w-5" />}
-                    {darkMode ? "Modo Claro" : "Modo Escuro"}
+                    {isDarkMode ? <Sun className="mr-2 h-5 w-5" /> : <Moon className="mr-2 h-5 w-5" />}
+                    {isDarkMode ? "Modo Claro" : "Modo Escuro"}
                   </button>
                 </div>
               </div>
