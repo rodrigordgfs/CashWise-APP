@@ -1,4 +1,5 @@
-// context/ThemeContext.tsx
+"use client"
+
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 interface ThemeContextProps {

@@ -1,3 +1,5 @@
+"use client"
+
 import { useMenu } from "@/context/menuContext";
 import { Menu, Moon, Settings, Sun, User, Wallet } from "lucide-react";
 import Link from "next/link";
@@ -34,7 +36,7 @@ export const Header = () => {
         <div className="mr-4 flex items-center">
           <button
             onClick={() => toggleMenu()}
-            className="mr-2 p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+            className="mr-2 p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 cursor-pointer"
           >
             <Menu className="h-5 w-5" />
             <span className="sr-only">Toggle sidebar</span>
