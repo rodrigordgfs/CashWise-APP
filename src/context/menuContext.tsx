@@ -8,7 +8,7 @@ interface MenuContextProps {
   openMenu: () => void;
   closeMenu: () => void;
   isMobileMenuOpen: boolean;
-  toogleMobileMenu: () => void;
+  toggleMobileMenu: () => void;
   openMobileMenu: () => void;
   closeMobileMenu: () => void;
 }
@@ -22,12 +22,21 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
   const toggleMenu = () => setIsOpen(prev => !prev);
   const openMenu = () => setIsOpen(true);
   const closeMenu = () => setIsOpen(false);
-  const toogleMobileMenu = () => setIsMobileMenuOpen(prev => !prev);
+  const toggleMobileMenu = () => setIsMobileMenuOpen(prev => !prev);
   const openMobileMenu = () => setIsMobileMenuOpen(true);
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
-    <MenuContext.Provider value={{ isOpen, toggleMenu, openMenu, closeMenu, isMobileMenuOpen, toogleMobileMenu, openMobileMenu, closeMobileMenu }}>
+    <MenuContext.Provider value={{ 
+      isOpen, 
+      toggleMenu, 
+      openMenu, 
+      closeMenu, 
+      isMobileMenuOpen, 
+      toggleMobileMenu, 
+      openMobileMenu, 
+      closeMobileMenu 
+    }}>
       {children}
     </MenuContext.Provider>
   );

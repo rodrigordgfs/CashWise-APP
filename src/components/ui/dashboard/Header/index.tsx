@@ -1,14 +1,15 @@
 "use client"
 
 import { useMenu } from "@/context/menuContext";
+import { useSidebar } from "@/context/sidebarContext";
 import { Menu, Moon, Settings, Sun, User, Wallet } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export const Header = () => {
-   const [darkMode, setDarkMode] = useState(false)
-
-  const { toggleMenu } = useMenu();
+  const [darkMode, setDarkMode] = useState(false)
+  const { toggleMobileMenu } = useMenu();
+  const { toggleSidebar } = useSidebar();
 
   const toggleDarkMode = () => {
     if (darkMode) {
@@ -22,21 +23,21 @@ export const Header = () => {
   }
 
   useEffect(() => {
-      if (
-        localStorage.theme === "dark" ||
-        (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        setDarkMode(true)
-      }
-    }, [])
+    if (
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      setDarkMode(true)
+    }
+  }, [])
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur">
       <div className="flex h-14 items-center pl-4 pr-6">
         <div className="mr-4 flex items-center">
           <button
-            onClick={() => toggleMenu()}
-            className="mr-2 p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 cursor-pointer"
+            onClick={toggleSidebar}
+            className="mr-2 p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 cursor-pointer md:flex hidden"
           >
             <Menu className="h-5 w-5" />
             <span className="sr-only">Toggle sidebar</span>
@@ -47,9 +48,8 @@ export const Header = () => {
           </Link>
         </div>
         <div className="flex md:hidden">
-          {/* Mobile menu button */}
           <button
-            onClick={() => toggleMenu()}
+            onClick={toggleMobileMenu}
             className="p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
           >
             <Menu className="h-5 w-5" />
