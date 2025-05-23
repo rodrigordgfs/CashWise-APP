@@ -3,6 +3,7 @@
 import {
   BarChart3,
   CreditCard,
+  Home as HomeIcon,
   LogOut,
   Moon,
   PieChart,
@@ -13,7 +14,6 @@ import {
   X,
 } from "lucide-react";
 import { NavItem } from "../NavItem";
-import Home from "@/app/page";
 import { useTheme } from "@/context/darkModeContext";
 import { usePathname } from "next/navigation";
 import { useMenu } from "@/context/menuContext";
@@ -38,7 +38,7 @@ export const MobileMenu = () => {
         <div className="p-4 space-y-1">
           <NavItem
             href="/dashboard"
-            icon={Home}
+            icon={HomeIcon}
             title="Dashboard"
             isActive={pathname === "/dashboard"}
           />

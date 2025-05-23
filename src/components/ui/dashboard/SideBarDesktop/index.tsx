@@ -3,6 +3,7 @@
 import {
   BarChart3,
   CreditCard,
+  Home as HomeIcon,
   LogOut,
   PieChart,
   Settings,
@@ -11,7 +12,6 @@ import {
 } from "lucide-react";
 import { NavItem } from "../NavItem";
 import { usePathname } from "next/navigation";
-import Home from "@/app/page";
 import { useSidebar } from "@/context/sidebarContext";
 
 export const SideBarDesktop = () => {
@@ -27,7 +27,7 @@ export const SideBarDesktop = () => {
       <div className="flex flex-col space-y-1 p-4">
         <NavItem
           href="/dashboard"
-          icon={Home}
+          icon={HomeIcon}
           title="Dashboard"
           isActive={pathname === "/dashboard"}
         />
@@ -76,4 +76,4 @@ export const SideBarDesktop = () => {
       </div>
     </aside>
   );
-};
+}
