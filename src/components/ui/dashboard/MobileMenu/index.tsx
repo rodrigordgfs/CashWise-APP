@@ -24,7 +24,7 @@ export const MobileMenu = () => {
   const { closeMobileMenu } = useMenu();
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 md:hidden">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm md:hidden">
       <div className="fixed inset-y-0 left-0 w-[240px] bg-white dark:bg-zinc-950 shadow-lg">
         <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center">
