@@ -25,7 +25,9 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <MenuProvider>
-            <SidebarProvider>{children}</SidebarProvider>
+            <SidebarProvider>
+              {children}
+            </SidebarProvider>
           </MenuProvider>
         </ThemeProvider>
       </body>
