@@ -4,7 +4,6 @@ import {
   BarChart3,
   CreditCard,
   Home as HomeIcon,
-  Icon,
   LogOut,
   Moon,
   PieChart,
