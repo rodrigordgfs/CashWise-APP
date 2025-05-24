@@ -4,6 +4,7 @@ import "./globals.css";
 import { MenuProvider } from "@/context/menuContext";
 import { ThemeProvider } from "@/context/darkModeContext";
 import { SidebarProvider } from "@/context/sidebarContext";
+import { TransactionProvider } from "@/context/transactionsContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +27,7 @@ export default function RootLayout({
         <ThemeProvider>
           <MenuProvider>
             <SidebarProvider>
-              {children}
+              <TransactionProvider>{children}</TransactionProvider>
             </SidebarProvider>
           </MenuProvider>
         </ThemeProvider>

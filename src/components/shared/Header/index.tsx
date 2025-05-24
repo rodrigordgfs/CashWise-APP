@@ -4,7 +4,7 @@ import { useMenu } from "@/context/menuContext";
 import { useSidebar } from "@/context/sidebarContext";
 import { Menu, Moon, Settings, Sun, User } from "lucide-react";
 import { useEffect, useState } from "react";
-import { IconButton } from "../../../shared/IconButton";
+import { IconButton } from "../IconButton";
 import { LogoButton } from "../LogoButton";
 
 export const Header = () => {

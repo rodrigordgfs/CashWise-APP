@@ -1,15 +1,20 @@
-"use client"
+"use client";
 
-import Link from "next/link"
+import Link from "next/link";
 
 interface NavItemProps {
-  href: string
-  icon: React.ElementType
-  title: string
-  isActive: boolean
+  href: string;
+  icon: React.ElementType;
+  title: string;
+  isActive: boolean;
 }
 
-export const NavItem = ({ href, icon: Icon, title, isActive }: NavItemProps) => {
+export const NavItem = ({
+  href,
+  icon: Icon,
+  title,
+  isActive,
+}: NavItemProps) => {
   return (
     <Link href={href}>
       <div
@@ -23,5 +28,5 @@ export const NavItem = ({ href, icon: Icon, title, isActive }: NavItemProps) => 
         {title}
       </div>
     </Link>
-  )
-}
+  );
+};
