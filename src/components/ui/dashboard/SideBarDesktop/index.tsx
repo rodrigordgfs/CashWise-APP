@@ -22,7 +22,7 @@ export const SideBarDesktop = () => {
     <aside
       className={`${
         isSidebarOpen ? "w-64" : "w-0"
-      } transition-all duration-300 overflow-hidden flex-col border-r border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 hidden md:flex fixed top-14 bottom-0`}
+      } transition-all duration-300 ease-in-out overflow-hidden flex-col border-r border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 hidden md:flex fixed top-14 bottom-0`}
     >
       <div className="flex flex-col flex-1">
         <div className="flex flex-col space-y-1 p-4">
