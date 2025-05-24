@@ -2,10 +2,10 @@
 
 import { useMenu } from "@/context/menuContext";
 import { useSidebar } from "@/context/sidebarContext";
-import { Menu, Moon, Settings, Sun, User, Wallet } from "lucide-react";
-import Link from "next/link";
+import { Menu, Moon, Settings, Sun, User } from "lucide-react";
 import { useEffect, useState } from "react";
-import { IconButton } from "../IconButton";
+import { IconButton } from "../../../shared/IconButton";
+import { LogoButton } from "../LogoButton";
 
 export const Header = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -43,10 +43,7 @@ export const Header = () => {
           <div className="md:hidden">
             <IconButton icon={Menu} name="Menu" onClick={toggleMobileMenu} />
           </div>
-          <Link href="/" className="flex items-center space-x-2">
-            <Wallet className="h-6 w-6 text-emerald-600 dark:text-emerald-500" />
-            <span className="font-bold">CashWise</span>
-          </Link>
+          <LogoButton />
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
           <IconButton

@@ -4,6 +4,7 @@ import {
   BarChart3,
   CreditCard,
   Home as HomeIcon,
+  Icon,
   LogOut,
   Moon,
   PieChart,
@@ -17,6 +18,8 @@ import { NavItem } from "../NavItem";
 import { useTheme } from "@/context/darkModeContext";
 import { usePathname } from "next/navigation";
 import { useMenu } from "@/context/menuContext";
+import { LogoButton } from "../LogoButton";
+import { IconButton } from "@/components/shared/IconButton";
 
 export const MobileMenu = () => {
   const pathname = usePathname();
@@ -27,15 +30,10 @@ export const MobileMenu = () => {
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm md:hidden animate-in fade-in duration-200">
       <div className="fixed inset-y-0 left-0 w-[240px] bg-white dark:bg-zinc-950 shadow-lg animate-in slide-in-from-left duration-300">
         <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800">
-          <div className="flex items-center">
-            <Wallet className="h-6 w-6 mr-2 text-emerald-600 dark:text-emerald-500" />
-            <span className="font-bold">CashWise</span>
-          </div>
-          <button title="Close Button" onClick={() => closeMobileMenu()}>
-            <X className="h-5 w-5" />
-          </button>
+          <LogoButton />
+          <IconButton icon={X} name="Close menu" onClick={closeMobileMenu} />
         </div>
-        <div className="p-4 space-y-1">
+        <div className="flex flex-col space-y-1 p-4">
           <NavItem
             href="/dashboard"
             icon={HomeIcon}
@@ -81,7 +79,7 @@ export const MobileMenu = () => {
           <div className="pt-4">
             <button
               onClick={toggleTheme}
-              className="w-full flex items-center px-3 py-2 rounded-md text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100"
+              className="w-full flex items-center cursor-pointer transition-all ease-in-out duration-200 px-3 py-2 rounded-md text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100"
             >
               {isDarkMode ? (
                 <Sun className="mr-2 h-5 w-5" />
@@ -93,7 +91,7 @@ export const MobileMenu = () => {
           </div>
         </div>
         <div className="absolute bottom-4 w-full px-4">
-          <button className="w-full flex items-center px-3 py-2 rounded-md text-red-500 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+          <button className="w-full flex items-center px-3 py-2 rounded-md cursor-pointer transition-all ease-in-out duration-200 text-red-500 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
             <LogOut className="mr-2 h-5 w-5" />
             Sair
           </button>
