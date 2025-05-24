@@ -7,8 +7,6 @@ import { MobileMenu } from "@/components/ui/dashboard/MobileMenu"
 import { useSidebar } from "@/context/sidebarContext"
 import { useMenu } from "@/context/menuContext"
 
-
-
 export default function DashboardLayout({
   children,
 }: Readonly<{
@@ -22,12 +20,10 @@ export default function DashboardLayout({
       <Header />
       <div className="flex flex-1">
         <SideBarDesktop />
-
-        {isMobileMenuOpen && (
-          <MobileMenu />
-        )}
-
-        <main className={`flex-1 overflow-auto ${isSidebarOpen ? "" : "w-full"}`}>{children}</main>
+        {isMobileMenuOpen && <MobileMenu />}
+        <main className={`flex-1 overflow-auto pt-0 ${isSidebarOpen ? "md:ml-64" : ""}`}>
+          {children}
+        </main>
       </div>
     </div>
   )
