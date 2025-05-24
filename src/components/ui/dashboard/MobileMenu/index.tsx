@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   BarChart3,
@@ -24,8 +24,8 @@ export const MobileMenu = () => {
   const { closeMobileMenu } = useMenu();
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 md:hidden">
-      <div className="fixed inset-y-0 left-0 w-[240px] bg-white dark:bg-zinc-950 shadow-lg">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm md:hidden animate-in fade-in duration-200">
+      <div className="fixed inset-y-0 left-0 w-[240px] bg-white dark:bg-zinc-950 shadow-lg animate-in slide-in-from-left duration-300">
         <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center">
             <Wallet className="h-6 w-6 mr-2 text-emerald-600 dark:text-emerald-500" />

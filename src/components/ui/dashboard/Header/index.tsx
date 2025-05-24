@@ -37,8 +37,10 @@ export const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur">
       <div className="flex h-14 items-center pl-4 pr-6">
         <div className="space-x-2 flex items-center">
-          <IconButton icon={Menu} name="Menu" onClick={toggleSidebar} />
-          <div className="flex md:hidden">
+          <div className="hidden md:block">
+            <IconButton icon={Menu} name="Menu" onClick={toggleSidebar} />
+          </div>
+          <div className="md:hidden">
             <IconButton icon={Menu} name="Menu" onClick={toggleMobileMenu} />
           </div>
           <Link href="/" className="flex items-center space-x-2">
