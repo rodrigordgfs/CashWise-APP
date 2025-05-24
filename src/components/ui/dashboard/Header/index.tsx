@@ -1,81 +1,59 @@
-"use client"
+"use client";
 
 import { useMenu } from "@/context/menuContext";
 import { useSidebar } from "@/context/sidebarContext";
 import { Menu, Moon, Settings, Sun, User, Wallet } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { IconButton } from "../IconButton";
 
 export const Header = () => {
-  const [darkMode, setDarkMode] = useState(false)
+  const [darkMode, setDarkMode] = useState(false);
   const { toggleMobileMenu } = useMenu();
   const { toggleSidebar } = useSidebar();
 
   const toggleDarkMode = () => {
     if (darkMode) {
-      document.documentElement.classList.remove("dark")
-      localStorage.theme = "light"
+      document.documentElement.classList.remove("dark");
+      localStorage.theme = "light";
     } else {
-      document.documentElement.classList.add("dark")
-      localStorage.theme = "dark"
+      document.documentElement.classList.add("dark");
+      localStorage.theme = "dark";
     }
-    setDarkMode(!darkMode)
-  }
+    setDarkMode(!darkMode);
+  };
 
   useEffect(() => {
     if (
       localStorage.theme === "dark" ||
-      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
     ) {
-      setDarkMode(true)
+      setDarkMode(true);
     }
-  }, [])
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur">
       <div className="flex h-14 items-center pl-4 pr-6">
-        <div className="mr-4 flex items-center">
-          <button
-            onClick={toggleSidebar}
-            className="mr-2 p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 cursor-pointer md:flex hidden"
-          >
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle sidebar</span>
-          </button>
+        <div className="space-x-2 flex items-center">
+          <IconButton icon={Menu} name="Menu" onClick={toggleSidebar} />
+          <div className="flex md:hidden">
+            <IconButton icon={Menu} name="Menu" onClick={toggleMobileMenu} />
+          </div>
           <Link href="/" className="flex items-center space-x-2">
             <Wallet className="h-6 w-6 text-emerald-600 dark:text-emerald-500" />
             <span className="font-bold">CashWise</span>
           </Link>
         </div>
-        <div className="flex md:hidden">
-          <button
-            onClick={toggleMobileMenu}
-            className="p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-          >
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Open menu</span>
-          </button>
-        </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
-          <button
+          <IconButton
             onClick={toggleDarkMode}
-            className="p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-          >
-            {darkMode ? (
-              <Sun className="h-5 w-5" />
-            ) : (
-              <Moon className="h-5 w-5" />
-            )}
-            <span className="sr-only">Toggle theme</span>
-          </button>
-          <button className="p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100">
-            <User className="h-5 w-5" />
-            <span className="sr-only">Perfil</span>
-          </button>
-          <button className="p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100">
-            <Settings className="h-5 w-5" />
-            <span className="sr-only">Configurações</span>
-          </button>
+            icon={darkMode ? Sun : Moon}
+            name="Toggle theme"
+          />
+          <IconButton icon={User} name="Perfil" onClick={() => {}} />
+          <IconButton icon={Settings} name="Configurações" onClick={() => {}} />
         </div>
       </div>
     </header>
