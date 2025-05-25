@@ -19,9 +19,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className="h-full" suppressHydrationWarning>
+    <html lang="pt-BR" suppressHydrationWarning>
       <body
-        className={`${inter.className} h-full bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100`}
+        className={`${inter.className} bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100`}
         suppressHydrationWarning
       >
         <ThemeProvider>
