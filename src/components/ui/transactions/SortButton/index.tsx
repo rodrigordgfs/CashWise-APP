@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowDownUp } from "lucide-react";
 
 export const SortButton = () => (

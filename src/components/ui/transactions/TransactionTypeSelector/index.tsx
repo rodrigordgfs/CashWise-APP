@@ -1,3 +1,5 @@
+"use client";
+
 import { TransactionTypeFilter } from "@/types/TransactionTypeFilter";
 
 interface Props {
