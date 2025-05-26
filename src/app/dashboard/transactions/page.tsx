@@ -1,19 +1,78 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ArrowDownUp, Calendar, Edit, Plus, Search, Trash } from "lucide-react"
+import { useState } from "react";
+import { Edit, Plus, Trash } from "lucide-react";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { TransactionFilters } from "@/components/ui/transactions/TransactionsFilters";
+import { TransactionTypeFilter } from "@/types/TransactionTypeFilter";
 
 // Dados de exemplo
 const transactions = [
-  { id: 1, description: "Supermercado", amount: -250, date: "2025-05-18", category: "Alimentação", account: "Nubank" },
-  { id: 2, description: "Salário", amount: 5000, date: "2025-05-15", category: "Receita", account: "Itaú" },
-  { id: 3, description: "Aluguel", amount: -1200, date: "2025-05-10", category: "Moradia", account: "Nubank" },
-  { id: 4, description: "Restaurante", amount: -85, date: "2025-05-08", category: "Alimentação", account: "Carteira" },
-  { id: 5, description: "Uber", amount: -25, date: "2025-05-07", category: "Transporte", account: "Nubank" },
-  { id: 6, description: "Freelance", amount: 1500, date: "2025-05-05", category: "Receita", account: "Itaú" },
-  { id: 7, description: "Academia", amount: -120, date: "2025-05-03", category: "Saúde", account: "Nubank" },
-  { id: 8, description: "Cinema", amount: -50, date: "2025-05-01", category: "Lazer", account: "Carteira" },
-]
+  {
+    id: 1,
+    description: "Supermercado",
+    amount: -250,
+    date: "2025-05-18",
+    category: "Alimentação",
+    account: "Nubank",
+  },
+  {
+    id: 2,
+    description: "Salário",
+    amount: 5000,
+    date: "2025-05-15",
+    category: "Receita",
+    account: "Itaú",
+  },
+  {
+    id: 3,
+    description: "Aluguel",
+    amount: -1200,
+    date: "2025-05-10",
+    category: "Moradia",
+    account: "Nubank",
+  },
+  {
+    id: 4,
+    description: "Restaurante",
+    amount: -85,
+    date: "2025-05-08",
+    category: "Alimentação",
+    account: "Carteira",
+  },
+  {
+    id: 5,
+    description: "Uber",
+    amount: -25,
+    date: "2025-05-07",
+    category: "Transporte",
+    account: "Nubank",
+  },
+  {
+    id: 6,
+    description: "Freelance",
+    amount: 1500,
+    date: "2025-05-05",
+    category: "Receita",
+    account: "Itaú",
+  },
+  {
+    id: 7,
+    description: "Academia",
+    amount: -120,
+    date: "2025-05-03",
+    category: "Saúde",
+    account: "Nubank",
+  },
+  {
+    id: 8,
+    description: "Cinema",
+    amount: -50,
+    date: "2025-05-01",
+    category: "Lazer",
+    account: "Carteira",
+  },
+];
 
 const categories = [
   { id: 1, name: "Alimentação", type: "expense" },
@@ -22,105 +81,57 @@ const categories = [
   { id: 4, name: "Lazer", type: "expense" },
   { id: 5, name: "Saúde", type: "expense" },
   { id: 6, name: "Receita", type: "income" },
-]
+];
 
 const accounts = [
   { id: 1, name: "Nubank" },
   { id: 2, name: "Itaú" },
   { id: 3, name: "Carteira" },
-]
+];
 
 export default function TransactionsPage() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [transactionType, setTransactionType] = useState("all")
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [transactionType, setTransactionType] = useState<TransactionTypeFilter>(
+    TransactionTypeFilter.All
+  );
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   // Filtrar transações
   const filteredTransactions = transactions.filter((transaction) => {
     // Filtrar por termo de busca
-    const matchesSearch = transaction.description.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesSearch = transaction.description
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
 
     // Filtrar por tipo
     const matchesType =
-      transactionType === "all" ? true : transactionType === "income" ? transaction.amount > 0 : transaction.amount < 0
+      transactionType === TransactionTypeFilter.All
+        ? true
+        : transactionType === TransactionTypeFilter.Income
+        ? transaction.amount > 0
+        : transaction.amount < 0;
 
-    return matchesSearch && matchesType
-  })
+    return matchesSearch && matchesType;
+  });
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Transações</h2>
-        <button
-          onClick={() => setIsAddDialogOpen(true)}
-          className="flex items-center px-4 py-2 rounded-md bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Nova Transação
-        </button>
-      </div>
+      <PageHeader
+        title="Transações"
+        actionIcon={Plus}
+        actionTitle="Nova Transação"
+        onActionClick={() => setIsAddDialogOpen(true)}
+      />
 
-      <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
-        <div className="p-6 pb-3">
-          <h3 className="text-lg font-semibold">Filtros</h3>
-        </div>
-        <div className="p-6">
-          <div className="flex flex-col gap-4 md:flex-row">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-zinc-500 dark:text-zinc-400" />
-                <input
-                  type="search"
-                  placeholder="Buscar transações..."
-                  className="w-full pl-8 pr-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <button className="p-2 rounded-md border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-                <Calendar className="h-4 w-4" />
-              </button>
-              <button className="p-2 rounded-md border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-                <ArrowDownUp className="h-4 w-4" />
-              </button>
-              <div className="flex border-b border-zinc-200 dark:border-zinc-800">
-                <button
-                  onClick={() => setTransactionType("all")}
-                  className={`px-4 py-2 text-sm font-medium ${
-                    transactionType === "all"
-                      ? "border-b-2 border-emerald-600 dark:border-emerald-500 text-emerald-600 dark:text-emerald-500"
-                      : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
-                  }`}
-                >
-                  Todos
-                </button>
-                <button
-                  onClick={() => setTransactionType("income")}
-                  className={`px-4 py-2 text-sm font-medium ${
-                    transactionType === "income"
-                      ? "border-b-2 border-emerald-600 dark:border-emerald-500 text-emerald-600 dark:text-emerald-500"
-                      : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
-                  }`}
-                >
-                  Receitas
-                </button>
-                <button
-                  onClick={() => setTransactionType("expense")}
-                  className={`px-4 py-2 text-sm font-medium ${
-                    transactionType === "expense"
-                      ? "border-b-2 border-emerald-600 dark:border-emerald-500 text-emerald-600 dark:text-emerald-500"
-                      : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
-                  }`}
-                >
-                  Despesas
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <TransactionFilters
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
+        transactionType={transactionType}
+        setTransactionType={setTransactionType}
+      />
 
       <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
         <div className="p-6">
@@ -128,12 +139,24 @@ export default function TransactionsPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-zinc-200 dark:border-zinc-800">
-                  <th className="text-left py-3 px-4 font-medium text-zinc-500 dark:text-zinc-400">Descrição</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-500 dark:text-zinc-400">Categoria</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-500 dark:text-zinc-400">Data</th>
-                  <th className="text-left py-3 px-4 font-medium text-zinc-500 dark:text-zinc-400">Conta</th>
-                  <th className="text-right py-3 px-4 font-medium text-zinc-500 dark:text-zinc-400">Valor</th>
-                  <th className="text-right py-3 px-4 font-medium text-zinc-500 dark:text-zinc-400">Ações</th>
+                  <th className="text-left py-3 px-4 font-medium text-zinc-500 dark:text-zinc-400">
+                    Descrição
+                  </th>
+                  <th className="text-left py-3 px-4 font-medium text-zinc-500 dark:text-zinc-400">
+                    Categoria
+                  </th>
+                  <th className="text-left py-3 px-4 font-medium text-zinc-500 dark:text-zinc-400">
+                    Data
+                  </th>
+                  <th className="text-left py-3 px-4 font-medium text-zinc-500 dark:text-zinc-400">
+                    Conta
+                  </th>
+                  <th className="text-right py-3 px-4 font-medium text-zinc-500 dark:text-zinc-400">
+                    Valor
+                  </th>
+                  <th className="text-right py-3 px-4 font-medium text-zinc-500 dark:text-zinc-400">
+                    Ações
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -142,12 +165,20 @@ export default function TransactionsPage() {
                     key={transaction.id}
                     className="border-b border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900"
                   >
-                    <td className="py-3 px-4 font-medium">{transaction.description}</td>
+                    <td className="py-3 px-4 font-medium">
+                      {transaction.description}
+                    </td>
                     <td className="py-3 px-4">{transaction.category}</td>
-                    <td className="py-3 px-4">{new Date(transaction.date).toLocaleDateString("pt-BR")}</td>
+                    <td className="py-3 px-4">
+                      {new Date(transaction.date).toLocaleDateString("pt-BR")}
+                    </td>
                     <td className="py-3 px-4">{transaction.account}</td>
                     <td
-                      className={`py-3 px-4 text-right font-medium ${transaction.amount > 0 ? "text-green-500" : "text-red-500"}`}
+                      className={`py-3 px-4 text-right font-medium ${
+                        transaction.amount > 0
+                          ? "text-green-500"
+                          : "text-red-500"
+                      }`}
                     >
                       {transaction.amount > 0 ? "+" : ""}
                       R$ {Math.abs(transaction.amount).toFixed(2)}
@@ -176,7 +207,9 @@ export default function TransactionsPage() {
           <div className="bg-white dark:bg-zinc-950 rounded-lg border border-zinc-200 dark:border-zinc-800 w-full max-w-md">
             <div className="p-6">
               <h3 className="text-lg font-semibold mb-2">Nova Transação</h3>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">Preencha os detalhes da transação abaixo</p>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">
+                Preencha os detalhes da transação abaixo
+              </p>
 
               <div className="space-y-4">
                 <div>
@@ -188,7 +221,9 @@ export default function TransactionsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Descrição</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Descrição
+                  </label>
                   <input
                     type="text"
                     placeholder="Ex: Supermercado"
@@ -197,7 +232,9 @@ export default function TransactionsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Valor</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Valor
+                  </label>
                   <input
                     type="number"
                     placeholder="0.00"
@@ -206,7 +243,9 @@ export default function TransactionsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Categoria</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Categoria
+                  </label>
                   <select className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600">
                     {categories.map((category) => (
                       <option key={category.id} value={category.name}>
@@ -217,7 +256,9 @@ export default function TransactionsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Conta</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Conta
+                  </label>
                   <select className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600">
                     {accounts.map((account) => (
                       <option key={account.id} value={account.name}>
@@ -255,5 +296,5 @@ export default function TransactionsPage() {
         </div>
       )}
     </div>
-  )
+  );
 }
