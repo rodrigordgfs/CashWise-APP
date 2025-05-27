@@ -45,8 +45,8 @@ export const CategoryModal = ({
     if (initialData) {
       setType(initialData.type);
       setName(initialData.name);
-      setSelectedColor(initialData.color);
-      setSelectedIcon(initialData.icon);
+      setSelectedColor(initialData.color || Object.keys(colorOptions)[0]);
+      setSelectedIcon(initialData.icon || icons[0]);
     } else {
       setType(TransactionTypeFilter.Expense);
       setName("");
