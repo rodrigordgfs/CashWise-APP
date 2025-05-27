@@ -22,7 +22,7 @@ export const CategoryCard = ({
           <button
             title="Editar categoria"
             onClick={() => onEdit?.(category)}
-            className="p-1 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+            className="p-1 rounded-md text-zinc-500 hover:text-emerald-500 dark:text-zinc-400 dark:hover:text-emerald-500 cursor-pointer transition-all"
           >
             <Edit className="h-4 w-4" />
           </button>
@@ -30,7 +30,7 @@ export const CategoryCard = ({
           <button
             title="Excluir categoria"
             onClick={() => onDelete?.(category)}
-            className="p-1 rounded-md text-zinc-500 hover:text-red-500 dark:text-zinc-400 dark:hover:text-red-400"
+            className="p-1 rounded-md text-zinc-500 hover:text-red-500 dark:text-zinc-400 dark:hover:text-red-400 cursor-pointer transition-all"
           >
             <Trash className="h-4 w-4" />
           </button>

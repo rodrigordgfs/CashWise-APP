@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/shared/Button";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { RadioGroupField } from "@/components/shared/RadioGroupField";
 import { SelectField } from "@/components/shared/SelectField";
@@ -136,9 +137,20 @@ export default function SettingsPage() {
             />
           </div>
           <div className="p-6 border-t border-zinc-200 dark:border-zinc-800">
-            <button className="px-4 py-2 rounded-md bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600">
+            <Button
+              variant="emerald"
+              onClick={() => {
+                // Save preferences logic here
+                console.log("Preferências salvas:", {
+                  darkMode,
+                  currency,
+                  language,
+                  notifications,
+                });
+              }}
+            >
               Salvar preferências
-            </button>
+            </Button>
           </div>
         </div>
       </div>
