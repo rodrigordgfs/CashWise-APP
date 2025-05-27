@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/shared/Button";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { DeleteAccountCard } from "@/components/ui/profile/DeleteAccountCard";
 import {
@@ -33,12 +34,15 @@ export default function ProfilePage() {
       <div className="h-px bg-zinc-200 dark:bg-zinc-800 my-4"></div>
 
       <div className="flex justify-between">
-        <button className="px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-          Voltar
-        </button>
-        <button className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600">
+        <Button
+          variant="red"
+          onClick={() => {
+            // Handle cancel action
+            console.log("Cancel clicked");
+          }}
+        >
           Sair
-        </button>
+        </Button>
       </div>
     </div>
   );
