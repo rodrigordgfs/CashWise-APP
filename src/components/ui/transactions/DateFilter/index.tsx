@@ -51,6 +51,7 @@ export const DateFilter = ({ selectedDate, onChange }: DateFilterProps) => {
           </div>
           <DayPicker
             mode="single"
+            navLayout="around"
             selected={selectedDate}
             onSelect={(date) => {
               onChange(date);
@@ -67,9 +68,7 @@ export const DateFilter = ({ selectedDate, onChange }: DateFilterProps) => {
             }}
             classNames={{
               selected: "bg-emerald-500 text-white rounded-full",
-              today: "text-emerald-100 dark:text-emerald-800",
-              button_next: "text-emerald-500 dark:text-emerald-400",
-              button_previous: "text-emerald-500 dark:text-emerald-400",
+              today: "text-emerald-100 dark:text-emerald-800"
             }}
           />
         </div>

@@ -14,3 +14,11 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+.custom-radial-background {
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(16, 185, 129, 0.15),
+    transparent 40%
+  );
+}

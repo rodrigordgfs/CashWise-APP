@@ -1,50 +1,52 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import Link from "next/link"
-import { useState, useEffect } from "react"
-import { Moon, Sun, Wallet } from "lucide-react"
-import { useRouter } from "next/navigation"
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { Moon, Sun, Wallet, Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [darkMode, setDarkMode] = useState(false)
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     // Check if dark mode is enabled on initial load
     if (
       localStorage.theme === "dark" ||
-      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
     ) {
-      setDarkMode(true)
+      setDarkMode(true);
     }
-  }, [])
+  }, []);
 
   const toggleDarkMode = () => {
     if (darkMode) {
-      document.documentElement.classList.remove("dark")
-      localStorage.theme = "light"
+      document.documentElement.classList.remove("dark");
+      localStorage.theme = "light";
     } else {
-      document.documentElement.classList.add("dark")
-      localStorage.theme = "dark"
+      document.documentElement.classList.add("dark");
+      localStorage.theme = "dark";
     }
-    setDarkMode(!darkMode)
-  }
+    setDarkMode(!darkMode);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+    e.preventDefault();
+    setIsLoading(true);
 
     // Simulação de login
     setTimeout(() => {
-      setIsLoading(false)
-      router.push("/dashboard")
-    }, 1500)
-  }
+      setIsLoading(false);
+      router.push("/dashboard");
+    }, 1500);
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-50 dark:bg-zinc-900 p-4">
@@ -57,10 +59,15 @@ export default function LoginPage() {
           onClick={toggleDarkMode}
           className="p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
         >
-          {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          {darkMode ? (
+            <Sun className="h-5 w-5" />
+          ) : (
+            <Moon className="h-5 w-5" />
+          )}
           <span className="sr-only">Toggle theme</span>
         </button>
       </div>
+
       <div className="w-full max-w-md rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
         <div className="p-6 space-y-1">
           <h1 className="text-2xl font-bold">Entrar</h1>
@@ -96,14 +103,27 @@ export default function LoginPage() {
                   Esqueceu a senha?
                 </Link>
               </div>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 pr-10 border border-zinc-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
             </div>
           </div>
           <div className="p-6 border-t border-zinc-200 dark:border-zinc-800 flex flex-col space-y-4">
@@ -116,7 +136,10 @@ export default function LoginPage() {
             </button>
             <div className="text-center text-sm">
               Não tem uma conta?{" "}
-              <Link href="/register" className="text-emerald-600 dark:text-emerald-500 hover:underline">
+              <Link
+                href="/register"
+                className="text-emerald-600 dark:text-emerald-500 hover:underline"
+              >
                 Registre-se
               </Link>
             </div>
@@ -124,5 +147,5 @@ export default function LoginPage() {
         </form>
       </div>
     </div>
-  )
+  );
 }
