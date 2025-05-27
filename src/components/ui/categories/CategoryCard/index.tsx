@@ -40,7 +40,7 @@ export const CategoryCard = ({
         <div className="flex items-center gap-4">
           <div
             className={`flex h-12 w-12 items-center justify-center rounded-full text-xl ${
-              colorOptions[category.color] || "bg-zinc-300"
+              (category.color && colorOptions[category.color]) || "bg-zinc-300"
             }`}
           >
             {category.icon}
