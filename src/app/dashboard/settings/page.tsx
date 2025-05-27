@@ -1,6 +1,7 @@
 "use client";
 
 import { PageHeader } from "@/components/shared/PageHeader";
+import { RadioGroupField } from "@/components/shared/RadioGroupField";
 import { SelectField } from "@/components/shared/SelectField";
 import { ToggleSwitchField } from "@/components/shared/ToggleSwitchField";
 import { SettingCard } from "@/components/ui/settings/SettingsCard";
@@ -61,34 +62,19 @@ export default function SettingsPage() {
           description="Personalize a aparência do aplicativo"
         >
           <div className="space-y-3">
-            {["light", "dark", "system"].map((theme) => (
-              <label key={theme} className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="theme"
-                  value={theme}
-                  checked={
-                    theme === "light"
-                      ? !darkMode
-                      : theme === "dark"
-                      ? darkMode
-                      : false
-                  }
-                  onChange={() => {
-                    if (theme === "light" && darkMode) toggleDarkMode();
-                    if (theme === "dark" && !darkMode) toggleDarkMode();
-                  }}
-                  className="w-4 h-4 text-emerald-600 border-zinc-300 dark:border-zinc-700 focus:ring-emerald-500 dark:focus:ring-emerald-600"
-                />
-                <span className="text-sm capitalize">
-                  {theme === "light"
-                    ? "Claro"
-                    : theme === "dark"
-                    ? "Escuro"
-                    : "Sistema"}
-                </span>
-              </label>
-            ))}
+            <RadioGroupField
+              name="theme"
+              value={darkMode ? "dark" : "light"}
+              onChange={(theme) => {
+                if (theme === "light" && darkMode) toggleDarkMode();
+                if (theme === "dark" && !darkMode) toggleDarkMode();
+              }}
+              options={[
+                { value: "light", label: "Claro" },
+                { value: "dark", label: "Escuro" },
+                { value: "system", label: "Sistema" },
+              ]}
+            />
           </div>
         </SettingCard>
 
