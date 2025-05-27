@@ -1,10 +1,9 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { Category } from "@/types/CategoryType";
 import { SelectField } from "@/components/shared/SelectField";
 import { InputField } from "@/components/shared/InputField";
 import { TransactionTypeFilter } from "@/types/TransactionTypeFilter";
+import { Modal } from "@/components/shared/Modal";
 
 interface CategoryModalProps {
   isOpen: boolean;
@@ -37,7 +36,9 @@ export const CategoryModal = ({
     TransactionTypeFilter.Expense
   );
   const [name, setName] = useState("");
-  const [selectedColor, setSelectedColor] = useState(colorOptions[0]);
+  const [selectedColor, setSelectedColor] = useState(
+    Object.keys(colorOptions)[0]
+  );
   const [selectedIcon, setSelectedIcon] = useState(icons[0]);
 
   useEffect(() => {
@@ -49,7 +50,7 @@ export const CategoryModal = ({
     } else {
       setType(TransactionTypeFilter.Expense);
       setName("");
-      setSelectedColor(colorOptions[0]);
+      setSelectedColor(Object.keys(colorOptions)[0]);
       setSelectedIcon(icons[0]);
     }
   }, [initialData, isOpen]);
@@ -67,93 +68,76 @@ export const CategoryModal = ({
     onClose();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-zinc-950 rounded-lg border border-zinc-200 dark:border-zinc-800 w-full max-w-md">
-        <div className="p-6">
-          <h3 className="text-lg font-semibold mb-2">
-            {initialData ? "Editar Categoria" : "Nova Categoria"}
-          </h3>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">
-            {initialData
-              ? "Altere os dados da categoria selecionada."
-              : "Crie uma nova categoria para organizar suas transações."}
-          </p>
+    <Modal
+      isOpen={isOpen}
+      title={initialData ? "Editar Categoria" : "Nova Categoria"}
+      onClose={onClose}
+      onConfirm={handleSubmit}
+      confirmLabel="Salvar"
+      cancelLabel="Cancelar"
+    >
+      <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">
+        {initialData
+          ? "Altere os dados da categoria selecionada."
+          : "Crie uma nova categoria para organizar suas transações."}
+      </p>
 
-          <div className="space-y-4">
-            <SelectField
-              label="Tipo"
-              value={type}
-              onChange={(e) => setType(e.target.value as TransactionTypeFilter)}
-              options={[
-                { value: "expense", label: "Despesa" },
-                { value: "income", label: "Receita" },
-              ]}
-            />
+      <div className="space-y-4">
+        <SelectField
+          label="Tipo"
+          value={type}
+          onChange={(e) => setType(e.target.value as TransactionTypeFilter)}
+          options={[
+            { value: "expense", label: "Despesa" },
+            { value: "income", label: "Receita" },
+          ]}
+        />
 
-            <InputField
-              label="Nome"
-              placeholder="Ex: Alimentação"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+        <InputField
+          label="Nome"
+          placeholder="Ex: Alimentação"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Cor</label>
-              <div className="flex flex-wrap gap-2">
-                {Object.entries(colorOptions).map(([color, className]) => (
-                  <button
-                    key={color}
-                    type="button"
-                    title={`Selecionar cor ${color}`}
-                    className={`h-8 w-8 rounded-full cursor-pointer ${className} ${
-                      selectedColor === color
-                        ? "ring-2 ring-offset-2 ring-emerald-500"
-                        : ""
-                    }`}
-                    onClick={() => setSelectedColor(color)}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Ícone</label>
-              <div className="flex flex-wrap gap-2">
-                {icons.map((icon) => (
-                  <button
-                    key={icon}
-                    type="button"
-                    className={`flex h-8 w-8 items-center justify-center rounded-md border border-zinc-300 dark:border-zinc-700 cursor-pointer ${
-                      selectedIcon === icon ? "ring-2 ring-emerald-500" : ""
-                    }`}
-                    onClick={() => setSelectedIcon(icon)}
-                  >
-                    {icon}
-                  </button>
-                ))}
-              </div>
-            </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">Cor</label>
+          <div className="flex flex-wrap gap-2">
+            {Object.entries(colorOptions).map(([color, className]) => (
+              <button
+                key={color}
+                type="button"
+                title={`Selecionar cor ${color}`}
+                className={`h-8 w-8 rounded-full cursor-pointer ${className} ${
+                  selectedColor === color
+                    ? "ring-2 ring-offset-2 ring-emerald-500"
+                    : ""
+                }`}
+                onClick={() => setSelectedColor(color)}
+              />
+            ))}
           </div>
         </div>
 
-        <div className="p-6 border-t border-zinc-200 dark:border-zinc-800 flex gap-2 justify-end">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleSubmit}
-            className="px-4 py-2 rounded-md bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600"
-          >
-            Salvar
-          </button>
+        <div>
+          <label className="block text-sm font-medium mb-2">Ícone</label>
+          <div className="flex flex-wrap gap-2">
+            {icons.map((icon) => (
+              <button
+                key={icon}
+                type="button"
+                className={`flex h-8 w-8 items-center justify-center rounded-md border border-zinc-300 dark:border-zinc-700 cursor-pointer ${
+                  selectedIcon === icon ? "ring-2 ring-emerald-500" : ""
+                }`}
+                onClick={() => setSelectedIcon(icon)}
+              >
+                {icon}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
