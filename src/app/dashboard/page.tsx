@@ -2,11 +2,12 @@
 
 import { Plus } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { PeriodTabs } from "@/components/ui/dashboard/PeriodTabs";
 import { OverviewTiles } from "@/components/ui/dashboard/OverviewTiles";
 import { MonthlyEvolutionChart } from "@/components/ui/dashboard/MonthlyEvolutionChart";
 import { ExpensesByCategoryChart } from "@/components/ui/dashboard/ExpensesByCategoryChart";
 import { RecentTransactionsList } from "@/components/ui/dashboard/RecentTransactionsList";
+import { Tabs } from "@/components/shared/Tabs";
+import { Period, useTransaction } from "@/context/transactionsContext";
 
 // Dados de exemplo
 const monthlyData = [
@@ -64,10 +65,18 @@ const recentTransactions = [
   },
 ];
 
+const periodTabs = [
+  { label: "Semana", value: Period.WEEK },
+  { label: "Mês", value: Period.MONTH },
+  { label: "Ano", value: Period.YEAR },
+];
+
 export default function DashboardPage() {
   const totalIncome = 5000;
   const totalExpenses = 2760;
   const balance = totalIncome - totalExpenses;
+
+  const { period, setPeriod } = useTransaction();
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -79,7 +88,7 @@ export default function DashboardPage() {
       />
 
       <div className="space-y-4">
-        <PeriodTabs />
+        <Tabs tabs={periodTabs} selectedValue={period} onChange={setPeriod} />
 
         <OverviewTiles
           balance={balance}
