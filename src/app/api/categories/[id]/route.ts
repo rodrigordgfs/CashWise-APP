@@ -68,12 +68,15 @@ const categories: Category[] = [
   },
 ];
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: NextRequest) {
   try {
-    const id = parseInt(params.id, 10);
+    const idParam = request.nextUrl.pathname.split("/").pop();
+    const id = parseInt(idParam || "", 10);
+
+    if (isNaN(id)) {
+      return NextResponse.json({ error: "ID inválido" }, { status: 400 });
+    }
+
     const data = await request.json();
 
     const index = categories.findIndex((cat) => cat.id === id);
