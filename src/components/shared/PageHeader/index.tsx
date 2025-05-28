@@ -7,6 +7,7 @@ type PageHeaderProps =
       title: string;
       actionTitle: string;
       actionIcon: LucideIcon;
+      actionDisabled?: boolean;
       onActionClick: () => void;
     };
 
@@ -22,6 +23,7 @@ export const PageHeader = (props: PageHeaderProps) => {
               variant="emerald"
               onClick={props.onActionClick}
               icon={props.actionIcon}
+              disabled={props.actionDisabled}
             >
               {props.actionTitle}
             </Button>

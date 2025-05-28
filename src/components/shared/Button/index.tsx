@@ -9,12 +9,15 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: "sm" | "md" | "lg";
   icon?: LucideIcon;
   children: React.ReactNode;
+  disabled?: boolean;
 }
 
-const baseStyles = "flex items-center rounded-md text-white dark:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer transition duration-200 ease-in-out";
+const baseStyles =
+  "flex items-center rounded-md text-white dark:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-200 ease-in-out";
 
 const variants: Record<string, string> = {
-  emerald: "bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600",
+  emerald:
+    "bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600",
   blue: "bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600",
   red: "bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600",
 };
@@ -30,15 +33,19 @@ export const Button: React.FC<ButtonProps> = ({
   size = "md",
   icon: Icon,
   children,
+  disabled = false,
   className,
   ...props
 }) => {
   return (
     <button
+      disabled={disabled}
       className={clsx(
         baseStyles,
         variants[variant],
         sizes[size],
+        disabled &&
+          "opacity-50 cursor-not-allowed hover:bg-inherit dark:hover:bg-inherit focus:ring-0",
         className
       )}
       {...props}
@@ -48,6 +55,3 @@ export const Button: React.FC<ButtonProps> = ({
     </button>
   );
 };
-
-// Exemplo de uso
-// <Button variant="emerald" size="md" icon={Plus}>Nova Transação</Button>

@@ -3,13 +3,8 @@
 import { InputField } from "@/components/shared/InputField";
 import { Modal } from "@/components/shared/Modal";
 import { SelectField } from "@/components/shared/SelectField";
+import { Category } from "@/types/CategoryType";
 import { useState } from "react";
-
-interface Category {
-  id: number;
-  name: string;
-  icon: string;
-}
 
 interface BudgetModalProps {
   isOpen: boolean;

@@ -10,7 +10,7 @@ export const BudgetCardFooter = ({ budget }: BudgetCardFooterProps) => {
   const isDanger = percentage >= 100;
 
   return (
-    <div className="p-6 pt-0 border-t border-zinc-200 dark:border-zinc-800">
+    <div className="px-6 py-3 border-t border-zinc-200 dark:border-zinc-800">
       {isDanger ? (
         <p className="text-sm text-red-500">Você ultrapassou o limite!</p>
       ) : isWarning ? (
