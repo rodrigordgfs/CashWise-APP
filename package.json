@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.0.1",
+    "add": "^2.0.6",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.511.0",
@@ -16,7 +18,11 @@
     "react": "^19.0.0",
     "react-day-picker": "^9.7.0",
     "react-dom": "^19.0.0",
-    "recharts": "^2.15.3"
+    "react-hook-form": "^7.56.4",
+    "react-hot-toast": "^2.5.2",
+    "recharts": "^2.15.3",
+    "sonner": "^2.0.3",
+    "zod": "^3.25.32"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

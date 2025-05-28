@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
+import { Button } from "../Button";
 
 interface ModalProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface ModalProps {
   onConfirm?: () => void;
   confirmLabel?: string;
   cancelLabel?: string;
+  isLoading?: boolean;
 }
 
 export const Modal = ({
@@ -18,6 +20,7 @@ export const Modal = ({
   children,
   onClose,
   onConfirm,
+  isLoading = false,
   confirmLabel = "Salvar",
   cancelLabel = "Cancelar",
 }: ModalProps) => {
@@ -32,19 +35,13 @@ export const Modal = ({
         </div>
 
         <div className="p-6 border-t border-zinc-200 dark:border-zinc-800 flex gap-2 justify-end">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-          >
+          <Button disabled={isLoading} onClick={onClose} variant="neutral">
             {cancelLabel}
-          </button>
+          </Button>
           {onConfirm && (
-            <button
-              onClick={onConfirm}
-              className="px-4 py-2 rounded-md bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600"
-            >
+            <Button disabled={isLoading} onClick={onConfirm}>
               {confirmLabel}
-            </button>
+            </Button>
           )}
         </div>
       </div>

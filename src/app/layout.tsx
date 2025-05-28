@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 import { MenuProvider } from "@/context/menuContext";
 // import { ThemeProvider } from "@/context/darkModeContext";
@@ -27,7 +28,10 @@ export default function RootLayout({
         {/* <ThemeProvider> */}
         <MenuProvider>
           <SidebarProvider>
-            <TransactionProvider>{children}</TransactionProvider>
+            <TransactionProvider>
+              {children}
+              <Toaster richColors />
+            </TransactionProvider>
           </SidebarProvider>
         </MenuProvider>
         {/* </ThemeProvider> */}

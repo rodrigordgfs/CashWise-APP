@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Plus } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Tabs } from "@/components/shared/Tabs";
 import { CategoryList } from "@/components/ui/categories/CategoryList";
-import { Category } from "@/types/CategoryType";
 import { CategoryModal } from "@/components/ui/categories/CategoryModal";
+import { Category } from "@/types/CategoryType";
 import { TransactionTypeFilter } from "@/types/TransactionTypeFilter";
+import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const categoriesTabs = [
   { label: "Todas", value: TransactionTypeFilter.All },
@@ -17,9 +18,10 @@ const categoriesTabs = [
 
 export default function CategoriesPage() {
   const [categoryType, setCategoryType] = useState("expense");
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
 
   const filteredCategories = categories.filter((category) =>
     categoryType === TransactionTypeFilter.All
@@ -46,13 +48,56 @@ export default function CategoriesPage() {
     fetchCategories();
   }, []);
 
+  const handleEdit = (category: Category) => {
+    setCategoryToEdit(category);
+    setIsModalOpen(true);
+  };
+
+  const handleAddNew = () => {
+    setCategoryToEdit(null);
+    setIsModalOpen(true);
+  };
+
+  const handleSave = (savedCategory: Category) => {
+    if (categoryToEdit) {
+      setCategories((prev) =>
+        prev.map((cat) =>
+          cat.id === categoryToEdit.id ? { ...cat, ...savedCategory } : cat
+        )
+      );
+    } else {
+      setCategories((prev) => [...prev, savedCategory]);
+    }
+    setIsModalOpen(false);
+    setCategoryToEdit(null);
+  };
+
+  const handleDelete = async (category: Category) => {
+    setIsLoading(true);
+
+    const response = await fetch(`/api/categories/${category?.id}`, {
+      method: "DELETE",
+    });
+
+    setIsLoading(false);
+
+    if (!response.ok) {
+      toast.error("Erro ao excluir categoria");
+      return;
+    }
+
+    await response.json();
+    setCategories((prev) => prev.filter((cat) => cat.id !== category.id));
+    toast.success("Categoria excluída com sucesso!");
+  };
+
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <PageHeader
         title="Categorias"
         actionIcon={Plus}
         actionTitle="Nova Categoria"
-        onActionClick={() => setIsAddDialogOpen(true)}
+        onActionClick={handleAddNew}
         actionDisabled={isLoading}
       />
 
@@ -73,19 +118,21 @@ export default function CategoriesPage() {
       <CategoryList
         categories={filteredCategories}
         isLoading={isLoading}
-        onEdit={(category) => console.log("Editar", category)}
-        onDelete={(category) => console.log("Excluir", category)}
+        onEdit={handleEdit}
+        onDelete={(category) => {
+          handleDelete(category);
+        }}
       />
 
-      {isAddDialogOpen && (
+      {isModalOpen && (
         <CategoryModal
-          isOpen={isAddDialogOpen}
-          onClose={() => setIsAddDialogOpen(false)}
-          onSave={(newCategory) => {
-            console.log("Nova categoria:", newCategory);
-            setIsAddDialogOpen(false);
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setCategoryToEdit(null);
           }}
-          initialData={null}
+          onSave={handleSave}
+          initialData={categoryToEdit ?? null}
         />
       )}
     </div>

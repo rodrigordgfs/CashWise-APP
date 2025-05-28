@@ -5,7 +5,7 @@ import React from "react";
 import clsx from "clsx";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "emerald" | "blue" | "red";
+  variant?: "emerald" | "blue" | "red" | "neutral"; // adicionei neutral
   size?: "sm" | "md" | "lg";
   icon?: LucideIcon;
   children: React.ReactNode;
@@ -13,13 +13,15 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const baseStyles =
-  "flex items-center rounded-md text-white dark:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-200 ease-in-out";
+  "flex items-center rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-200 ease-in-out cursor-pointer";
 
 const variants: Record<string, string> = {
   emerald:
-    "bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600",
-  blue: "bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600",
-  red: "bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600",
+    "bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600 text-white dark:text-white",
+  blue: "bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white dark:text-white",
+  red: "bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 text-white dark:text-white",
+  neutral:
+    "border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800",
 };
 
 const sizes: Record<string, string> = {
@@ -44,8 +46,7 @@ export const Button: React.FC<ButtonProps> = ({
         baseStyles,
         variants[variant],
         sizes[size],
-        disabled &&
-          "opacity-50 cursor-not-allowed hover:bg-inherit dark:hover:bg-inherit focus:ring-0",
+        disabled && "opacity-50 cursor-not-allowed focus:ring-0",
         className
       )}
       {...props}

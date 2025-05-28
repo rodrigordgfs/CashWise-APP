@@ -1,6 +1,6 @@
+import { NextRequest, NextResponse } from "next/server";
 import { Category } from "@/types/CategoryType";
 import { TransactionTypeFilter } from "@/types/TransactionTypeFilter";
-import { NextResponse } from "next/server";
 
 const categories: Category[] = [
   {
@@ -68,26 +68,51 @@ const categories: Category[] = [
   },
 ];
 
-export async function GET() {
-  return NextResponse.json(categories, { status: 200 });
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const id = parseInt(params.id, 10);
+    const data = await request.json();
+
+    const index = categories.findIndex((cat) => cat.id === id);
+
+    if (index === -1) {
+      return NextResponse.json(
+        { error: "Categoria não encontrada" },
+        { status: 404 }
+      );
+    }
+
+    categories[index] = { ...categories[index], ...data, id };
+
+    return NextResponse.json(categories[index], { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error }, { status: 400 });
+  }
 }
 
-export async function POST(request: Request) {
+export async function DELETE(
+  _: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    const data = await request.json();
-    const newCategory: Category = {
-      id: categories.length + 1,
-      name: data.name,
-      type: data.type,
-      color: data.color,
-      icon: data.icon,
-    };
-    categories.push(newCategory);
-    return NextResponse.json(newCategory, { status: 201 });
-  } catch {
-    return NextResponse.json(
-      { error: "Erro ao processar requisição" },
-      { status: 400 }
-    );
+    const id = parseInt(params.id, 10);
+
+    const index = categories.findIndex((cat) => cat.id === id);
+
+    if (index === -1) {
+      return NextResponse.json(
+        { error: "Categoria não encontrada" },
+        { status: 404 }
+      );
+    }
+
+    const deleted = categories.splice(index, 1)[0];
+
+    return NextResponse.json(deleted, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error }, { status: 400 });
   }
 }

@@ -1,4 +1,11 @@
-import { useState, useEffect } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+
 import { Category } from "@/types/CategoryType";
 import { SelectField } from "@/components/shared/SelectField";
 import { InputField } from "@/components/shared/InputField";
@@ -8,8 +15,8 @@ import { Modal } from "@/components/shared/Modal";
 interface CategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (category: Omit<Category, "id">) => void;
-  initialData?: Omit<Category, "id"> | null;
+  onSave: (category: Category) => void;
+  initialData?: Category | null;
 }
 
 export const colorOptions: Record<string, string> = {
@@ -26,45 +33,98 @@ export const colorOptions: Record<string, string> = {
 
 const icons = ["💸", "🍔", "🏠", "🚗", "🎮", "💼", "💊", "🎁", "🛒"];
 
-export const CategoryModal = ({
+const schema = z.object({
+  name: z.string().trim().min(1, "Nome é obrigatório"),
+  type: z.nativeEnum(TransactionTypeFilter, {
+    errorMap: () => ({ message: "Tipo é obrigatório" }),
+  }),
+  color: z.string().min(1, "Cor é obrigatória"),
+  icon: z.string().min(1, "Ícone é obrigatório"),
+});
+
+type FormValues = z.infer<typeof schema>;
+
+export function CategoryModal({
   isOpen,
   onClose,
   onSave,
-  initialData = null,
-}: CategoryModalProps) => {
-  const [type, setType] = useState<TransactionTypeFilter>(
-    TransactionTypeFilter.Expense
-  );
-  const [name, setName] = useState("");
-  const [selectedColor, setSelectedColor] = useState(
-    Object.keys(colorOptions)[0]
-  );
-  const [selectedIcon, setSelectedIcon] = useState(icons[0]);
+  initialData,
+}: CategoryModalProps) {
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: "",
+      type: TransactionTypeFilter.Expense,
+      color: Object.keys(colorOptions)[0],
+      icon: icons[0],
+    },
+  });
+
+  const selectedColor = watch("color");
+  const selectedIcon = watch("icon");
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (initialData) {
-      setType(initialData.type);
-      setName(initialData.name);
-      setSelectedColor(initialData.color || Object.keys(colorOptions)[0]);
-      setSelectedIcon(initialData.icon || icons[0]);
+      reset({
+        ...initialData,
+        type:
+          initialData.type === "income"
+            ? TransactionTypeFilter.Income
+            : TransactionTypeFilter.Expense,
+      });
     } else {
-      setType(TransactionTypeFilter.Expense);
-      setName("");
-      setSelectedColor(Object.keys(colorOptions)[0]);
-      setSelectedIcon(icons[0]);
+      reset({
+        name: "",
+        type: TransactionTypeFilter.Expense,
+        color: Object.keys(colorOptions)[0],
+        icon: icons[0],
+      });
     }
-  }, [initialData, isOpen]);
+  }, [initialData, isOpen, reset]);
 
-  const handleSubmit = () => {
-    if (!name.trim()) return;
+  const onSubmit = async (data: FormValues) => {
+    setIsLoading(true);
 
-    onSave({
-      name,
-      type,
-      color: selectedColor,
-      icon: selectedIcon,
+    const method = initialData ? "PATCH" : "POST";
+
+    const url = initialData
+      ? `/api/categories/${initialData.id}`
+      : "/api/categories";
+
+    const bodyData = {
+      ...data,
+      type: data.type === TransactionTypeFilter.Income ? "income" : "expense",
+    };
+
+    const response = await fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(bodyData),
     });
 
+    setIsLoading(false);
+
+    if (!response.ok) {
+      toast.error("Erro ao salvar categoria");
+      return;
+    }
+
+    const savedCategory = await response.json();
+    onSave(savedCategory);
+    toast.success("Categoria salva com sucesso!");
+    reset();
     onClose();
   };
 
@@ -73,9 +133,10 @@ export const CategoryModal = ({
       isOpen={isOpen}
       title={initialData ? "Editar Categoria" : "Nova Categoria"}
       onClose={onClose}
-      onConfirm={handleSubmit}
+      onConfirm={handleSubmit(onSubmit)}
       confirmLabel="Salvar"
       cancelLabel="Cancelar"
+      isLoading={isLoading}
     >
       <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">
         {initialData
@@ -84,21 +145,27 @@ export const CategoryModal = ({
       </p>
 
       <div className="space-y-4">
-        <SelectField
-          label="Tipo"
-          value={type}
-          onChange={(e) => setType(e.target.value as TransactionTypeFilter)}
-          options={[
-            { value: "expense", label: "Despesa" },
-            { value: "income", label: "Receita" },
-          ]}
+        <Controller
+          name="type"
+          control={control}
+          render={({ field }) => (
+            <SelectField
+              label="Tipo"
+              error={errors.type?.message}
+              options={[
+                { value: "expense", label: "Despesa" },
+                { value: "income", label: "Receita" },
+              ]}
+              {...field}
+            />
+          )}
         />
 
         <InputField
           label="Nome"
           placeholder="Ex: Alimentação"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          error={errors.name?.message}
+          {...register("name")}
         />
 
         <div>
@@ -114,9 +181,17 @@ export const CategoryModal = ({
                     ? "ring-2 ring-offset-2 ring-emerald-500"
                     : ""
                 }`}
-                onClick={() => setSelectedColor(color)}
+                onClick={() =>
+                  setValue("color", color, { shouldValidate: true })
+                }
+                aria-label={`Selecionar cor ${color}`}
               />
             ))}
+            {errors.color && (
+              <p className="text-sm text-red-500 mt-2">
+                {errors.color.message}
+              </p>
+            )}
           </div>
         </div>
 
@@ -128,16 +203,22 @@ export const CategoryModal = ({
                 key={icon}
                 type="button"
                 className={`flex h-8 w-8 items-center justify-center rounded-md border border-zinc-300 dark:border-zinc-700 cursor-pointer ${
-                  selectedIcon === icon ? "ring-2 ring-emerald-500" : ""
+                  selectedIcon === icon
+                    ? "ring-2 ring-emerald-500 animate-pulse"
+                    : ""
                 }`}
-                onClick={() => setSelectedIcon(icon)}
+                onClick={() => setValue("icon", icon, { shouldValidate: true })}
+                aria-label={`Selecionar ícone ${icon}`}
               >
                 {icon}
               </button>
             ))}
+            {errors.icon && (
+              <p className="text-sm text-red-500 mt-2">{errors.icon.message}</p>
+            )}
           </div>
         </div>
       </div>
     </Modal>
   );
-};
+}

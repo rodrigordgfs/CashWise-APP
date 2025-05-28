@@ -5,16 +5,16 @@ import {
   CreditCard,
   Home as HomeIcon,
   LogOut,
-  Moon,
+  // Moon,
   PieChart,
   Settings,
-  Sun,
+  // Sun,
   User,
   Wallet,
   X,
 } from "lucide-react";
 import { NavItem } from "../NavItem";
-import { useTheme } from "@/context/darkModeContext";
+// import { useTheme } from "@/context/darkModeContext";
 import { usePathname } from "next/navigation";
 import { useMenu } from "@/context/menuContext";
 import { LogoButton } from "../LogoButton";
@@ -22,7 +22,7 @@ import { IconButton } from "@/components/shared/IconButton";
 
 export const MobileMenu = () => {
   const pathname = usePathname();
-  const { isDarkMode, toggleTheme } = useTheme();
+  // const { isDarkMode, toggleTheme } = useTheme();
   const { closeMobileMenu } = useMenu();
 
   return (
@@ -75,7 +75,7 @@ export const MobileMenu = () => {
             title="Perfil"
             isActive={pathname.startsWith("/dashboard/profile")}
           />
-          <div className="pt-4">
+          {/* <div className="pt-4">
             <button
               onClick={toggleTheme}
               className="w-full flex items-center cursor-pointer transition-all ease-in-out duration-200 px-3 py-2 rounded-md text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100"
@@ -87,7 +87,7 @@ export const MobileMenu = () => {
               )}
               {isDarkMode ? "Modo Claro" : "Modo Escuro"}
             </button>
-          </div>
+          </div> */}
         </div>
         <div className="absolute bottom-4 w-full px-4">
           <button className="w-full flex items-center px-3 py-2 rounded-md cursor-pointer transition-all ease-in-out duration-200 text-red-500 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
