@@ -12,17 +12,18 @@ interface PersonalInfoCardProps {
   onSave: (data: User) => void;
 }
 
-export const PersonalInfoCard = ({ user, onSave }: PersonalInfoCardProps) => {
+// export const PersonalInfoCard = ({ user, onSave }: PersonalInfoCardProps) => {
+  export const PersonalInfoCard = ({ user }: PersonalInfoCardProps) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({ ...user });
+  // const [formData, setFormData] = useState({ ...user });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  // };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    // onSave(formData);
     setIsEditing(false);
   };
 
@@ -40,15 +41,15 @@ export const PersonalInfoCard = ({ user, onSave }: PersonalInfoCardProps) => {
             <InputField
               label="Nome"
               name="name"
-              value={formData.name}
-              onChange={handleChange}
+              // value={formData.name}
+              // onChange={handleChange}
             />
             <InputField
               label="E-mail"
               type="email"
               name="email"
-              value={formData.email}
-              onChange={handleChange}
+              // value={formData.email}
+              // onChange={handleChange}
             />
           </form>
         ) : (
