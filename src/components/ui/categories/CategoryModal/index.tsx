@@ -51,7 +51,6 @@ export function CategoryModal({
   initialData,
 }: CategoryModalProps) {
   const {
-    register,
     control,
     handleSubmit,
     reset,
@@ -161,11 +160,17 @@ export function CategoryModal({
           )}
         />
 
-        <InputField
-          label="Nome"
-          placeholder="Ex: Alimentação"
-          error={errors.name?.message}
-          {...register("name")}
+        <Controller
+          name="name"
+          control={control}
+          render={({ field }) => (
+            <InputField
+              label="Nome"
+              placeholder="Ex: Alimentação"
+              error={errors.name?.message}
+              {...field}
+            />
+          )}
         />
 
         <div>
