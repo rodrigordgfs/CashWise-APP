@@ -5,7 +5,6 @@ import { Calendar } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { DayPicker } from "react-day-picker";
-import "react-day-picker/dist/style.css";
 
 interface DateFilterProps {
   selectedDate?: Date;
@@ -68,7 +67,7 @@ export const DateFilter = ({ selectedDate, onChange }: DateFilterProps) => {
             }}
             classNames={{
               selected: "bg-emerald-500 text-white rounded-full",
-              today: "text-emerald-100 dark:text-emerald-800"
+              today: "text-emerald-100 dark:text-emerald-800",
             }}
           />
         </div>

@@ -6,6 +6,13 @@ interface BudgetCardContentProps {
   budget: Budget;
 }
 
+const formatBRL = (value: number) => {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(value);
+};
+
 export const BudgetCardContent = ({ budget }: BudgetCardContentProps) => {
   const percentage = Math.round((budget.spent / budget.limit) * 100);
 
@@ -26,7 +33,7 @@ export const BudgetCardContent = ({ budget }: BudgetCardContentProps) => {
             Gasto / Limite
           </p>
           <p className="font-medium">
-            R$ {budget.spent.toFixed(2)} / R$ {budget.limit.toFixed(2)}
+            {formatBRL(budget.spent)} / {formatBRL(budget.limit)}
           </p>
         </div>
       </div>

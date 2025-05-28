@@ -1,5 +1,5 @@
 import { Budget } from "@/types/BudgeType";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
   const budgets: Budget[] = [
@@ -53,4 +53,25 @@ export async function GET() {
   return NextResponse.json(budgets, {
     status: 200,
   });
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+
+    const newBudget = {
+      id: Math.floor(Math.random() * 10000),
+      spent: 0,
+      icon: "🏷️",
+      color: "#0ea5e9",
+      ...body,
+    };
+
+    return NextResponse.json(newBudget, { status: 201 });
+  } catch {
+    return NextResponse.json(
+      { error: "Erro ao processar o orçamento" },
+      { status: 500 }
+    );
+  }
 }
