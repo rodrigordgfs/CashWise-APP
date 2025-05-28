@@ -100,7 +100,7 @@ export const TransactionModal = ({
           label="Descrição"
           placeholder="Ex: Supermercado"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          // onChange={(e) => setDescription(e.target.value)}
         />
 
         <InputField
@@ -108,7 +108,7 @@ export const TransactionModal = ({
           type="number"
           placeholder="0.00"
           value={amount}
-          onChange={(e) => setAmount(Number(e.target.value))}
+          // onChange={(e) => setAmount(Number(e.target.value))}
         />
 
         <SelectField
@@ -135,7 +135,7 @@ export const TransactionModal = ({
           label="Data"
           type="date"
           value={date}
-          onChange={(e) => setDate(e.target.value)}
+          // onChange={(e) => setDate(e.target.value)}
         />
       </div>
     </Modal>
