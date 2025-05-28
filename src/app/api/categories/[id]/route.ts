@@ -93,12 +93,10 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
-  _: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
   try {
-    const id = parseInt(params.id, 10);
+    const idParam = request.nextUrl.pathname.split("/").pop();
+    const id = parseInt(idParam || "", 10);
 
     const index = categories.findIndex((cat) => cat.id === id);
 
