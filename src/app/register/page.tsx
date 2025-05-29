@@ -64,12 +64,15 @@ export default function RegisterPage() {
       const result = await signUp.create({
         emailAddress: data.email,
         password: data.password,
+        unsafeMetadata: {
+          name: data.name,
+        },
       });
 
-      if (result.status === "complete") {
-        await signUp.update({ firstName: data.name });
-        await setActive({ session: result.createdSessionId });
+      console.log("Resultado do signUp:", result);
 
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
         toast.success("Conta criada com sucesso!");
         router.push("/dashboard");
       } else {

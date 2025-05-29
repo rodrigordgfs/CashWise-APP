@@ -1,29 +1,52 @@
+"use client";
+
+import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/shared/Button";
 import { InputField } from "@/components/shared/InputField";
-import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-export interface User {
-  name: string;
-  email: string;
-}
+const schema = z.object({
+  name: z.string().min(1, "Nome é obrigatório"),
+  email: z.string().email("E-mail inválido"),
+});
 
-interface PersonalInfoCardProps {
-  user: User;
-  onSave: (data: User) => void;
-}
+type FormData = z.infer<typeof schema>;
 
-// export const PersonalInfoCard = ({ user, onSave }: PersonalInfoCardProps) => {
-  export const PersonalInfoCard = ({ user }: PersonalInfoCardProps) => {
+export const PersonalInfoCard = () => {
+  const { user } = useUser();
   const [isEditing, setIsEditing] = useState(false);
-  // const [formData, setFormData] = useState({ ...user });
 
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setFormData({ ...formData, [e.target.name]: e.target.value });
-  // };
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: "",
+      email: "",
+    },
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // onSave(formData);
+  useEffect(() => {
+    if (user) {
+      reset({
+        name: String(user?.unsafeMetadata?.name || ""),
+        email: String(user?.emailAddresses[0]?.emailAddress || ""),
+      });
+    }
+  }, [user, reset]);
+
+  const onSubmit = async (data: FormData) => {
+    await user?.update({
+      unsafeMetadata: { name: data.name },
+    });
+    toast.success("Dados salvos com sucesso!");
     setIsEditing(false);
   };
 
@@ -37,50 +60,61 @@ interface PersonalInfoCardProps {
       </div>
       <div className="p-6 pt-0">
         {isEditing ? (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <InputField
-              label="Nome"
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <Controller
+              control={control}
               name="name"
-              // value={formData.name}
-              // onChange={handleChange}
+              render={({ field }) => (
+                <InputField
+                  label="Nome"
+                  {...field}
+                  error={errors.name?.message}
+                />
+              )}
             />
-            <InputField
-              label="E-mail"
-              type="email"
+            <Controller
+              control={control}
               name="email"
-              // value={formData.email}
-              // onChange={handleChange}
+              render={({ field }) => (
+                <InputField
+                  label="E-mail"
+                  type="email"
+                  disabled
+                  {...field}
+                  error={errors.email?.message}
+                />
+              )}
             />
+            <div className="flex gap-2 pt-4">
+              <Button type="submit">Salvar</Button>
+              <Button
+                type="button"
+                variant="neutral"
+                onClick={() => {
+                  reset();
+                  setIsEditing(false);
+                }}
+              >
+                Cancelar
+              </Button>
+            </div>
           </form>
         ) : (
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1">Nome</label>
-              <p className="text-sm">{user.name}</p>
+              <p className="text-sm">
+                {(user?.unsafeMetadata?.name as string) || "-"}
+              </p>
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">E-mail</label>
-              <p className="text-sm">{user.email}</p>
+              <p className="text-sm">
+                {(user?.emailAddresses[0]?.emailAddress as string) || "-"}
+              </p>
             </div>
+            <Button onClick={() => setIsEditing(true)}>Editar</Button>
           </div>
-        )}
-      </div>
-      <div className="p-6 border-t border-zinc-200 dark:border-zinc-800">
-        {isEditing ? (
-          <div className="flex gap-2">
-            <Button type="submit" onClick={handleSubmit}>
-              Salvar
-            </Button>
-            <Button
-              type="button"
-              variant="blue"
-              onClick={() => setIsEditing(false)}
-            >
-              Cancelar
-            </Button>
-          </div>
-        ) : (
-          <Button onClick={() => setIsEditing(true)}>Editar</Button>
         )}
       </div>
     </div>

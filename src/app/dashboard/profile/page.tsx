@@ -3,23 +3,14 @@
 import { Button } from "@/components/shared/Button";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { DeleteAccountCard } from "@/components/ui/profile/DeleteAccountCard";
-import {
-  PersonalInfoCard,
-  User,
-} from "@/components/ui/profile/PersonalInfoCard";
+import { PersonalInfoCard } from "@/components/ui/profile/PersonalInfoCard";
 import { SecurityCard } from "@/components/ui/profile/SecurityCard";
-import { useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const { signOut } = useAuth();
   const router = useRouter();
-
-  const [user, setUser] = useState({
-    name: "João Silva",
-    email: "joao.silva@exemplo.com",
-  });
 
   const handleLogout = async () => {
     await signOut();
@@ -31,12 +22,7 @@ export default function ProfilePage() {
       <PageHeader title="Perfil" />
 
       <div className="grid gap-4 md:grid-cols-2">
-        <PersonalInfoCard
-          user={user}
-          onSave={(data: User) => {
-            setUser(data);
-          }}
-        />
+        <PersonalInfoCard />
         <SecurityCard />
         <DeleteAccountCard />
       </div>
