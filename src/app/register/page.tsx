@@ -6,6 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { useSignUp } from "@clerk/nextjs";
 
 import { AuthHeader } from "@/components/ui/register/AuthHeader";
 import { AuthCard } from "@/components/ui/register/AuthCard";
@@ -37,6 +38,7 @@ type FormData = z.infer<typeof schema>;
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { signUp, setActive } = useSignUp();
 
   const {
     control,
@@ -53,9 +55,31 @@ export default function RegisterPage() {
   });
 
   const onSubmit = async (data: FormData) => {
-    console.log("Dados de registro:", data);
-    toast.success("Conta criada com sucesso!");
-    router.push("/dashboard");
+    if (!signUp) {
+      toast.error("Sistema de autenticação não está pronto. Tente novamente.");
+      return;
+    }
+
+    try {
+      const result = await signUp.create({
+        emailAddress: data.email,
+        password: data.password,
+      });
+
+      if (result.status === "complete") {
+        await signUp.update({ firstName: data.name });
+        await setActive({ session: result.createdSessionId });
+
+        toast.success("Conta criada com sucesso!");
+        router.push("/dashboard");
+      } else {
+        toast.info("Verifique seu e-mail para concluir o cadastro.");
+      }
+    } catch (err: unknown) {
+      const error = err as { errors?: { message: string }[] };
+      console.error("Erro ao criar conta:", err);
+      toast.error(error.errors?.[0]?.message || "Erro ao criar conta.");
+    }
   };
 
   return (

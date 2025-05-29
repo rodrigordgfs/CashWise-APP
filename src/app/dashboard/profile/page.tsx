@@ -9,12 +9,22 @@ import {
 } from "@/components/ui/profile/PersonalInfoCard";
 import { SecurityCard } from "@/components/ui/profile/SecurityCard";
 import { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
+  const { signOut } = useAuth();
+  const router = useRouter();
+
   const [user, setUser] = useState({
     name: "João Silva",
     email: "joao.silva@exemplo.com",
   });
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/");
+  };
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -34,13 +44,7 @@ export default function ProfilePage() {
       <div className="h-px bg-zinc-200 dark:bg-zinc-800 my-4"></div>
 
       <div className="flex justify-between">
-        <Button
-          variant="red"
-          onClick={() => {
-            // Handle cancel action
-            console.log("Cancel clicked");
-          }}
-        >
+        <Button variant="red" onClick={handleLogout}>
           Sair
         </Button>
       </div>

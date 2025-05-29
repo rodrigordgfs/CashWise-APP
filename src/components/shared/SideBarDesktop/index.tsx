@@ -13,10 +13,19 @@ import {
 import { NavItem } from "../NavItem";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "@/context/sidebarContext";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 
 export const SideBarDesktop = () => {
   const { isSidebarOpen } = useSidebar();
   const pathname = usePathname();
+  const router = useRouter();
+  const { signOut } = useAuth();
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/");
+  };
 
   return (
     <aside
@@ -71,7 +80,10 @@ export const SideBarDesktop = () => {
         </div>
       </div>
       <div className="p-4 border-t border-zinc-200 dark:border-zinc-800">
-        <button className="w-full flex items-center px-3 py-2 rounded-md text-red-500 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+        <button
+          className="w-full flex items-center px-3 py-2 rounded-md text-red-500 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          onClick={handleLogout}
+        >
           <LogOut className="mr-2 h-5 w-5" />
           Sair
         </button>

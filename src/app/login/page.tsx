@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Moon, Sun, Wallet } from "lucide-react";
+import { useSignIn } from "@clerk/nextjs";
+import { toast } from "sonner";
 
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
@@ -20,7 +22,7 @@ const schema = z.object({
   password: z
     .string()
     .nonempty({ message: "Senha é obrigatória" })
-    .min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+    .min(8, { message: "A senha deve ter no mínimo 8 caracteres" }),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -28,6 +30,7 @@ type FormData = z.infer<typeof schema>;
 export default function LoginPage() {
   const [darkMode, setDarkMode] = useState(false);
   const router = useRouter();
+  const { signIn, setActive } = useSignIn();
 
   const {
     control,
@@ -63,11 +66,28 @@ export default function LoginPage() {
   };
 
   const onSubmit = async (data: FormData) => {
-    // Simulação de login
-    console.log("Login data:", data);
-    // Aqui você pode chamar seu backend
-    await new Promise((r) => setTimeout(r, 1500));
-    router.push("/dashboard");
+    try {
+      if (!signIn) {
+        throw new Error("signIn não está disponível");
+      }
+
+      const result = await signIn.create({
+        identifier: data.email,
+        password: data.password,
+      });
+
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
+        toast.success("Login realizado com sucesso!");
+        router.push("/dashboard");
+      } else {
+        toast.error("Verificação pendente. Verifique seu e-mail.");
+      }
+    } catch (err: unknown) {
+      const error = err as { errors?: { message: string }[] };
+      console.error("Erro ao fazer o login:", err);
+      toast.error(error.errors?.[0]?.message || "Erro ao fazer o login.");
+    }
   };
 
   return (
