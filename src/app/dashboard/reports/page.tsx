@@ -1,43 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { ReportFilters } from "@/components/ui/reports/ReportFilters";
 import { IncomeVsExpensesChart } from "@/components/ui/reports/IncomeVsExpensesChart";
 import { ExpensesByCategoryChart } from "@/components/ui/dashboard/ExpensesByCategoryChart";
 import { BalanceEvolutionChart } from "@/components/ui/reports/BalanceEvolutionChart";
-
-// Dados de exemplo
-const monthlyData = [
-  { name: "Jan", receitas: 4000, despesas: 2400 },
-  { name: "Fev", receitas: 3000, despesas: 1398 },
-  { name: "Mar", receitas: 2000, despesas: 9800 },
-  { name: "Abr", receitas: 2780, despesas: 3908 },
-  { name: "Mai", receitas: 1890, despesas: 4800 },
-  { name: "Jun", receitas: 2390, despesas: 3800 },
-];
-
-const categoryData = [
-  { name: "Alimentação", value: 2400, fill: "#0ea5e9" },
-  { name: "Moradia", value: 4500, fill: "#f97316" },
-  { name: "Transporte", value: 1200, fill: "#8b5cf6" },
-  { name: "Lazer", value: 800, fill: "#22c55e" },
-  { name: "Saúde", value: 1500, fill: "#ef4444" },
-];
-
-const balanceData = [
-  { name: "Jan", saldo: 1600 },
-  { name: "Fev", saldo: 3202 },
-  { name: "Mar", saldo: -4600 },
-  { name: "Abr", saldo: -1128 },
-  { name: "Mai", saldo: -2910 },
-  { name: "Jun", saldo: -1410 },
-];
+import { ReportsPageSkeleton } from "@/components/ui/reports/ReportsPageSkeleton";
 
 export default function ReportsPage() {
   const [period, setPeriod] = useState("1month");
   const [reportType, setReportType] = useState("income-expense");
+  const [monthlyReports, setMonthlyReports] = useState([]);
+  const [categoryReports, setCategoryReports] = useState([]);
+  const [balanceReports, setBalanceReports] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchReports() {
+      try {
+        const [monthlyRes, categoryRes, balanceRes] = await Promise.all([
+          fetch("/api/reports/monthly"),
+          fetch("/api/reports/categories"),
+          fetch("/api/reports/balance"),
+        ]);
+
+        if (!monthlyRes.ok || !categoryRes.ok || !balanceRes.ok) {
+          throw new Error("Erro ao buscar relatórios");
+        }
+
+        const [monthlyData, categoryData, balanceData] = await Promise.all([
+          monthlyRes.json(),
+          categoryRes.json(),
+          balanceRes.json(),
+        ]);
+
+        setMonthlyReports(monthlyData);
+        setCategoryReports(categoryData);
+        setBalanceReports(balanceData);
+      } catch (error) {
+        console.error("Erro ao carregar relatórios:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchReports();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <ReportsPageSkeleton />
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -57,17 +75,13 @@ export default function ReportsPage() {
       />
 
       <div className="grid gap-4">
-        {reportType === "income-expense" && (
-          <IncomeVsExpensesChart data={monthlyData} />
-        )}
-
-        {reportType === "categories" && (
-          <ExpensesByCategoryChart data={categoryData} />
-        )}
-
-        {reportType === "balance" && (
-          <BalanceEvolutionChart data={balanceData} />
-        )}
+        {reportType === "income-expense" ? (
+          <IncomeVsExpensesChart data={monthlyReports} />
+        ) : reportType === "categories" ? (
+          <ExpensesByCategoryChart data={categoryReports} />
+        ) : reportType === "balance" ? (
+          <BalanceEvolutionChart data={balanceReports} />
+        ) : null}
       </div>
     </div>
   );
