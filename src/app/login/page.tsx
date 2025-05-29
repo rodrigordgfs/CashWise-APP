@@ -1,22 +1,47 @@
 "use client";
 
-import type React from "react";
-
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Moon, Sun, Wallet, Eye, EyeOff } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Moon, Sun, Wallet } from "lucide-react";
+
+import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { InputField } from "@/components/shared/InputField";
+import { Button } from "@/components/shared/Button";
+
+const schema = z.object({
+  email: z
+    .string()
+    .nonempty({ message: "E-mail é obrigatório" })
+    .email({ message: "E-mail inválido" }),
+  password: z
+    .string()
+    .nonempty({ message: "Senha é obrigatória" })
+    .min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+});
+
+type FormData = z.infer<typeof schema>;
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const router = useRouter();
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
   useEffect(() => {
-    // Check if dark mode is enabled on initial load
     if (
       localStorage.theme === "dark" ||
       (!("theme" in localStorage) &&
@@ -37,15 +62,12 @@ export default function LoginPage() {
     setDarkMode(!darkMode);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
+  const onSubmit = async (data: FormData) => {
     // Simulação de login
-    setTimeout(() => {
-      setIsLoading(false);
-      router.push("/dashboard");
-    }, 1500);
+    console.log("Login data:", data);
+    // Aqui você pode chamar seu backend
+    await new Promise((r) => setTimeout(r, 1500));
+    router.push("/dashboard");
   };
 
   return (
@@ -58,13 +80,13 @@ export default function LoginPage() {
         <button
           onClick={toggleDarkMode}
           className="p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+          aria-label="Toggle theme"
         >
           {darkMode ? (
             <Sun className="h-5 w-5" />
           ) : (
             <Moon className="h-5 w-5" />
           )}
-          <span className="sr-only">Toggle theme</span>
         </button>
       </div>
 
@@ -75,65 +97,53 @@ export default function LoginPage() {
             Entre com seu e-mail e senha para acessar sua conta
           </p>
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="p-6 space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-medium">
-                E-mail
-              </label>
-              <input
-                id="email"
-                type="email"
-                placeholder="seu@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600"
-              />
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium">
-                  Senha
-                </label>
-                <Link
-                  href="/forgot-password"
-                  className="text-sm text-emerald-600 dark:text-emerald-500 hover:underline"
-                >
-                  Esqueceu a senha?
-                </Link>
-              </div>
-              <div className="relative">
-                <input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="w-full px-3 py-2 pr-10 border border-zinc-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600"
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  id="email"
+                  label="E-mail"
+                  type="email"
+                  placeholder="seu@email.com"
+                  error={errors.email?.message}
+                  {...field}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </button>
-              </div>
-            </div>
+              )}
+            />
+
+            <Controller
+              name="password"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  label="Senha"
+                  type="password"
+                  error={errors.password?.message}
+                  {...field}
+                  headerRight={
+                    <Link
+                      href="/forgot-password"
+                      className="text-sm text-emerald-600 dark:text-emerald-500 hover:underline"
+                    >
+                      Esqueceu a senha?
+                    </Link>
+                  }
+                />
+              )}
+            />
           </div>
           <div className="p-6 border-t border-zinc-200 dark:border-zinc-800 flex flex-col space-y-4">
-            <button
+            <Button
+              variant="emerald"
               type="submit"
-              disabled={isLoading}
-              className="w-full px-4 py-2 rounded-md bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isSubmitting}
+              className="w-full"
             >
-              {isLoading ? "Entrando..." : "Entrar"}
-            </button>
+              {isSubmitting ? "Entrando..." : "Entrar"}
+            </Button>
             <div className="text-center text-sm">
               Não tem uma conta?{" "}
               <Link

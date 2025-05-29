@@ -13,7 +13,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const baseStyles =
-  "flex items-center rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-200 ease-in-out cursor-pointer";
+  "flex items-center justify-center rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-200 ease-in-out cursor-pointer";
 
 const variants: Record<string, string> = {
   emerald:
@@ -46,7 +46,7 @@ export const Button: React.FC<ButtonProps> = ({
         baseStyles,
         variants[variant],
         sizes[size],
-        disabled && "opacity-50 cursor-not-allowed focus:ring-0",
+        disabled && "opacity-50 cursor-not-allowed focus:ring-0 flex ",
         className
       )}
       {...props}
