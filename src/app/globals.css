@@ -22,3 +22,7 @@ body {
     transparent 40%
   );
 }
+
+.rdp-chevron {
+  fill: var(--color-emerald-500) !important;
+}
