@@ -1,12 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+
 import { InputField } from "@/components/shared/InputField";
 import { SelectField } from "@/components/shared/SelectField";
 import { Account } from "@/types/Account.Type";
 import { Category } from "@/types/CategoryType";
 import { Transaction, TransactionType } from "@/types/TransactionType";
 import { Modal } from "@/components/shared/Modal";
+import { DatePickerField } from "@/components/shared/DatePickerField";
 
 export interface TransactionFormData {
   id?: number;
@@ -27,6 +33,17 @@ interface TransactionModalProps {
   accounts: Account[];
 }
 
+const schema = z.object({
+  type: z.enum(["income", "expense"]),
+  description: z.string().min(1, "Descrição é obrigatória"),
+  amount: z.number().min(0.01, "Valor deve ser maior que zero"),
+  date: z.string().min(1, "Data é obrigatória"),
+  category: z.string().min(1, "Categoria é obrigatória"),
+  account: z.string().min(1, "Conta é obrigatória"),
+});
+
+type FormData = z.infer<typeof schema>;
+
 export const TransactionModal = ({
   isOpen,
   onClose,
@@ -35,44 +52,71 @@ export const TransactionModal = ({
   categories,
   accounts,
 }: TransactionModalProps) => {
-  const [type, setType] = useState<TransactionType>("expense");
-  const [description, setDescription] = useState("");
-  const [amount, setAmount] = useState<number | "">("");
-  const [date, setDate] = useState("");
-  const [category, setCategory] = useState("");
-  const [account, setAccount] = useState("");
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      type: "expense",
+      description: "",
+      amount: 0,
+      date: "",
+      category: categories.length > 0 ? categories[0].name : "",
+      account: accounts.length > 0 ? accounts[0].name : "",
+      ...initialData,
+    },
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (initialData) {
-      setType(initialData.type);
-      setDescription(initialData.description);
-      setAmount(initialData.amount);
-      setDate(initialData.date);
-      setCategory(initialData.category);
-      setAccount(initialData.account);
+      reset(initialData);
     } else {
-      setType("expense");
-      setDescription("");
-      setAmount("");
-      setDate("");
-      setCategory("");
-      setAccount("");
+      reset({
+        type: "expense",
+        description: "",
+        amount: 0,
+        date: "",
+        category: categories.length > 0 ? categories[0].name : "",
+        account: accounts.length > 0 ? accounts[0].name : "",
+      });
     }
-  }, [initialData, isOpen]);
+  }, [initialData, isOpen, reset, categories, accounts]);
 
-  const handleSubmit = () => {
-    if (!description || !amount || !date || !category || !account) return;
+  const onSubmit = async (data: FormData) => {
+    setIsLoading(true);
 
-    onSave({
-      ...(initialData?.id ? { id: initialData.id } : {}),
-      type,
-      description,
-      amount: Number(amount),
-      date,
-      category,
-      account,
+    const method = initialData ? "PATCH" : "POST";
+    const url = initialData
+      ? `/api/transactions/${initialData.id}`
+      : "/api/transactions";
+
+    const response = await fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...data,
+        amount: Number(data.amount),
+      }),
     });
 
+    setIsLoading(false);
+
+    if (!response.ok) {
+      toast.error("Erro ao salvar transação");
+      return;
+    }
+
+    const savedTransaction = await response.json();
+    onSave(savedTransaction);
+    toast.success("Transação salva com sucesso!");
+    reset();
     onClose();
   };
 
@@ -81,61 +125,97 @@ export const TransactionModal = ({
       isOpen={isOpen}
       title={initialData ? "Editar Transação" : "Nova Transação"}
       onClose={onClose}
-      onConfirm={handleSubmit}
+      onConfirm={handleSubmit(onSubmit)}
       confirmLabel="Salvar"
       cancelLabel="Cancelar"
+      isLoading={isLoading}
     >
       <div className="space-y-4">
-        <SelectField
-          label="Tipo"
-          value={type}
-          onChange={(e) => setType(e.target.value as "income" | "expense")}
-          options={[
-            { value: "expense", label: "Despesa" },
-            { value: "income", label: "Receita" },
-          ]}
+        <Controller
+          control={control}
+          name="type"
+          render={({ field }) => (
+            <SelectField
+              label="Tipo"
+              {...field}
+              options={[
+                { value: "expense", label: "Despesa" },
+                { value: "income", label: "Receita" },
+              ]}
+              error={errors.type?.message}
+            />
+          )}
         />
 
-        <InputField
-          label="Descrição"
-          placeholder="Ex: Supermercado"
-          value={description}
-          // onChange={(e) => setDescription(e.target.value)}
+        <Controller
+          control={control}
+          name="description"
+          render={({ field }) => (
+            <InputField
+              label="Descrição"
+              placeholder="Ex: Supermercado"
+              {...field}
+              error={errors.description?.message}
+            />
+          )}
         />
 
-        <InputField
-          label="Valor"
-          type="number"
-          placeholder="0.00"
-          value={amount}
-          // onChange={(e) => setAmount(Number(e.target.value))}
+        <Controller
+          control={control}
+          name="amount"
+          render={({ field }) => (
+            <InputField
+              label="Valor"
+              type="money"
+              placeholder="0.00"
+              {...field}
+              onChange={(val) => field.onChange(val)}
+              error={errors.amount?.message}
+            />
+          )}
         />
 
-        <SelectField
-          label="Categoria"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          options={categories.map((c) => ({
-            value: c.name,
-            label: c.name,
-          }))}
+        <Controller
+          control={control}
+          name="category"
+          render={({ field }) => (
+            <SelectField
+              label="Categoria"
+              {...field}
+              options={categories.map((c) => ({
+                value: c.name,
+                label: c.name,
+              }))}
+              error={errors.category?.message}
+            />
+          )}
         />
 
-        <SelectField
-          label="Conta"
-          value={account}
-          onChange={(e) => setAccount(e.target.value)}
-          options={accounts.map((a) => ({
-            value: a.name,
-            label: a.name,
-          }))}
+        <Controller
+          control={control}
+          name="account"
+          render={({ field }) => (
+            <SelectField
+              label="Conta"
+              {...field}
+              options={accounts.map((a) => ({
+                value: a.name,
+                label: a.name,
+              }))}
+              error={errors.account?.message}
+            />
+          )}
         />
 
-        <InputField
-          label="Data"
-          type="date"
-          value={date}
-          // onChange={(e) => setDate(e.target.value)}
+        <Controller
+          control={control}
+          name="date"
+          render={({ field }) => (
+            <DatePickerField<FormData>
+              field={field}
+              error={errors.date?.message}
+            />
+          )}
         />
       </div>
     </Modal>

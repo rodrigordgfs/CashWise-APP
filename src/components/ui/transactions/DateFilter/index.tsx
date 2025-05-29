@@ -17,7 +17,7 @@ export const DateFilter = ({ selectedDate, onChange }: DateFilterProps) => {
   return (
     <>
       <button
-        className={`p-3 rounded-md border flex items-center gap-2 transition-colors ${
+        className={`p-3 rounded-md border flex items-center gap-2 transition-colors cursor-pointer ${
           selectedDate
             ? "bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400"
             : "border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800"

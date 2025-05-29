@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { TransactionFilters } from "@/components/ui/transactions/TransactionsFilters";
@@ -10,82 +10,8 @@ import { Transaction } from "@/types/TransactionType";
 import { TransactionModal } from "@/components/ui/transactions/TransactionModal";
 import { Category } from "@/types/CategoryType";
 import { Account } from "@/types/Account.Type";
-
-// Dados de exemplo
-const transactions: Transaction[] = [
-  {
-    id: 1,
-    description: "Supermercado",
-    amount: -250,
-    date: "2025-05-18",
-    category: "Alimentação",
-    account: "Nubank",
-    type: TransactionTypeFilter.Expense,
-  },
-  {
-    id: 2,
-    description: "Salário",
-    amount: 5000,
-    date: "2025-05-15",
-    category: "Receita",
-    account: "Itaú",
-    type: TransactionTypeFilter.Income,
-  },
-  {
-    id: 3,
-    description: "Aluguel",
-    amount: -1200,
-    date: "2025-05-10",
-    category: "Moradia",
-    account: "Nubank",
-    type: TransactionTypeFilter.Expense,
-  },
-  {
-    id: 4,
-    description: "Restaurante",
-    amount: -85,
-    date: "2025-05-08",
-    category: "Alimentação",
-    account: "Carteira",
-    type: TransactionTypeFilter.Expense,
-  },
-  {
-    id: 5,
-    description: "Uber",
-    amount: -25,
-    date: "2025-05-07",
-    category: "Transporte",
-    account: "Nubank",
-    type: TransactionTypeFilter.Expense,
-  },
-  {
-    id: 6,
-    description: "Freelance",
-    amount: 1500,
-    date: "2025-05-05",
-    category: "Receita",
-    account: "Itaú",
-    type: TransactionTypeFilter.Income,
-  },
-  {
-    id: 7,
-    description: "Academia",
-    amount: -120,
-    date: "2025-05-03",
-    category: "Saúde",
-    account: "Nubank",
-    type: TransactionTypeFilter.Expense,
-  },
-  {
-    id: 8,
-    description: "Cinema",
-    amount: -50,
-    date: "2025-05-01",
-    category: "Lazer",
-    account: "Carteira",
-    type: TransactionTypeFilter.Expense,
-  },
-];
+import { TransactionsPageSkeleton } from "@/components/ui/transactions/TransactionsPageSkeleton";
+import { toast } from "sonner";
 
 const categories: Category[] = [
   { id: 1, name: "Alimentação", type: TransactionTypeFilter.Expense },
@@ -105,19 +31,20 @@ const accounts: Account[] = [
 export default function TransactionsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [sortOrder, setSortOrder] = useState<"none" | "asc" | "desc">("none");
   const [transactionType, setTransactionType] = useState<TransactionTypeFilter>(
     TransactionTypeFilter.All
   );
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [transactionToEdit, setTransactionToEdit] =
+    useState<Transaction | null>(null);
 
-  // Filtrar transações
   const filteredTransactions = transactions.filter((transaction) => {
-    // Filtrar por termo de busca
     const matchesSearch = transaction.description
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
-
-    // Filtrar por tipo
     const matchesType =
       transactionType === TransactionTypeFilter.All
         ? true
@@ -129,15 +56,67 @@ export default function TransactionsPage() {
   });
 
   const handleEditTransaction = (transaction: Transaction) => {
-    // Lógica para editar a transação
-    console.log("Editar transação:", transaction);
-    setIsAddDialogOpen(true); // Abre o modal de adição/edição
+    setTransactionToEdit(transaction);
+    setIsAddDialogOpen(true);
   };
 
-  const handleDeleteTransaction = (transaction: Transaction) => {
-    // Lógica
-    console.log("Excluir transação:", transaction);
+  const handleDeleteTransaction = async (transaction: Transaction) => {
+    try {
+      const response = await fetch(`/api/transactions/${transaction.id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao excluir transação");
+      }
+
+      setTransactions((prev) => prev.filter((t) => t.id !== transaction.id));
+      toast.success("Transação excluída com sucesso!");
+    } catch (error) {
+      toast.error("Erro ao excluir transação");
+      console.error(error);
+    }
   };
+
+  const handleSaveTransaction = (saved: Transaction) => {
+    if (transactionToEdit) {
+      setTransactions((prev) =>
+        prev.map((t) => (t.id === saved.id ? saved : t))
+      );
+    } else {
+      setTransactions((prev) => [...prev, saved]);
+    }
+
+    setTransactionToEdit(null);
+    setIsAddDialogOpen(false);
+  };
+
+  useEffect(() => {
+    async function fetchTransactions() {
+      try {
+        const response = await fetch("/api/transactions");
+        if (!response.ok) {
+          throw new Error("Erro ao buscar as transações");
+        }
+        const data = await response.json();
+        setTransactions(data);
+      } catch (error) {
+        console.error("Erro ao carregar transações:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchTransactions();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+        <TransactionsPageSkeleton />
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -145,7 +124,10 @@ export default function TransactionsPage() {
         title="Transações"
         actionIcon={Plus}
         actionTitle="Nova Transação"
-        onActionClick={() => setIsAddDialogOpen(true)}
+        onActionClick={() => {
+          setTransactionToEdit(null);
+          setIsAddDialogOpen(true);
+        }}
       />
 
       <TransactionFilters
@@ -155,6 +137,8 @@ export default function TransactionsPage() {
         setSelectedDate={setSelectedDate}
         transactionType={transactionType}
         setTransactionType={setTransactionType}
+        setSortOrder={setSortOrder}
+        sortOrder={sortOrder}
       />
 
       <TransactionTable
@@ -166,12 +150,12 @@ export default function TransactionsPage() {
       {isAddDialogOpen && (
         <TransactionModal
           isOpen={isAddDialogOpen}
-          onClose={() => setIsAddDialogOpen(false)}
-          onSave={(transaction: Transaction) => {
-            console.log("Salvar transação:", transaction);
+          onClose={() => {
             setIsAddDialogOpen(false);
+            setTransactionToEdit(null);
           }}
-          initialData={null}
+          onSave={handleSaveTransaction}
+          initialData={transactionToEdit}
           categories={categories}
           accounts={accounts}
         />

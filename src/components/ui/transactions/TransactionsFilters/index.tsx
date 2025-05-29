@@ -12,6 +12,8 @@ interface TransactionFiltersProps {
   selectedDate?: Date;
   transactionType: TransactionTypeFilter;
   setTransactionType: (type: TransactionTypeFilter) => void;
+  setSortOrder: (order: "none" | "asc" | "desc") => void;
+  sortOrder: "none" | "asc" | "desc";
 }
 
 export const TransactionFilters = ({
@@ -21,6 +23,8 @@ export const TransactionFilters = ({
   setSelectedDate,
   transactionType,
   setTransactionType,
+  setSortOrder,
+  sortOrder,
 }: TransactionFiltersProps) => {
   return (
     <div className="relative rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
@@ -38,7 +42,7 @@ export const TransactionFilters = ({
                 selectedDate={selectedDate}
                 onChange={setSelectedDate}
               />
-              <SortButton />
+              <SortButton setSortOrder={setSortOrder} sortOrder={sortOrder} />
             </div>
             <TransactionTypeSelector
               transactionType={transactionType}

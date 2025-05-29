@@ -1,3 +1,4 @@
 {
-    "px-to-rem.px-per-rem": 16
+    "px-to-rem.px-per-rem": 16,
+    "discord.enabled": true
 }

@@ -2,6 +2,7 @@
 
 import { Edit, Trash } from "lucide-react";
 import { Transaction } from "@/types/TransactionType";
+import { TransactionTypeFilter } from "@/types/TransactionTypeFilter";
 
 interface TransactionTableRowProps {
   transaction: Transaction;
@@ -14,11 +15,12 @@ export const TransactionTableRow = ({
   onClickEdit,
   onClickDelete,
 }: TransactionTableRowProps) => {
-  const { description, category, date, account, amount } = transaction;
+  const { description, category, date, account, amount, type } = transaction;
 
   const formattedDate = new Date(date).toLocaleDateString("pt-BR");
   const formattedAmount = `R$ ${Math.abs(amount).toFixed(2)}`;
-  const amountClass = amount > 0 ? "text-green-500" : "text-red-500";
+  const amountClass =
+    type === TransactionTypeFilter.Income ? "text-green-500" : "text-red-500";
 
   return (
     <tr className="border-b border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900">
@@ -27,7 +29,7 @@ export const TransactionTableRow = ({
       <td className="py-3 px-4">{formattedDate}</td>
       <td className="py-3 px-4">{account}</td>
       <td className={`py-3 px-4 text-right font-medium ${amountClass}`}>
-        {amount > 0 ? "+" : ""}
+        {type === TransactionTypeFilter.Income ? "" : "- "}
         {formattedAmount}
       </td>
       <td className="py-3 px-4 text-right">
