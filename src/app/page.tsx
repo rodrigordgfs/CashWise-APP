@@ -16,9 +16,13 @@ import {
   Users,
   Star,
 } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
+import { Button } from "@/components/shared/Button";
 
 export default function Home() {
   const [darkMode, setDarkMode] = useState(false);
+
+  const { isSignedIn } = useUser();
 
   useEffect(() => {
     // Check if dark mode is enabled on initial load
@@ -64,18 +68,23 @@ export default function Home() {
               )}
               <span className="sr-only">Toggle theme</span>
             </button>
-            <nav className="flex items-center space-x-3">
-              <Link href="/login">
-                <button className="px-4 py-2 text-sm rounded-md border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-                  Entrar
-                </button>
-              </Link>
-              <Link href="/register">
-                <button className="px-4 py-2 text-sm rounded-md bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600">
-                  Registrar
-                </button>
-              </Link>
-            </nav>
+
+            {isSignedIn ? (
+              <nav className="flex items-center space-x-3">
+                <Link href="/dashboard">
+                  <Button variant="emerald">Dashboard</Button>
+                </Link>
+              </nav>
+            ) : (
+              <nav className="flex items-center space-x-3">
+                <Link href="/login">
+                  <Button variant="neutral">Entrar</Button>
+                </Link>
+                <Link href="/register">
+                  <Button variant="emerald">Registrar</Button>
+                </Link>
+              </nav>
+            )}
           </div>
         </div>
       </header>

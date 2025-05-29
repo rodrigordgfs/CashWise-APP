@@ -1,18 +1,35 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
+// Rota protegida
 const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
 
-export default clerkMiddleware(async (auth, req) => {
-  const { userId, redirectToSignIn } = await auth();
+// Rotas de autenticação (login e registro) — você redireciona dessas se já estiver logado
+const isAuthRoute = createRouteMatcher(["/login", "/register"]);
 
+export default clerkMiddleware(async (auth, req) => {
+  const { userId } = await auth();
+  const url = req.nextUrl.clone();
+  const pathname = req.nextUrl.pathname;
+
+  // Se usuário não logado tenta acessar rota protegida
   if (!userId && isProtectedRoute(req)) {
-    return redirectToSignIn();
+    if (pathname !== "/login") {
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
+    }
   }
 
+  // Se usuário logado tenta acessar /login ou /register, redireciona para /dashboard
+  if (userId && isAuthRoute(req)) {
+    url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
+  }
+
+  // Permite acesso normal a qualquer outra rota
   return NextResponse.next();
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/dashboard/:path*", "/", "/login", "/register"],
 };

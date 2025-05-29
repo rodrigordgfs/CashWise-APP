@@ -111,7 +111,7 @@ export const MobileMenu = () => {
         </div>
         <div className="absolute bottom-4 w-full px-4">
           <button
-            className="w-full flex items-center px-3 py-2 rounded-md cursor-pointer transition-all ease-in-out duration-200 text-red-500 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            className="w-full cursor-pointer flex items-center px-3 py-2 rounded-md transition-all ease-in-out duration-200 text-red-500 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
             onClick={handleLogout}
           >
             <LogOut className="mr-2 h-5 w-5" />

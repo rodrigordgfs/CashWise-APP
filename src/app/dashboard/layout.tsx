@@ -6,9 +6,7 @@ import { SideBarDesktop } from "@/components/shared/SideBarDesktop";
 import { MobileMenu } from "@/components/shared/MobileMenu";
 import { useSidebar } from "@/context/sidebarContext";
 import { useMenu } from "@/context/menuContext";
-import { useUser } from "@clerk/nextjs";
 import { SignedIn } from "@clerk/clerk-react";
-import { redirect } from "next/navigation";
 
 export default function DashboardLayout({
   children,
@@ -17,11 +15,6 @@ export default function DashboardLayout({
 }>) {
   const { isSidebarOpen } = useSidebar();
   const { isMobileMenuOpen } = useMenu();
-  const { isSignedIn } = useUser();
-
-  if (!isSignedIn) {
-    redirect("/login");
-  }
 
   return (
     <SignedIn>
