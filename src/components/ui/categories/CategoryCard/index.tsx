@@ -1,7 +1,7 @@
 import { Edit, Trash } from "lucide-react";
-import { Category } from "@/types/CategoryType";
+import { Category } from "@/types/Category.type";
 import { colorOptions } from "../CategoryModal";
-import { TransactionTypeFilter } from "@/types/TransactionTypeFilter";
+import { TransactionType } from "@/types/Transaction.type";
 
 interface CategoryCardProps {
   category: Category;
@@ -48,7 +48,7 @@ export const CategoryCard = ({
           <div>
             <p className="text-sm text-zinc-500 dark:text-zinc-400">Tipo</p>
             <p className="font-medium">
-              {category.type === TransactionTypeFilter.Expense
+              {category.type === TransactionType.Expense
                 ? "Despesa"
                 : "Receita"}
             </p>

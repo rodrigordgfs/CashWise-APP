@@ -12,59 +12,59 @@ import {
   X,
 } from "lucide-react";
 import { NavItem } from "../NavItem";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useMenu } from "@/context/menuContext";
 import { LogoButton } from "../LogoButton";
 import { IconButton } from "@/components/shared/IconButton";
 import { useAuth } from "@clerk/nextjs";
-import { useRouter } from "next/router";
 
 export const MobileMenu = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const { closeMobileMenu } = useMenu();
   const { signOut } = useAuth();
-  const router = useRouter();
 
   const handleLogout = async () => {
     await signOut();
     router.push("/");
   };
 
-  // Função para fechar ao clicar em um item
-  function handleItemClick() {
+  // Fecha menu ao clicar em um item
+  const handleItemClick = () => {
     closeMobileMenu();
-  }
+  };
 
-  // Fecha se clicar fora do menu (no overlay)
-  function handleOverlayClick() {
+  // Fecha se clicar fora do menu (overlay)
+  const handleOverlayClick = () => {
     closeMobileMenu();
-  }
+  };
 
-  // Impede que clique dentro do menu dispare o fechamento (propagação)
-  function handleMenuClick(e: React.MouseEvent) {
+  // Impede fechamento ao clicar dentro do menu
+  const handleMenuClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-  }
+  };
 
   return (
     <div
       className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm md:hidden animate-in fade-in duration-200"
-      onClick={handleOverlayClick} // clique fora do menu fecha
+      onClick={handleOverlayClick}
     >
       <div
         className="fixed inset-y-0 left-0 w-[240px] bg-white dark:bg-zinc-950 shadow-lg animate-in slide-in-from-left duration-300"
-        onClick={handleMenuClick} // impede fechamento clicando dentro do menu
+        onClick={handleMenuClick}
       >
         <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800">
           <LogoButton />
-          <IconButton icon={X} name="Close menu" onClick={closeMobileMenu} />
+          <IconButton icon={X} name="Fechar menu" onClick={closeMobileMenu} />
         </div>
+
         <div className="flex flex-col space-y-1 p-4">
           <NavItem
             href="/dashboard"
             icon={HomeIcon}
             title="Dashboard"
             isActive={pathname === "/dashboard"}
-            onClick={handleItemClick} // fecha menu ao clicar
+            onClick={handleItemClick}
           />
           <NavItem
             href="/dashboard/transactions"
@@ -109,9 +109,10 @@ export const MobileMenu = () => {
             onClick={handleItemClick}
           />
         </div>
+
         <div className="absolute bottom-4 w-full px-4">
           <button
-            className="w-full cursor-pointer flex items-center px-3 py-2 rounded-md transition-all ease-in-out duration-200 text-red-500 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            className="w-full flex items-center px-3 py-2 rounded-md text-red-500 dark:text-red-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all duration-200"
             onClick={handleLogout}
           >
             <LogOut className="mr-2 h-5 w-5" />

@@ -1,6 +1,6 @@
 "use client";
 
-import { TransactionTypeFilter } from "@/types/TransactionTypeFilter";
+import { TransactionTypeFilter } from "@/types/TransactionFilter.type";
 import { SearchInput } from "../SearchInput";
 import { DateFilter } from "../DateFilter";
 import { SortButton } from "../SortButton";

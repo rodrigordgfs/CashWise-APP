@@ -1,4 +1,4 @@
-import { Budget } from "@/types/BudgeType";
+import { Budget } from "@/types/Budge.type";
 import { NextRequest, NextResponse } from "next/server";
 
 // Simula armazenamento em memória

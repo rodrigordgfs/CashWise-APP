@@ -6,11 +6,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
-import { Category } from "@/types/CategoryType";
+import { Category } from "@/types/Category.type";
 import { SelectField } from "@/components/shared/SelectField";
 import { InputField } from "@/components/shared/InputField";
-import { TransactionTypeFilter } from "@/types/TransactionTypeFilter";
 import { Modal } from "@/components/shared/Modal";
+import { TransactionType } from "@/types/Transaction.type";
 
 interface CategoryModalProps {
   isOpen: boolean;
@@ -35,7 +35,7 @@ const icons = ["💸", "🍔", "🏠", "🚗", "🎮", "💼", "💊", "🎁", "
 
 const schema = z.object({
   name: z.string().trim().min(1, "Nome é obrigatório"),
-  type: z.nativeEnum(TransactionTypeFilter, {
+  type: z.nativeEnum(TransactionType, {
     errorMap: () => ({ message: "Tipo é obrigatório" }),
   }),
   color: z.string().min(1, "Cor é obrigatória"),
@@ -61,7 +61,7 @@ export function CategoryModal({
     resolver: zodResolver(schema),
     defaultValues: {
       name: "",
-      type: TransactionTypeFilter.Expense,
+      type: TransactionType.Expense,
       color: Object.keys(colorOptions)[0],
       icon: icons[0],
     },
@@ -77,14 +77,14 @@ export function CategoryModal({
       reset({
         ...initialData,
         type:
-          initialData.type === "income"
-            ? TransactionTypeFilter.Income
-            : TransactionTypeFilter.Expense,
+          initialData.type === TransactionType.Income
+            ? TransactionType.Income
+            : TransactionType.Expense,
       });
     } else {
       reset({
         name: "",
-        type: TransactionTypeFilter.Expense,
+        type: TransactionType.Expense,
         color: Object.keys(colorOptions)[0],
         icon: icons[0],
       });
@@ -102,7 +102,7 @@ export function CategoryModal({
 
     const bodyData = {
       ...data,
-      type: data.type === TransactionTypeFilter.Income ? "income" : "expense",
+      type: data.type === TransactionType.Income ? "income" : "expense",
     };
 
     const response = await fetch(url, {

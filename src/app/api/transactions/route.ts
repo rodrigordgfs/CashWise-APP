@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { Transaction } from "@/types/TransactionType";
-import { TransactionTypeFilter } from "@/types/TransactionTypeFilter";
+import { Transaction } from "@/types/Transaction.type";
+import { TransactionType } from "@/types/Transaction.type";
 
 // Dados simulados (em memória)
 const transactions: Transaction[] = [
@@ -11,7 +11,7 @@ const transactions: Transaction[] = [
     date: "2025-05-18",
     category: "Alimentação",
     account: "Nubank",
-    type: TransactionTypeFilter.Expense,
+    type: TransactionType.Expense,
   },
   {
     id: 2,
@@ -20,7 +20,7 @@ const transactions: Transaction[] = [
     date: "2025-05-15",
     category: "Salário",
     account: "Itaú",
-    type: TransactionTypeFilter.Income,
+    type: TransactionType.Income,
   },
   {
     id: 3,
@@ -29,7 +29,7 @@ const transactions: Transaction[] = [
     date: "2025-05-10",
     category: "Moradia",
     account: "Nubank",
-    type: TransactionTypeFilter.Expense,
+    type: TransactionType.Expense,
   },
   {
     id: 4,
@@ -38,7 +38,7 @@ const transactions: Transaction[] = [
     date: "2025-05-05",
     category: "Freelance",
     account: "Itaú",
-    type: TransactionTypeFilter.Income,
+    type: TransactionType.Income,
   },
 ];
 

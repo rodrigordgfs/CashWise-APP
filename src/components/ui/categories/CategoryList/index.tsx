@@ -1,4 +1,4 @@
-import { Category } from "@/types/CategoryType";
+import { Category } from "@/types/Category.type";
 import { CategoryCard } from "../CategoryCard";
 import { CategoryCardSkeleton } from "../CategoryCardSkeleton";
 

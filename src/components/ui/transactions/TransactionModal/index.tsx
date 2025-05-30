@@ -8,9 +8,9 @@ import { toast } from "sonner";
 
 import { InputField } from "@/components/shared/InputField";
 import { SelectField } from "@/components/shared/SelectField";
-import { Account } from "@/types/Account.Type";
-import { Category } from "@/types/CategoryType";
-import { Transaction, TransactionType } from "@/types/TransactionType";
+import { Account } from "@/types/Account.type";
+import { Category } from "@/types/Category.type";
+import { Transaction, TransactionType } from "@/types/Transaction.type";
 import { Modal } from "@/components/shared/Modal";
 import { DatePickerField } from "@/components/shared/DatePickerField";
 

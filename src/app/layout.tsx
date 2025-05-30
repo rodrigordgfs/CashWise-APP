@@ -10,6 +10,8 @@ import { TransactionProvider } from "@/context/transactionsContext";
 import "./globals.css";
 import "react-day-picker/dist/style.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { BudgetProvider } from "@/context/budgetContext";
+import { CategoryProvider } from "@/context/categoryContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,8 +36,12 @@ export default function RootLayout({
           <MenuProvider>
             <SidebarProvider>
               <TransactionProvider>
-                {children}
-                <Toaster richColors />
+                <BudgetProvider>
+                  <CategoryProvider>
+                    {children}
+                    <Toaster richColors />
+                  </CategoryProvider>
+                </BudgetProvider>
               </TransactionProvider>
             </SidebarProvider>
           </MenuProvider>

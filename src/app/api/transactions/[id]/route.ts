@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { TransactionTypeFilter } from "@/types/TransactionTypeFilter";
-import { Transaction } from "@/types/TransactionType";
+import { TransactionTypeFilter } from "@/types/TransactionFilter.type";
+import { Transaction } from "@/types/Transaction.type";
 
 const transactions: Transaction[] = [
   {

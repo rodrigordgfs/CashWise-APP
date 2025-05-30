@@ -1,4 +1,4 @@
-import { Budget } from "@/types/BudgeType";
+import { Budget } from "@/types/Budge.type";
 import { BudgetProgressBar } from "../BudgetProgressBar";
 import { colorOptions } from "../../categories/CategoryModal";
 

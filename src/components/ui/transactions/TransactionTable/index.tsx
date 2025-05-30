@@ -2,7 +2,7 @@
 
 import { TransactionTableHeader } from "./TransactionTableHeader";
 import { TransactionTableRow } from "./TransactionTableRow";
-import { Transaction } from "@/types/TransactionType";
+import { Transaction } from "@/types/Transaction.type";
 
 interface TransactionTableProps {
   transactions: Transaction[];

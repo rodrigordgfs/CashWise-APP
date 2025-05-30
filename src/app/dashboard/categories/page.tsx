@@ -4,92 +4,25 @@ import { PageHeader } from "@/components/shared/PageHeader";
 import { Tabs } from "@/components/shared/Tabs";
 import { CategoryList } from "@/components/ui/categories/CategoryList";
 import { CategoryModal } from "@/components/ui/categories/CategoryModal";
-import { Category } from "@/types/CategoryType";
-import { TransactionTypeFilter } from "@/types/TransactionTypeFilter";
+import { useCategory } from "@/context/categoryContext";
 import { Plus } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-
-const categoriesTabs = [
-  { label: "Todas", value: TransactionTypeFilter.All },
-  { label: "Despesas", value: TransactionTypeFilter.Expense },
-  { label: "Receitas", value: TransactionTypeFilter.Income },
-];
 
 export default function CategoriesPage() {
-  const [categoryType, setCategoryType] = useState("expense");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
-
-  const filteredCategories = categories.filter((category) =>
-    categoryType === TransactionTypeFilter.All
-      ? true
-      : category.type === categoryType
-  );
-
-  useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const response = await fetch("/api/categories");
-        if (!response.ok) {
-          throw new Error("Erro ao buscar categorias");
-        }
-        const data = await response.json();
-        setCategories(data);
-      } catch (error) {
-        console.error("Erro ao carregar categorias:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchCategories();
-  }, []);
-
-  const handleEdit = (category: Category) => {
-    setCategoryToEdit(category);
-    setIsModalOpen(true);
-  };
-
-  const handleAddNew = () => {
-    setCategoryToEdit(null);
-    setIsModalOpen(true);
-  };
-
-  const handleSave = (savedCategory: Category) => {
-    if (categoryToEdit) {
-      setCategories((prev) =>
-        prev.map((cat) =>
-          cat.id === categoryToEdit.id ? { ...cat, ...savedCategory } : cat
-        )
-      );
-    } else {
-      setCategories((prev) => [...prev, savedCategory]);
-    }
-    setIsModalOpen(false);
-    setCategoryToEdit(null);
-  };
-
-  const handleDelete = async (category: Category) => {
-    setIsLoading(true);
-
-    const response = await fetch(`/api/categories/${category?.id}`, {
-      method: "DELETE",
-    });
-
-    setIsLoading(false);
-
-    if (!response.ok) {
-      toast.error("Erro ao excluir categoria");
-      return;
-    }
-
-    await response.json();
-    setCategories((prev) => prev.filter((cat) => cat.id !== category.id));
-    toast.success("Categoria excluída com sucesso!");
-  };
+  const {
+    categoryType,
+    setCategoryType,
+    filteredCategories,
+    isLoading,
+    isModalOpen,
+    setIsModalOpen,
+    openModalToCreate,
+    openModalToEdit,
+    saveCategory,
+    deleteCategory,
+    categoryToEdit,
+    setCategoryToEdit,
+    categoriesTabs,
+  } = useCategory();
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -97,7 +30,7 @@ export default function CategoriesPage() {
         title="Categorias"
         actionIcon={Plus}
         actionTitle="Nova Categoria"
-        onActionClick={handleAddNew}
+        onActionClick={openModalToCreate}
         actionDisabled={isLoading}
       />
 
@@ -118,10 +51,8 @@ export default function CategoriesPage() {
       <CategoryList
         categories={filteredCategories}
         isLoading={isLoading}
-        onEdit={handleEdit}
-        onDelete={(category) => {
-          handleDelete(category);
-        }}
+        onEdit={openModalToEdit}
+        onDelete={deleteCategory}
       />
 
       {isModalOpen && (
@@ -131,7 +62,7 @@ export default function CategoriesPage() {
             setIsModalOpen(false);
             setCategoryToEdit(null);
           }}
-          onSave={handleSave}
+          onSave={saveCategory}
           initialData={categoryToEdit ?? null}
         />
       )}

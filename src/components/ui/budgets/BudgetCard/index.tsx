@@ -1,7 +1,7 @@
 import { BudgetCardHeader } from "../BudgetCardHeader";
 import { BudgetCardContent } from "../BudgetCardContent";
 import { BudgetCardFooter } from "../BudgetCardFooter";
-import { Budget } from "@/types/BudgeType";
+import { Budget } from "@/types/Budge.type";
 
 interface BudgetCardProps {
   budget: Budget;

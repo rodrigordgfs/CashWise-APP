@@ -1,9 +1,9 @@
-import { TransactionTypeFilter } from "./TransactionTypeFilter";
+import { TransactionType } from "./Transaction.type";
 
 export interface Category {
   id: number;
   name: string;
-  type: TransactionTypeFilter;
+  type: TransactionType;
   color?: string;
   icon?: string;
 }

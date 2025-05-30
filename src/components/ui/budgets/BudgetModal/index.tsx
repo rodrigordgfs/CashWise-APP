@@ -3,7 +3,7 @@
 import { InputField } from "@/components/shared/InputField";
 import { Modal } from "@/components/shared/Modal";
 import { SelectField } from "@/components/shared/SelectField";
-import { Category } from "@/types/CategoryType";
+import { Category } from "@/types/Category.type";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
