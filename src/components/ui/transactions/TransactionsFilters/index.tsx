@@ -1,10 +1,10 @@
 "use client";
 
-import { TransactionTypeFilter } from "@/types/TransactionFilter.type";
 import { SearchInput } from "../SearchInput";
 import { DateFilter } from "../DateFilter";
 import { SortButton } from "../SortButton";
 import { TransactionTypeSelector } from "../TransactionTypeSelector";
+import { TransactionTypeFilter } from "@/types/Transaction.type";
 interface TransactionFiltersProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;

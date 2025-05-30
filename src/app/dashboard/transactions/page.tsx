@@ -9,7 +9,7 @@ import { Category } from "@/types/Category.type";
 import { TransactionsPageSkeleton } from "@/components/ui/transactions/TransactionsPageSkeleton";
 import { useTransaction } from "@/context/transactionsContext";
 import { TransactionType } from "@/types/Transaction.type";
-import { Account } from "@/types/Account.Type";
+import { Account } from "@/types/Account.type";
 
 export default function TransactionsPage() {
   const {
