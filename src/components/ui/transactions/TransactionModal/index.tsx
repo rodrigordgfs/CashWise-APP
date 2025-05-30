@@ -34,7 +34,9 @@ interface TransactionModalProps {
 }
 
 const schema = z.object({
-  type: z.enum(["income", "expense"]),
+  type: z.nativeEnum(TransactionType, {
+    errorMap: () => ({ message: "Tipo de transação é obrigatório" }),
+  }),
   description: z.string().min(1, "Descrição é obrigatória"),
   amount: z.number().min(0.01, "Valor deve ser maior que zero"),
   date: z.string().min(1, "Data é obrigatória"),
@@ -60,7 +62,7 @@ export const TransactionModal = ({
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      type: "expense",
+      type: TransactionType.Expense,
       description: "",
       amount: 0,
       date: "",
@@ -77,7 +79,7 @@ export const TransactionModal = ({
       reset(initialData);
     } else {
       reset({
-        type: "expense",
+        type: TransactionType.Expense,
         description: "",
         amount: 0,
         date: "",
