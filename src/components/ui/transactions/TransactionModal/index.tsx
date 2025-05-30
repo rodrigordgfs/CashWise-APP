@@ -12,7 +12,6 @@ import { Category } from "@/types/Category.type";
 import { Transaction, TransactionType } from "@/types/Transaction.type";
 import { Modal } from "@/components/shared/Modal";
 import { DatePickerField } from "@/components/shared/DatePickerField";
-import { Account } from "@/types/Account.type";
 
 export interface TransactionFormData {
   id?: number;
@@ -23,6 +22,11 @@ export interface TransactionFormData {
   category: string;
   account: string;
 }
+
+type Account = {
+  id: number;
+  name: string;
+};
 
 interface TransactionModalProps {
   isOpen: boolean;
