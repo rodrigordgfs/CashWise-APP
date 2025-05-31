@@ -104,8 +104,8 @@ export const TransactionModal = ({
 
     const method = initialData ? "PATCH" : "POST";
     const url = initialData
-      ? `http://localhost:3001/transaction/${initialData.id}`
-      : "http://localhost:3001/transaction";
+      ? `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction/${initialData.id}`
+      : `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction`;
 
     const response = await fetch(url, {
       method,
@@ -131,7 +131,24 @@ export const TransactionModal = ({
     }
 
     const savedTransaction = await response.json();
-    onSave(savedTransaction);
+
+    const category = categories.find((c) => c.id === data.category);
+
+    if (!category) {
+      toast.error("Categoria inválida ou não encontrada");
+      throw new Error("Categoria inválida ou não encontrada");
+    }
+
+    onSave({
+      id: savedTransaction.id,
+      type: data.type,
+      description: data.description,
+      amount: Number(data.amount),
+      date: new Date(data.date).toISOString(),
+      account: data.account,
+      userId: user?.id,
+      category: category,
+    });
     toast.success("Transação salva com sucesso!");
     reset();
     onClose();

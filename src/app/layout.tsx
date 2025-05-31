@@ -32,20 +32,18 @@ export default function RootLayout({
           className={`${inter.className} bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100`}
           suppressHydrationWarning
         >
-          {/* <ThemeProvider> */}
-          <MenuProvider>
-            <SidebarProvider>
+          <CategoryProvider>
+            <BudgetProvider>
               <TransactionProvider>
-                <BudgetProvider>
-                  <CategoryProvider>
+                <SidebarProvider>
+                  <MenuProvider>
                     {children}
                     <Toaster richColors />
-                  </CategoryProvider>
-                </BudgetProvider>
+                  </MenuProvider>
+                </SidebarProvider>
               </TransactionProvider>
-            </SidebarProvider>
-          </MenuProvider>
-          {/* </ThemeProvider> */}
+            </BudgetProvider>
+          </CategoryProvider>
         </body>
       </html>
     </ClerkProvider>

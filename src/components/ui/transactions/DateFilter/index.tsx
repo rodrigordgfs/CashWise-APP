@@ -53,7 +53,14 @@ export const DateFilter = ({ selectedDate, onChange }: DateFilterProps) => {
             navLayout="around"
             selected={selectedDate}
             onSelect={(date) => {
-              onChange(date);
+              if (date) {
+                const utcDate = new Date(
+                  Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+                );
+                onChange(utcDate);
+              } else {
+                onChange(undefined);
+              }
               setShowCalendar(false);
             }}
             locale={ptBR}

@@ -100,8 +100,8 @@ export function CategoryModal({
     const method = initialData ? "PATCH" : "POST";
 
     const url = initialData
-      ? `http://localhost:3001/category/${initialData.id}`
-      : "http://localhost:3001/category";
+      ? `${process.env.NEXT_PUBLIC_BASE_URL_API}/category/${initialData.id}`
+      : `${process.env.NEXT_PUBLIC_BASE_URL_API}/category`;
 
     const response = await fetch(url, {
       method,

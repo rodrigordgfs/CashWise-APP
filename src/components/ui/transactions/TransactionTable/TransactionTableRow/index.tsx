@@ -18,7 +18,9 @@ export const TransactionTableRow = ({
   const { categories } = useCategory();
   const { description, category, date, account, amount, type } = transaction;
 
-  const formattedDate = new Date(date).toLocaleDateString("pt-BR");
+  const formattedDate = new Date(date).toLocaleDateString("pt-BR", {
+    timeZone: "UTC",
+  });
   const categoryName = categories.find((c) => c.id === category?.id)?.name;
   const formattedCategory = categoryName || "Sem categoria";
   const formattedAccount = account || "Sem conta";

@@ -13,6 +13,7 @@ export enum TransactionTypeFilter {
 
 export interface Transaction {
   id?: string;
+  userId?: string;
   type: TransactionType;
   description: string;
   category: Category;

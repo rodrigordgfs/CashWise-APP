@@ -56,27 +56,27 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   );
 
   // Buscar categorias
-  useEffect(() => {
-    async function fetchCategories() {
-      const userId = user?.id;
-      try {
-        const res = await fetch(
-          `http://localhost:3001/category?${
-            categoryType !== "" ? `type=${categoryType}&` : ""
-          }userId=${userId}`
-        );
-        if (!res.ok) throw new Error("Erro ao buscar categorias");
-        const data = await res.json();
-        setCategories(data);
-      } catch (error) {
-        console.error("Erro ao carregar categorias:", error);
-      } finally {
-        setIsLoading(false);
-      }
+  const fetchCategories = useCallback(async () => {
+    const userId = user?.id;
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL_API}/category?${
+          categoryType !== "" ? `type=${categoryType}&` : ""
+        }userId=${userId}`
+      );
+      if (!res.ok) throw new Error("Erro ao buscar categorias");
+      const data = await res.json();
+      setCategories(data);
+    } catch (error) {
+      console.error("Erro ao carregar categorias:", error);
+    } finally {
+      setIsLoading(false);
     }
-
-    fetchCategories();
   }, [categoryType, user?.id]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   // Filtra categorias conforme tipo selecionado
   const filteredCategories = useMemo(() => {
@@ -114,7 +114,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/category/${category.id}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL_API}/category/${category.id}`,
         {
           method: "DELETE",
         }

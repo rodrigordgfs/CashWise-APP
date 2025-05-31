@@ -23,7 +23,7 @@ export default function TransactionsPage() {
     setSortOrder,
     transactionType,
     setTransactionType,
-    filteredTransactions,
+    transactions,
     isLoading,
     isAddDialogOpen,
     setIsAddDialogOpen,
@@ -72,7 +72,7 @@ export default function TransactionsPage() {
       />
 
       <TransactionTable
-        transactions={filteredTransactions}
+        transactions={transactions}
         onClickDelete={handleDeleteTransaction}
         onClickEdit={handleEditTransaction}
       />

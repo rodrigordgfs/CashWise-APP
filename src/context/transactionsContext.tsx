@@ -12,6 +12,7 @@ import {
 import { toast } from "sonner";
 import { Transaction, TransactionTypeFilter } from "@/types/Transaction.type";
 import { useUser } from "@clerk/nextjs";
+import { useCategory } from "./categoryContext";
 
 export enum Period {
   WEEK = "week",
@@ -29,7 +30,6 @@ interface TransactionContextProps {
   transactionType: TransactionTypeFilter;
   setTransactionType: (type: TransactionTypeFilter) => void;
   transactions: Transaction[];
-  filteredTransactions: Transaction[];
   isLoading: boolean;
   transactionToEdit: Transaction | null;
   setTransactionToEdit: (transaction: Transaction | null) => void;
@@ -49,6 +49,7 @@ const TransactionContext = createContext<TransactionContextProps | undefined>(
 
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
+  const { categories } = useCategory(); // Assuming useCategory is defined elsewhere
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
@@ -72,23 +73,6 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     []
   );
 
-  // Filtered transactions logic
-  const filteredTransactions = useMemo(() => {
-    return transactions.filter((transaction) => {
-      const matchesSearch = transaction.description
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-      const matchesType =
-        transactionType === TransactionTypeFilter.All
-          ? true
-          : transactionType === TransactionTypeFilter.Income
-          ? transaction.amount > 0
-          : transaction.amount < 0;
-
-      return matchesSearch && matchesType;
-    });
-  }, [transactions, searchTerm, transactionType]);
-
   // Handlers with useCallback
   const handleEditTransaction = useCallback((transaction: Transaction) => {
     setTransactionToEdit(transaction);
@@ -98,11 +82,15 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   const handleDeleteTransaction = useCallback(
     async (transaction: Transaction) => {
       try {
-        const response = await fetch(`/api/transactions/${transaction.id}`, {
-          method: "DELETE",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction/${transaction.id}`,
+          {
+            method: "DELETE",
+          }
+        );
 
         if (!response.ok) {
+          toast.error("Erro ao excluir transação");
           throw new Error("Erro ao excluir transação");
         }
 
@@ -118,51 +106,72 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
 
   const handleSaveTransaction = useCallback(
     (saved: Transaction) => {
+      const isCategoryObject = (
+        category: string | { id: string }
+      ): category is { id: string } => {
+        return (
+          typeof category === "object" && category !== null && "id" in category
+        );
+      };
+
+      const categoryObj = categories.find((c) =>
+        isCategoryObject(saved.category)
+          ? c.id === saved.category.id
+          : c.id === saved.category
+      );
+
+      const fullTransaction = {
+        ...saved,
+        category: categoryObj ?? saved.category, // garantir que seja objeto completo
+        userId: user?.id,
+      };
+
       if (transactionToEdit) {
         setTransactions((prev) =>
-          prev.map((t) => (t.id === saved.id ? saved : t))
+          prev.map((t) => (t.id === saved.id ? fullTransaction : t))
         );
       } else {
-        setTransactions((prev) => [...prev, saved]);
+        setTransactions((prev) => [...prev, fullTransaction]);
       }
 
       setTransactionToEdit(null);
       setIsAddDialogOpen(false);
     },
-    [transactionToEdit]
+    [transactionToEdit, categories, user?.id]
   );
 
   // Fetch transactions once
-  useEffect(() => {
-    async function fetchTransactions() {
-      try {
-        const response = await fetch(
-          `http://localhost:3001/transaction?userId=${user?.id}${
-            searchTerm ? `&search=${searchTerm}` : ""
-          }${selectedDate ? `&date=${selectedDate.toISOString()}` : ""}${
-            sortOrder !== "none" ? `&sort=${sortOrder}` : ""
-          }${
-            transactionType !== TransactionTypeFilter.All
-              ? `&type=${transactionType}`
-              : ""
-          }`
-        );
-        if (!response.ok) {
-          toast.error("Erro ao buscar as transações");
-          throw new Error("Erro ao buscar as transações");
-        }
-        const data = await response.json();
-        setTransactions(data);
-      } catch (error) {
-        toast.error("Erro ao carregar transações");
-        console.error("Erro ao carregar transações:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
 
-    fetchTransactions();
+  const fetchTransactions = useCallback(async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction?userId=${
+          user?.id
+        }${searchTerm ? `&search=${searchTerm}` : ""}${
+          selectedDate ? `&date=${selectedDate.toISOString()}` : ""
+        }${sortOrder !== "none" ? `&sort=${sortOrder}` : ""}${
+          transactionType !== TransactionTypeFilter.All
+            ? `&type=${transactionType}`
+            : ""
+        }`
+      );
+      if (!response.ok) {
+        toast.error("Erro ao buscar as transações");
+        throw new Error("Erro ao buscar as transações");
+      }
+      const data = await response.json();
+      setTransactions(data);
+    } catch (error) {
+      toast.error("Erro ao carregar transações");
+      console.error("Erro ao carregar transações:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, [user?.id, searchTerm, selectedDate, sortOrder, transactionType]);
+
+  useEffect(() => {
+    fetchTransactions();
+  }, [fetchTransactions]);
 
   const value = useMemo(
     () => ({
@@ -175,7 +184,6 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       transactionType,
       setTransactionType,
       transactions,
-      filteredTransactions,
       isLoading,
       transactionToEdit,
       setTransactionToEdit,
@@ -194,7 +202,6 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       sortOrder,
       transactionType,
       transactions,
-      filteredTransactions,
       isLoading,
       transactionToEdit,
       isAddDialogOpen,
