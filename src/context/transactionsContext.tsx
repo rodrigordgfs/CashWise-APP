@@ -11,6 +11,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { Transaction, TransactionTypeFilter } from "@/types/Transaction.type";
+import { useUser } from "@clerk/nextjs";
 
 export enum Period {
   WEEK = "week",
@@ -47,6 +48,8 @@ const TransactionContext = createContext<TransactionContextProps | undefined>(
 );
 
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
+  const { user } = useUser();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [sortOrder, setSortOrder] = useState<"none" | "asc" | "desc">("none");
@@ -133,13 +136,25 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     async function fetchTransactions() {
       try {
-        const response = await fetch("/api/transactions");
+        const response = await fetch(
+          `http://localhost:3001/transaction?userId=${user?.id}${
+            searchTerm ? `&search=${searchTerm}` : ""
+          }${selectedDate ? `&date=${selectedDate.toISOString()}` : ""}${
+            sortOrder !== "none" ? `&sort=${sortOrder}` : ""
+          }${
+            transactionType !== TransactionTypeFilter.All
+              ? `&type=${transactionType}`
+              : ""
+          }`
+        );
         if (!response.ok) {
+          toast.error("Erro ao buscar as transações");
           throw new Error("Erro ao buscar as transações");
         }
         const data = await response.json();
         setTransactions(data);
       } catch (error) {
+        toast.error("Erro ao carregar transações");
         console.error("Erro ao carregar transações:", error);
       } finally {
         setIsLoading(false);
@@ -147,7 +162,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     }
 
     fetchTransactions();
-  }, []);
+  }, [user?.id, searchTerm, selectedDate, sortOrder, transactionType]);
 
   const value = useMemo(
     () => ({

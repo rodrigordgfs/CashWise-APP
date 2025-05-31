@@ -1,3 +1,5 @@
+import { Category } from "./Category.type";
+
 export enum TransactionType {
   Income = "INCOME",
   Expense = "EXPENSE",
@@ -10,10 +12,10 @@ export enum TransactionTypeFilter {
 }
 
 export interface Transaction {
-  id?: number;
+  id?: string;
   type: TransactionType;
   description: string;
-  category: string;
+  category: Category;
   date: string;
   account: string;
   amount: number;

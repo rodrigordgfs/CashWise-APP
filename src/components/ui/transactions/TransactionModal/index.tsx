@@ -8,10 +8,11 @@ import { toast } from "sonner";
 
 import { InputField } from "@/components/shared/InputField";
 import { SelectField } from "@/components/shared/SelectField";
-import { Category } from "@/types/Category.type";
 import { Transaction, TransactionType } from "@/types/Transaction.type";
 import { Modal } from "@/components/shared/Modal";
 import { DatePickerField } from "@/components/shared/DatePickerField";
+import { useUser } from "@clerk/nextjs";
+import { useCategory } from "@/context/categoryContext";
 
 type Account = {
   id: number;
@@ -23,7 +24,6 @@ interface TransactionModalProps {
   onClose: () => void;
   onSave: (transaction: Transaction) => void;
   initialData?: Transaction | null;
-  categories: Category[];
   accounts: Account[];
 }
 
@@ -45,9 +45,10 @@ export const TransactionModal = ({
   onClose,
   onSave,
   initialData,
-  categories,
   accounts,
 }: TransactionModalProps) => {
+  const { user } = useUser();
+  const { categories } = useCategory();
   const {
     control,
     handleSubmit,
@@ -55,30 +56,45 @@ export const TransactionModal = ({
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      type: TransactionType.Expense,
-      description: "",
-      amount: 0,
-      date: "",
-      category: categories.length > 0 ? categories[0].name : "",
-      account: accounts.length > 0 ? accounts[0].name : "",
-      ...initialData,
-    },
+    defaultValues: initialData
+      ? {
+          type: initialData.type,
+          description: initialData.description,
+          amount: initialData.amount,
+          date: initialData.date,
+          category: initialData.category.id,
+          account: initialData.account,
+        }
+      : {
+          type: TransactionType.Expense,
+          description: "",
+          amount: 0,
+          date: "",
+          category: categories[0]?.id ?? "",
+          account: accounts[0]?.name ?? "",
+        },
   });
 
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (initialData) {
-      reset(initialData);
+      reset({
+        type: initialData.type,
+        description: initialData.description,
+        amount: initialData.amount,
+        date: initialData.date,
+        category: initialData.category.id,
+        account: initialData.account,
+      });
     } else {
       reset({
         type: TransactionType.Expense,
         description: "",
         amount: 0,
         date: "",
-        category: categories.length > 0 ? categories[0].name : "",
-        account: accounts.length > 0 ? accounts[0].name : "",
+        category: categories[0]?.id ?? "",
+        account: accounts[0]?.name ?? "",
       });
     }
   }, [initialData, isOpen, reset, categories, accounts]);
@@ -88,8 +104,8 @@ export const TransactionModal = ({
 
     const method = initialData ? "PATCH" : "POST";
     const url = initialData
-      ? `/api/transactions/${initialData.id}`
-      : "/api/transactions";
+      ? `http://localhost:3001/transaction/${initialData.id}`
+      : "http://localhost:3001/transaction";
 
     const response = await fetch(url, {
       method,
@@ -97,7 +113,12 @@ export const TransactionModal = ({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        ...data,
+        account: data.account,
+        description: data.description,
+        type: data.type,
+        userId: user?.id,
+        date: new Date(data.date),
+        categoryId: data.category,
         amount: Number(data.amount),
       }),
     });
@@ -135,8 +156,8 @@ export const TransactionModal = ({
               label="Tipo"
               {...field}
               options={[
-                { value: "expense", label: "Despesa" },
-                { value: "income", label: "Receita" },
+                { value: TransactionType.Income, label: "Receita" },
+                { value: TransactionType.Expense, label: "Despesa" },
               ]}
               error={errors.type?.message}
             />
@@ -179,7 +200,7 @@ export const TransactionModal = ({
               label="Categoria"
               {...field}
               options={categories.map((c) => ({
-                value: c.name,
+                value: c.id,
                 label: c.name,
               }))}
               error={errors.category?.message}

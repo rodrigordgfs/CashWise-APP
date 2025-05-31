@@ -5,10 +5,8 @@ import { PageHeader } from "@/components/shared/PageHeader";
 import { TransactionFilters } from "@/components/ui/transactions/TransactionsFilters";
 import { TransactionTable } from "@/components/ui/transactions/TransactionTable";
 import { TransactionModal } from "@/components/ui/transactions/TransactionModal";
-import { Category } from "@/types/Category.type";
 import { TransactionsPageSkeleton } from "@/components/ui/transactions/TransactionsPageSkeleton";
 import { useTransaction } from "@/context/transactionsContext";
-import { TransactionType } from "@/types/Transaction.type";
 
 type Account = {
   id: number;
@@ -36,20 +34,11 @@ export default function TransactionsPage() {
     handleSaveTransaction,
   } = useTransaction();
 
-  const categories: Category[] = [
-  { id: 1, name: "Alimentação", type: TransactionType.Expense },
-  { id: 2, name: "Moradia", type: TransactionType.Expense },
-  { id: 3, name: "Transporte", type: TransactionType.Expense },
-  { id: 4, name: "Lazer", type: TransactionType.Expense },
-  { id: 5, name: "Saúde", type: TransactionType.Expense },
-  { id: 6, name: "Receita", type: TransactionType.Income },
-];
-
-const accounts: Account[] = [
-  { id: 1, name: "Nubank" },
-  { id: 2, name: "Itaú" },
-  { id: 3, name: "Carteira" },
-];
+  const accounts: Account[] = [
+    { id: 1, name: "Nubank" },
+    { id: 2, name: "Itaú" },
+    { id: 3, name: "Carteira" },
+  ];
 
   if (isLoading) {
     return (
@@ -97,7 +86,6 @@ const accounts: Account[] = [
           }}
           onSave={handleSaveTransaction}
           initialData={transactionToEdit}
-          categories={categories}
           accounts={accounts}
         />
       )}
