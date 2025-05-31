@@ -4,14 +4,12 @@ import { useEffect, useRef, useState } from "react";
 
 interface AnimatedNumberProps {
   value: number;
-  prefix?: string;
   duration?: number; // em milissegundos
   className?: string;
 }
 
 export const AnimatedNumber = ({
   value,
-  prefix = "",
   duration = 1000,
   className = "",
 }: AnimatedNumberProps) => {
@@ -38,9 +36,12 @@ export const AnimatedNumber = ({
     requestAnimationFrame(step);
   }, [value, duration]);
 
-  return (
-    <span className={className}>
-      {prefix} {displayValue.toFixed(2)}
-    </span>
-  );
+  const formattedValue = new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(displayValue);
+
+  return <span className={className}>{formattedValue}</span>;
 };

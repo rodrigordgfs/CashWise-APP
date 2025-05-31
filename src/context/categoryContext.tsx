@@ -12,6 +12,7 @@ import {
 import { toast } from "sonner";
 import { Category } from "@/types/Category.type";
 import { TransactionTypeFilter } from "@/types/Transaction.type";
+import { useUser } from "@clerk/nextjs";
 
 interface CategoryContextProps {
   categories: Category[];
@@ -35,10 +36,12 @@ const CategoryContext = createContext<CategoryContextProps | undefined>(
 );
 
 export const CategoryProvider = ({ children }: { children: ReactNode }) => {
+  const { user } = useUser();
+
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categoryType, setCategoryType] = useState<string>(
-    TransactionTypeFilter.Expense
+    TransactionTypeFilter.All
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
@@ -55,8 +58,13 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   // Buscar categorias
   useEffect(() => {
     async function fetchCategories() {
+      const userId = user?.id;
       try {
-        const res = await fetch("/api/categories");
+        const res = await fetch(
+          `http://localhost:3001/category?${
+            categoryType !== "" ? `type=${categoryType}&` : ""
+          }userId=${userId}`
+        );
         if (!res.ok) throw new Error("Erro ao buscar categorias");
         const data = await res.json();
         setCategories(data);
@@ -68,7 +76,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     }
 
     fetchCategories();
-  }, []);
+  }, [categoryType, user?.id]);
 
   // Filtra categorias conforme tipo selecionado
   const filteredCategories = useMemo(() => {
@@ -90,9 +98,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     (savedCategory: Category) => {
       if (categoryToEdit) {
         setCategories((prev) =>
-          prev.map((cat) =>
-            cat.id === categoryToEdit.id ? { ...cat, ...savedCategory } : cat
-          )
+          prev.map((cat) => (cat.id === categoryToEdit.id ? { ...cat } : cat))
         );
       } else {
         setCategories((prev) => [...prev, savedCategory]);
@@ -107,9 +113,12 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`/api/categories/${category.id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `http://localhost:3001/category/${category.id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!response.ok) {
         toast.error("Erro ao excluir categoria");

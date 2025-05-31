@@ -8,7 +8,8 @@ import { RecentTransactionsList } from "@/components/ui/dashboard/RecentTransact
 import { Tabs } from "@/components/shared/Tabs";
 import { Period, useTransaction } from "@/context/transactionsContext";
 import { DashboardSkeleton } from "@/components/ui/dashboard/DashboardSkeleton";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { Transaction } from "@/types/Transaction.type";
 
 const periodTabs = [
   { label: "Semana", value: Period.WEEK },
@@ -39,49 +40,43 @@ export default function DashboardPage() {
     { name: string; value: number; fill: string }[]
   >([]);
 
-  const [recentTransactions, setRecentTransactions] = useState<
-    {
-      id: number;
-      description: string;
-      amount: number;
-      date: string;
-      category: string;
-    }[]
-  >([]);
+  const [recentTransactions, setRecentTransactions] = useState<Transaction[]>(
+    []
+  );
 
   const { period, setPeriod } = useTransaction();
 
-  useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const periodSelected = period || Period.WEEK;
+      const [summaryRes, monthlyRes, categoryRes, transactionsRes] =
+        await Promise.all([
+          fetch(`/api/dashboard/summary?period=${periodSelected}`),
+          fetch(`/api/dashboard/monthly?period=${periodSelected}`),
+          fetch(`/api/dashboard/category?period=${periodSelected}`),
+          fetch(`/api/dashboard/recent-transactions?period=${periodSelected}`),
+        ]);
 
-      try {
-        const [summaryRes, monthlyRes, categoryRes, transactionsRes] =
-          await Promise.all([
-            fetch("/api/dashboard/summary"),
-            fetch("/api/dashboard/monthly"),
-            fetch("/api/dashboard/category"),
-            fetch("/api/dashboard/recent-transactions"),
-          ]);
+      const summaryJson = await summaryRes.json();
+      const monthlyJson = await monthlyRes.json();
+      const categoryJson = await categoryRes.json();
+      const transactionsJson = await transactionsRes.json();
 
-        const summaryJson = await summaryRes.json();
-        const monthlyJson = await monthlyRes.json();
-        const categoryJson = await categoryRes.json();
-        const transactionsJson = await transactionsRes.json();
-
-        setSummary(summaryJson);
-        setMonthlyData(monthlyJson);
-        setCategoryData(categoryJson);
-        setRecentTransactions(transactionsJson);
-      } catch (error) {
-        console.error("Erro ao carregar dados do dashboard:", error);
-      } finally {
-        setIsLoading(false);
-      }
+      setSummary(summaryJson);
+      setMonthlyData(monthlyJson);
+      setCategoryData(categoryJson);
+      setRecentTransactions(transactionsJson);
+    } catch (error) {
+      console.error("Erro ao carregar dados do dashboard:", error);
+    } finally {
+      setIsLoading(false);
     }
+  }, [period]);
 
+  useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   if (isLoading) return <DashboardSkeleton />;
 

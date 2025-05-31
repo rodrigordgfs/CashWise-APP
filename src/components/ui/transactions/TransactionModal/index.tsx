@@ -13,16 +13,6 @@ import { Transaction, TransactionType } from "@/types/Transaction.type";
 import { Modal } from "@/components/shared/Modal";
 import { DatePickerField } from "@/components/shared/DatePickerField";
 
-export interface TransactionFormData {
-  id?: number;
-  type: TransactionType;
-  description: string;
-  amount: number;
-  date: string;
-  category: string;
-  account: string;
-}
-
 type Account = {
   id: number;
   name: string;
@@ -32,7 +22,7 @@ interface TransactionModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (transaction: Transaction) => void;
-  initialData?: TransactionFormData | null;
+  initialData?: Transaction | null;
   categories: Category[];
   accounts: Account[];
 }

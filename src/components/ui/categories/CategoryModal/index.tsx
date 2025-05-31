@@ -11,6 +11,7 @@ import { SelectField } from "@/components/shared/SelectField";
 import { InputField } from "@/components/shared/InputField";
 import { Modal } from "@/components/shared/Modal";
 import { TransactionType } from "@/types/Transaction.type";
+import { useUser } from "@clerk/nextjs";
 
 interface CategoryModalProps {
   isOpen: boolean;
@@ -29,9 +30,10 @@ export const colorOptions: Record<string, string> = {
   "#10b981": "bg-emerald-500",
   "#6366f1": "bg-indigo-500",
   "#f59e0b": "bg-amber-500",
+  "#eab308": "bg-yellow-500",
 };
 
-const icons = ["💸", "🍔", "🏠", "🚗", "🎮", "💼", "💊", "🎁", "🛒"];
+const icons = ["💸", "🍔", "🏠", "🚗", "🎮", "💼", "💊", "🎁", "🛒", "🏴‍☠️"];
 
 const schema = z.object({
   name: z.string().trim().min(1, "Nome é obrigatório"),
@@ -50,6 +52,7 @@ export function CategoryModal({
   onSave,
   initialData,
 }: CategoryModalProps) {
+  const { user } = useUser();
   const {
     control,
     handleSubmit,
@@ -97,20 +100,18 @@ export function CategoryModal({
     const method = initialData ? "PATCH" : "POST";
 
     const url = initialData
-      ? `/api/categories/${initialData.id}`
-      : "/api/categories";
-
-    const bodyData = {
-      ...data,
-      type: data.type === TransactionType.Income ? "income" : "expense",
-    };
+      ? `http://localhost:3001/category/${initialData.id}`
+      : "http://localhost:3001/category";
 
     const response = await fetch(url, {
       method,
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(bodyData),
+      body: JSON.stringify({
+        ...data,
+        userId: user?.id,
+      }),
     });
 
     setIsLoading(false);
@@ -152,8 +153,8 @@ export function CategoryModal({
               label="Tipo"
               error={errors.type?.message}
               options={[
-                { value: "expense", label: "Despesa" },
-                { value: "income", label: "Receita" },
+                { value: TransactionType.Expense, label: "Despesa" },
+                { value: TransactionType.Income, label: "Receita" },
               ]}
               {...field}
             />

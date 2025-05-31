@@ -1,6 +1,7 @@
 import { Category } from "@/types/Category.type";
 import { CategoryCard } from "../CategoryCard";
 import { CategoryCardSkeleton } from "../CategoryCardSkeleton";
+import { EmptyState } from "@/components/shared/EmptyState";
 
 interface CategoryListProps {
   categories: Category[];
@@ -21,6 +22,17 @@ export const CategoryList = ({
         {Array.from({ length: 6 }).map((_, index) => (
           <CategoryCardSkeleton key={index} />
         ))}
+      </div>
+    );
+  }
+
+  if (categories.length === 0) {
+    return (
+      <div className="flex items-center justify-center">
+        <EmptyState
+          title="Nenhuma categoria encontrada"
+          description="Você ainda não adicionou nenhuma categoria por aqui."
+        />
       </div>
     );
   }

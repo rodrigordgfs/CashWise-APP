@@ -14,7 +14,6 @@ export const OverviewTile = ({
   value,
   icon: Icon,
   valueColor,
-  prefix = "R$",
 }: OverviewTileProps) => {
   return (
     <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
@@ -26,7 +25,7 @@ export const OverviewTile = ({
       </div>
       <div className="p-4 pt-0">
         <p className={`text-2xl font-bold ${valueColor ?? ""}`}>
-          <AnimatedNumber value={value} prefix={prefix} />
+          <AnimatedNumber value={value} />
         </p>
       </div>
     </div>

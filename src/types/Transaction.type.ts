@@ -1,14 +1,13 @@
 export enum TransactionType {
   Income = "INCOME",
   Expense = "EXPENSE",
-};
+}
 
 export enum TransactionTypeFilter {
-  All = "ALL",
+  All = "",
   Income = "INCOME",
   Expense = "EXPENSE",
 }
-
 
 export interface Transaction {
   id?: number;

@@ -1,14 +1,7 @@
 "use client";
 
+import { Transaction } from "@/types/Transaction.type";
 import { TransactionItem } from "../TransactionItem";
-
-export interface Transaction {
-  id: string | number;
-  description: string;
-  category: string;
-  date: string;
-  amount: number;
-}
 
 interface RecentTransactionsListProps {
   transactions: Transaction[];
