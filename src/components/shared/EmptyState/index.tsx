@@ -10,7 +10,7 @@ export const EmptyState = ({
   description = "Você ainda não adicionou nenhuma informação por aqui.",
 }: EmptyStateProps) => {
   return (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
+    <div className="flex flex-col items-center justify-center py-20 px-10 text-center">
       <div className="flex items-center justify-center h-20 w-20 rounded-full bg-emerald-100 dark:bg-emerald-900 mb-6 shadow-sm">
         <FileX2 className="h-10 w-10 text-emerald-600 dark:text-emerald-300" />
       </div>

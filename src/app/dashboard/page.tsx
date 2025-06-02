@@ -6,10 +6,10 @@ import { MonthlyEvolutionChart } from "@/components/ui/dashboard/MonthlyEvolutio
 import { ExpensesByCategoryChart } from "@/components/ui/dashboard/ExpensesByCategoryChart";
 import { RecentTransactionsList } from "@/components/ui/dashboard/RecentTransactionsList";
 import { Tabs } from "@/components/shared/Tabs";
-import { Period, useTransaction } from "@/context/transactionsContext";
 import { DashboardSkeleton } from "@/components/ui/dashboard/DashboardSkeleton";
-import { useCallback, useEffect, useState } from "react";
-import { Transaction } from "@/types/Transaction.type";
+import { Period } from "@/context/transactionsContext";
+import { useDashboard } from "@/context/dashboardContext";
+import { EmptyState } from "@/components/shared/EmptyState";
 
 const periodTabs = [
   { label: "Semana", value: Period.WEEK },
@@ -17,66 +17,16 @@ const periodTabs = [
   { label: "Ano", value: Period.YEAR },
 ];
 
-type Summary = {
-  totalIncome: number;
-  totalExpenses: number;
-  balance: number;
-};
-
 export default function DashboardPage() {
-  const [isLoading, setIsLoading] = useState(true);
-
-  const [summary, setSummary] = useState<Summary>({
-    totalIncome: 0,
-    totalExpenses: 0,
-    balance: 0,
-  });
-
-  const [monthlyData, setMonthlyData] = useState<
-    { name: string; receitas: number; despesas: number }[]
-  >([]);
-
-  const [categoryData, setCategoryData] = useState<
-    { name: string; value: number; fill: string }[]
-  >([]);
-
-  const [recentTransactions, setRecentTransactions] = useState<Transaction[]>(
-    []
-  );
-
-  const { period, setPeriod } = useTransaction();
-
-  const fetchData = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const periodSelected = period || Period.WEEK;
-      const [summaryRes, monthlyRes, categoryRes, transactionsRes] =
-        await Promise.all([
-          fetch(`/api/dashboard/summary?period=${periodSelected}`),
-          fetch(`/api/dashboard/monthly?period=${periodSelected}`),
-          fetch(`/api/dashboard/category?period=${periodSelected}`),
-          fetch(`/api/dashboard/recent-transactions?period=${periodSelected}`),
-        ]);
-
-      const summaryJson = await summaryRes.json();
-      const monthlyJson = await monthlyRes.json();
-      const categoryJson = await categoryRes.json();
-      const transactionsJson = await transactionsRes.json();
-
-      setSummary(summaryJson);
-      setMonthlyData(monthlyJson);
-      setCategoryData(categoryJson);
-      setRecentTransactions(transactionsJson);
-    } catch (error) {
-      console.error("Erro ao carregar dados do dashboard:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [period]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+  const {
+    isLoading,
+    summary,
+    monthlyData,
+    category,
+    recentTransactions,
+    period,
+    setPeriod,
+  } = useDashboard();
 
   if (isLoading) return <DashboardSkeleton />;
 
@@ -89,16 +39,47 @@ export default function DashboardPage() {
 
         <OverviewTiles
           balance={summary.balance}
-          totalIncome={summary.totalIncome}
-          totalExpenses={summary.totalExpenses}
+          totalIncome={summary.income}
+          totalExpenses={summary.expense}
         />
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-          <MonthlyEvolutionChart data={monthlyData} />
-          <ExpensesByCategoryChart data={categoryData} />
+        <div className="flex flex-col lg:flex-row gap-4">
+          <div className="w-full lg:w-1/2">
+            {monthlyData.length > 0 ? (
+              <MonthlyEvolutionChart data={monthlyData} />
+            ) : (
+              <div className="flex items-center justify-center h-[428px] w-full border rounded-lg border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
+                <EmptyState
+                  title="Nenhum dado mensal encontrado"
+                  description="Adicione uma nova transação para ver a evolução mensal."
+                />
+              </div>
+            )}
+          </div>
+          <div className="w-full lg:w-1/2">
+            {category.length > 0 ? (
+              <ExpensesByCategoryChart data={category} />
+            ) : (
+              <div className="flex items-center justify-center h-[428px] w-full border rounded-lg border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
+                <EmptyState
+                  title="Nenhuma despesa por categoria encontrada"
+                  description="Adicione uma nova despesa para ver a distribuição por categoria."
+                />
+              </div>
+            )}
+          </div>
         </div>
 
-        <RecentTransactionsList transactions={recentTransactions} />
+        {recentTransactions.length > 0 ? (
+          <RecentTransactionsList transactions={recentTransactions} />
+        ) : (
+          <div className="flex items-center justify-center h-[428px] w-full border rounded-lg border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
+            <EmptyState
+              title="Nenhuma transação recente encontrada"
+              description="Adicione uma nova transação para ver as transações recentes."
+            />
+          </div>
+        )}
       </div>
     </div>
   );

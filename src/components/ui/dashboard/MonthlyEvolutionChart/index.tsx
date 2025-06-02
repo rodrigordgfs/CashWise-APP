@@ -1,20 +1,15 @@
 "use client";
 
+import { MonthlyReport } from "@/types/Report.type";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis } from "recharts";
 
-interface MonthlyData {
-  name: string;
-  receitas: number;
-  despesas: number;
-}
-
 interface MonthlyEvolutionChartProps {
-  data: MonthlyData[];
+  data: MonthlyReport[];
 }
 
 export const MonthlyEvolutionChart = ({ data }: MonthlyEvolutionChartProps) => {
   return (
-    <div className="lg:col-span-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
+    <div className="lg:col-span-3 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
       <div className="p-6">
         <h3 className="text-lg font-semibold">Evolução Mensal</h3>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -28,13 +23,13 @@ export const MonthlyEvolutionChart = ({ data }: MonthlyEvolutionChartProps) => {
             <YAxis />
             <Line
               type="monotone"
-              dataKey="receitas"
+              dataKey="income"
               stroke="#22c55e"
               strokeWidth={2}
             />
             <Line
               type="monotone"
-              dataKey="despesas"
+              dataKey="expense"
               stroke="#ef4444"
               strokeWidth={2}
             />

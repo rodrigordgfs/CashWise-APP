@@ -17,6 +17,8 @@ interface ExpensesByCategoryChartProps {
 export const ExpensesByCategoryChart = ({
   data,
 }: ExpensesByCategoryChartProps) => {
+  console.log("ExpensesByCategoryChart data:", data);
+
   return (
     <div className="lg:col-span-3 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
       <div className="p-6">

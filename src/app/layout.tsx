@@ -13,6 +13,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { BudgetProvider } from "@/context/budgetContext";
 import { CategoryProvider } from "@/context/categoryContext";
 import { ReportsProvider } from "@/context/reportContext";
+import { DashboardProvider } from "@/context/dashboardContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,20 +34,22 @@ export default function RootLayout({
           className={`${inter.className} bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100`}
           suppressHydrationWarning
         >
-          <ReportsProvider>
-            <CategoryProvider>
-              <BudgetProvider>
-                <TransactionProvider>
-                  <SidebarProvider>
-                    <MenuProvider>
-                      {children}
-                      <Toaster richColors />
-                    </MenuProvider>
-                  </SidebarProvider>
-                </TransactionProvider>
-              </BudgetProvider>
-            </CategoryProvider>
-          </ReportsProvider>
+          <DashboardProvider>
+            <ReportsProvider>
+              <CategoryProvider>
+                <BudgetProvider>
+                  <TransactionProvider>
+                    <SidebarProvider>
+                      <MenuProvider>
+                        {children}
+                        <Toaster richColors />
+                      </MenuProvider>
+                    </SidebarProvider>
+                  </TransactionProvider>
+                </BudgetProvider>
+              </CategoryProvider>
+            </ReportsProvider>
+          </DashboardProvider>
         </body>
       </html>
     </ClerkProvider>
