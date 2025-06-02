@@ -12,24 +12,20 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MonthYearPicker } from "@/components/shared/MonthPicker";
+import { Budget } from "@/types/Budge.type";
 
 interface BudgetModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: {
-    id?: number;
-    category: string;
-    limit: number;
-    month: string;
-  }) => void;
+  onSave: (data: Budget) => void;
   categories: Category[];
-  initialData?: { id?: number; category: string; limit: number; month: string };
+  initialData?: Budget;
 }
 
 const schema = z.object({
-  category: z.string().min(1, "Categoria é obrigatória"),
+  category: z.string().min(1, "Categoria inválida"),
   limit: z.number().min(0.01, "Limite deve ser maior que zero"),
-  month: z.string().min(1, "Mês é obrigatório"),
+  date: z.string().min(1, "Data é obrigatória"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -47,10 +43,11 @@ export const BudgetModal = ({
   initialData,
 }: BudgetModalProps) => {
   const initialDate = initialData
-    ? parseYearMonth(initialData.month)
+    ? parseYearMonth(initialData.date)
     : new Date();
 
   const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
+  const [showPicker, setShowPicker] = useState(false);
 
   const {
     control,
@@ -61,47 +58,57 @@ export const BudgetModal = ({
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      category: initialData?.category || categories[0]?.name || "",
+      category: initialData?.category?.id || categories[0]?.id || "",
       limit: initialData?.limit || 0,
-      month:
-        initialData?.month ||
+      date:
+        initialData?.date ||
         (selectedDate ? selectedDate.toISOString().slice(0, 7) : ""),
     },
   });
 
-  const monthValue = watch("month");
+  const dateValue = watch("date");
 
   useEffect(() => {
     if (initialData) {
       reset({
-        category: initialData.category,
+        category: initialData?.category?.id || categories[0]?.id,
         limit: initialData.limit,
-        month: initialData.month,
+        date: initialData.date || new Date().toISOString().slice(0, 7),
       });
-      setSelectedDate(parseYearMonth(initialData.month));
+      setSelectedDate(
+        parseYearMonth(initialData.date || new Date().toISOString().slice(0, 7))
+      );
     } else {
       reset({
-        category: categories[0]?.name || "",
+        category: categories[0]?.id || "",
         limit: 0,
-        month: new Date().toISOString().slice(0, 7),
+        date: new Date().toISOString().slice(0, 7),
       });
       setSelectedDate(new Date());
     }
   }, [initialData, isOpen, reset, categories]);
 
   useEffect(() => {
-    if (monthValue) {
-      const dateFromField = parseYearMonth(monthValue);
+    if (dateValue) {
+      const dateFromField = parseYearMonth(dateValue);
       if (dateFromField.getTime() !== selectedDate.getTime()) {
         setSelectedDate(dateFromField);
       }
     }
-  }, [monthValue, selectedDate]);
-
-  const [showPicker, setShowPicker] = useState(false);
+  }, [dateValue, selectedDate]);
 
   const onSubmit = (data: FormData) => {
-    onSave({ ...data, id: initialData?.id });
+    const category = categories.find((c) => c.id === data.category);
+    if (!category) return;
+
+    onSave({
+      id: initialData?.id,
+      category: category,
+      limit: data.limit,
+      date: data.date,
+      spent: initialData?.spent || 0,
+    });
+
     onClose();
   };
 
@@ -124,9 +131,9 @@ export const BudgetModal = ({
           render={({ field }) => (
             <SelectField
               label="Categoria"
-              options={categories.map((cat) => ({
-                value: cat.name,
-                label: `${cat.icon} ${cat.name}`,
+              options={categories.map((category) => ({
+                value: category.id,
+                label: `${category.icon} ${category.name}`,
               }))}
               {...field}
               error={errors.category?.message}
@@ -153,7 +160,7 @@ export const BudgetModal = ({
         {/* Mês */}
         <Controller
           control={control}
-          name="month"
+          name="date"
           render={({ field }) => (
             <div className="relative z-10">
               <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
@@ -163,7 +170,7 @@ export const BudgetModal = ({
                 type="button"
                 onClick={() => setShowPicker(!showPicker)}
                 className={`w-full border rounded-md px-3 py-2 text-left bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 ${
-                  errors.month
+                  errors.date
                     ? "border-red-500"
                     : "border-zinc-300 dark:border-zinc-700"
                 }`}
@@ -174,9 +181,9 @@ export const BudgetModal = ({
                     }).replace(/^./, (c) => c.toUpperCase())
                   : "Selecionar mês"}
               </button>
-              {errors.month && (
+              {errors.date && (
                 <p className="text-sm text-red-500 mt-1">
-                  {errors.month.message}
+                  {errors.date.message}
                 </p>
               )}
 

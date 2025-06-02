@@ -1,9 +1,9 @@
+import { Category } from "./Category.type";
+
 export type Budget = {
-  id: number;
-  category: string;
-  icon: string;
-  color: string;
+  id?: string;
+  category: Category;
   limit: number;
-  spent: number;
-  month: string;
+  spent?: number;
+  date: string;
 };

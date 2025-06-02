@@ -14,18 +14,24 @@ const formatBRL = (value: number) => {
 };
 
 export const BudgetCardContent = ({ budget }: BudgetCardContentProps) => {
-  const percentage = Math.round((budget.spent / budget.limit) * 100);
+  const percentage = Math.round(
+    ((budget.spent || 0) / (budget.limit || 0)) * 100
+  );
+
+  const categoryColor = budget.category?.color;
+  const bgColorClass =
+    categoryColor && colorOptions[categoryColor]
+      ? colorOptions[categoryColor]
+      : "bg-zinc-300";
 
   return (
     <div className="p-6 pt-0">
       <div className="flex items-center gap-4 mb-4">
         <div
-          className={`flex h-12 w-12 items-center justify-center rounded-full text-xl ${
-            colorOptions[budget.color] || "bg-zinc-300"
-          }`}
-          aria-label={`Ícone da categoria ${budget.category}`}
+          className={`flex h-12 w-12 items-center justify-center rounded-full text-xl ${bgColorClass}`}
+          aria-label={`Ícone da categoria ${budget.category?.name}`}
         >
-          {budget.icon}
+          {budget.category?.icon}
         </div>
 
         <div>
@@ -33,7 +39,7 @@ export const BudgetCardContent = ({ budget }: BudgetCardContentProps) => {
             Gasto / Limite
           </p>
           <p className="font-medium">
-            {formatBRL(budget.spent)} / {formatBRL(budget.limit)}
+            {formatBRL(budget.spent || 0)} / {formatBRL(budget.limit || 0)}
           </p>
         </div>
       </div>

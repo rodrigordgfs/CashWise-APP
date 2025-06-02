@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   createContext,
@@ -12,6 +12,8 @@ import {
 import { toast } from "sonner";
 import { Budget } from "@/types/Budge.type";
 import { Category } from "@/types/Category.type";
+import { useCategory } from "./categoryContext";
+import { useUser } from "@clerk/nextjs";
 
 interface BudgetContextProps {
   isLoading: boolean;
@@ -22,12 +24,7 @@ interface BudgetContextProps {
   setIsModalOpen: (open: boolean) => void;
   openModalToCreate: () => void;
   openModalToEdit: (budget: Budget) => void;
-  saveBudget: (data: {
-    id?: number;
-    category: string;
-    limit: number;
-    month: string;
-  }) => Promise<Budget | undefined>;
+  saveBudget: (data: Budget) => Promise<Budget | undefined>;
   handleDelete: (budget: Budget) => Promise<void>;
   setEditingBudget: (budget: Budget | null) => void;
 }
@@ -35,30 +32,27 @@ interface BudgetContextProps {
 const BudgetContext = createContext<BudgetContextProps | undefined>(undefined);
 
 export const BudgetProvider = ({ children }: { children: ReactNode }) => {
+  const { user } = useUser();
+  const { categories } = useCategory();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [budgets, setBudgets] = useState<Budget[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [editingBudget, setEditingBudget] = useState<Budget | null>(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [categoriesRes, budgetsRes] = await Promise.all([
-          fetch("/api/categories"),
-          fetch("/api/budgets"),
-        ]);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget?userId=${user?.id}`
+        );
 
-        if (!categoriesRes.ok || !budgetsRes.ok) {
-          throw new Error("Erro ao buscar dados");
+        if (!response.ok) {
+          toast.error("Erro ao buscar dados");
         }
 
-        const [categoriesData, budgetsData] = await Promise.all([
-          categoriesRes.json(),
-          budgetsRes.json(),
-        ]);
+        const budgetsData = await response.json();
 
-        setCategories(categoriesData);
         setBudgets(budgetsData);
       } catch (error) {
         console.error("Erro ao carregar dados:", error);
@@ -68,7 +62,7 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
     }
 
     fetchData();
-  }, []);
+  }, [user]);
 
   const openModalToCreate = useCallback(() => {
     setEditingBudget(null);
@@ -81,26 +75,31 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const saveBudget = useCallback(
-    async (data: {
-      id?: number;
-      category: string;
-      limit: number;
-      month: string;
-    }): Promise<Budget | undefined> => {
+    async (data: Budget): Promise<Budget | undefined> => {
       try {
-        const url = data.id ? `/api/budgets/${data.id}` : "/api/budgets";
-        const method = data.id ? "PUT" : "POST";
+        const url = data.id
+          ? `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget/${data.id}`
+          : `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget`;
+        const method = data.id ? "PATCH" : "POST";
 
         const res = await fetch(url, {
           method,
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify({
+            categoryId: data.category.id,
+            limit: data.limit,
+            date: data.date,
+            userId: user?.id,
+          }),
         });
 
         if (!res.ok) {
-          throw new Error("Erro ao salvar orçamento");
+          toast.error(
+            data.id ? "Erro ao atualizar orçamento" : "Erro ao criar orçamento"
+          );
+          return;
         }
 
         const saved = await res.json();
@@ -112,7 +111,19 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
 
         setBudgets((prev) => {
           if (data.id) {
-            return prev.map((b) => (b.id === data.id ? saved : b));
+            return prev.map((b) =>
+              b.id === data.id
+                ? {
+                    category:
+                      categories.find((c) => c.id === data.category.id) ||
+                      b.category,
+                    limit: data.limit,
+                    spent: b.spent,
+                    date: `${data.date}-01`,
+                    id: b.id,
+                  }
+                : b
+            );
           }
           return [...prev, saved];
         });
@@ -123,20 +134,23 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
         return saved;
       } catch (error) {
         console.error("Erro no saveBudget:", error);
-        throw error;
+        toast.error("Não foi possível salvar o orçamento.");
       }
     },
-    []
+    [user, categories]
   );
 
   const handleDelete = useCallback(async (budget: Budget) => {
     try {
-      const res = await fetch(`/api/budgets/${budget.id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget/${budget.id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!res.ok) {
-        throw new Error("Erro ao deletar orçamento");
+        toast.error("Erro ao deletar orçamento");
       }
 
       toast.success("Orçamento excluído com sucesso!");
