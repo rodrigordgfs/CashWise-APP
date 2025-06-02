@@ -1,5 +1,6 @@
 "use client";
 
+import { CategoryReport } from "@/types/Report.type";
 import {
   PieChart,
   Pie,
@@ -9,24 +10,9 @@ import {
   Legend,
 } from "recharts";
 
-interface CategoryData {
-  name: string;
-  value: number;
-  color?: string; // permite personalizar a cor de cada fatia
-}
-
 interface ExpensesByCategoryChartProps {
-  data: CategoryData[];
+  data: CategoryReport[];
 }
-
-const COLORS = [
-  "#10b981", // green
-  "#f59e0b", // amber
-  "#ef4444", // red
-  "#6366f1", // indigo
-  "#ec4899", // pink
-  "#3b82f6", // blue
-];
 
 export const ExpensesByCategoryChart = ({
   data,
@@ -55,7 +41,10 @@ export const ExpensesByCategoryChart = ({
               {data.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={entry.color || COLORS[index % COLORS.length]}
+                  fill={
+                    entry.fill ||
+                    `#${Math.floor(Math.random() * 16777215).toString(16)}`
+                  }
                 />
               ))}
             </Pie>

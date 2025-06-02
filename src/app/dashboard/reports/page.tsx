@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { ReportFilters } from "@/components/ui/reports/ReportFilters";
@@ -8,46 +7,20 @@ import { IncomeVsExpensesChart } from "@/components/ui/reports/IncomeVsExpensesC
 import { ExpensesByCategoryChart } from "@/components/ui/dashboard/ExpensesByCategoryChart";
 import { BalanceEvolutionChart } from "@/components/ui/reports/BalanceEvolutionChart";
 import { ReportsPageSkeleton } from "@/components/ui/reports/ReportsPageSkeleton";
+import { useReports } from "@/context/reportContext";
+import { ReportTypeEnum } from "@/types/Report.type";
 
 export default function ReportsPage() {
-  const [period, setPeriod] = useState("1month");
-  const [reportType, setReportType] = useState("income-expense");
-  const [monthlyReports, setMonthlyReports] = useState([]);
-  const [categoryReports, setCategoryReports] = useState([]);
-  const [balanceReports, setBalanceReports] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchReports() {
-      try {
-        const [monthlyRes, categoryRes, balanceRes] = await Promise.all([
-          fetch("/api/reports/monthly"),
-          fetch("/api/reports/categories"),
-          fetch("/api/reports/balance"),
-        ]);
-
-        if (!monthlyRes.ok || !categoryRes.ok || !balanceRes.ok) {
-          throw new Error("Erro ao buscar relatórios");
-        }
-
-        const [monthlyData, categoryData, balanceData] = await Promise.all([
-          monthlyRes.json(),
-          categoryRes.json(),
-          balanceRes.json(),
-        ]);
-
-        setMonthlyReports(monthlyData);
-        setCategoryReports(categoryData);
-        setBalanceReports(balanceData);
-      } catch (error) {
-        console.error("Erro ao carregar relatórios:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchReports();
-  }, []);
+  const {
+    period,
+    setPeriod,
+    reportType,
+    setReportType,
+    monthlyReports,
+    categoryReports,
+    balanceReports,
+    isLoading,
+  } = useReports();
 
   if (isLoading) {
     return (
@@ -69,17 +42,17 @@ export default function ReportsPage() {
       />
       <ReportFilters
         initialPeriod={period}
-        initialReportType="income-expense"
+        initialReportType={reportType}
         onPeriodChange={setPeriod}
         onReportTypeChange={setReportType}
       />
 
       <div className="grid gap-4">
-        {reportType === "income-expense" ? (
+        {reportType === ReportTypeEnum.INCOME_EXPENSE ? (
           <IncomeVsExpensesChart data={monthlyReports} />
-        ) : reportType === "categories" ? (
+        ) : reportType === ReportTypeEnum.CATEGORIES ? (
           <ExpensesByCategoryChart data={categoryReports} />
-        ) : reportType === "balance" ? (
+        ) : reportType === ReportTypeEnum.BALANCE ? (
           <BalanceEvolutionChart data={balanceReports} />
         ) : null}
       </div>

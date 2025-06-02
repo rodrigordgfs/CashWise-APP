@@ -1,15 +1,11 @@
 "use client";
 
+import { EmptyState } from "@/components/shared/EmptyState";
+import { CategoryReport } from "@/types/Report.type";
 import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from "recharts";
 
-interface CategoryData {
-  name: string;
-  value: number;
-  fill: string;
-}
-
 interface ExpensesByCategoryChartProps {
-  data: CategoryData[];
+  data: CategoryReport[];
 }
 
 export const ExpensesByCategoryChart = ({
@@ -23,7 +19,14 @@ export const ExpensesByCategoryChart = ({
           Distribuição de gastos
         </p>
       </div>
-      <div className="p-6 pt-0 flex flex-col items-center">
+      {data.length === 0 ? (
+        <div className="p-6 pt-0 text-center text-sm text-zinc-500">
+          <EmptyState
+            title="Nenhum dado disponível para o período selecionado."
+            description="Tente alterar o período ou adicionar transações."
+          />
+        </div>
+      ) : (
         <ResponsiveContainer width="100%" height={400}>
           <PieChart>
             <Pie
@@ -43,7 +46,7 @@ export const ExpensesByCategoryChart = ({
             <Legend />
           </PieChart>
         </ResponsiveContainer>
-      </div>
+      )}
     </div>
   );
 };

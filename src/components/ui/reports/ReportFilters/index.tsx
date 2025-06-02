@@ -1,15 +1,14 @@
 "use client";
 
+import { ReportType, ReportTypeEnum } from "@/types/Report.type";
 import { SelectField } from "@/components/shared/SelectField";
 import { Tabs } from "@/components/shared/Tabs";
 import { useState } from "react";
 
-export type ReportType = "income-expense" | "categories" | "balance";
-
 const reportTabs: { label: string; value: ReportType }[] = [
-  { label: "Receitas vs Despesas", value: "income-expense" },
-  { label: "Categorias", value: "categories" },
-  { label: "Saldo", value: "balance" },
+  { label: "Receitas vs Despesas", value: ReportTypeEnum.INCOME_EXPENSE },
+  { label: "Categorias", value: ReportTypeEnum.CATEGORIES },
+  { label: "Saldo", value: ReportTypeEnum.BALANCE },
 ];
 
 const periodOptions = [
@@ -27,7 +26,7 @@ interface FiltersCardProps {
 }
 
 export const ReportFilters = ({
-  initialReportType = "income-expense",
+  initialReportType = ReportTypeEnum.INCOME_EXPENSE,
   initialPeriod = "1month",
   onReportTypeChange,
   onPeriodChange,
