@@ -13,7 +13,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const baseStyles =
-  "flex items-center justify-center rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-200 ease-in-out cursor-pointer";
+  "flex items-center h-10 justify-center rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-200 ease-in-out cursor-pointer";
 
 const variants: Record<string, string> = {
   emerald:
@@ -51,8 +51,10 @@ export const Button: React.FC<ButtonProps> = ({
       )}
       {...props}
     >
-      {Icon && <Icon className="mr-2 h-4 w-4" />}
-      {children}
+      {Icon && <Icon className=" h-4 w-4" />}
+      {children && (
+        <span className={Icon ? "md:ml-2" : ""}>{children}</span>
+      )}
     </button>
   );
 };

@@ -25,7 +25,7 @@ export const PageHeader = (props: PageHeaderProps) => {
               icon={props.actionIcon}
               disabled={props.actionDisabled}
             >
-              {props.actionTitle}
+              <span className="hidden sm:inline">{props.actionTitle}</span>
             </Button>
           </div>
         )}

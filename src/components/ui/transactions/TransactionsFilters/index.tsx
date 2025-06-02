@@ -27,29 +27,19 @@ export const TransactionFilters = ({
   sortOrder,
 }: TransactionFiltersProps) => {
   return (
-    <div className="relative rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
-      <div className="p-6 pb-3">
-        <h3 className="text-lg font-semibold">Filtros</h3>
+    <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
+      <div className="flex-1">
+        <SearchInput value={searchTerm} onChange={setSearchTerm} />
       </div>
-      <div className="p-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
-          <div className="flex-1">
-            <SearchInput value={searchTerm} onChange={setSearchTerm} />
-          </div>
-          <div className="flex flex-col gap-4 md:flex-row md:items-end">
-            <div className="flex gap-2 relative">
-              <DateFilter
-                selectedDate={selectedDate}
-                onChange={setSelectedDate}
-              />
-              <SortButton setSortOrder={setSortOrder} sortOrder={sortOrder} />
-            </div>
-            <TransactionTypeSelector
-              transactionType={transactionType}
-              setTransactionType={setTransactionType}
-            />
-          </div>
-        </div>
+
+      {/* Linha com filtros juntos inclusive no mobile */}
+      <div className="flex flex-wrap gap-2 items-center">
+        <DateFilter selectedDate={selectedDate} onChange={setSelectedDate} />
+        <SortButton setSortOrder={setSortOrder} sortOrder={sortOrder} />
+        <TransactionTypeSelector
+          transactionType={transactionType}
+          setTransactionType={setTransactionType}
+        />
       </div>
     </div>
   );
