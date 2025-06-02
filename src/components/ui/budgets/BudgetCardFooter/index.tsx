@@ -5,7 +5,7 @@ interface BudgetCardFooterProps {
 }
 
 export const BudgetCardFooter = ({ budget }: BudgetCardFooterProps) => {
-  const percentage = Math.round((budget.spent / budget.limit) * 100);
+  const percentage = Math.round(((budget.spent || 0) / budget.limit) * 100);
   const isWarning = percentage >= 80 && percentage < 100;
   const isDanger = percentage >= 100;
 
