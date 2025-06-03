@@ -49,7 +49,7 @@ const TransactionContext = createContext<TransactionContextProps | undefined>(
 
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
-  const { categories } = useCategory(); // Assuming useCategory is defined elsewhere
+  const { categories } = useCategory();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
@@ -73,7 +73,6 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     []
   );
 
-  // Handlers with useCallback
   const handleEditTransaction = useCallback((transaction: Transaction) => {
     setTransactionToEdit(transaction);
     setIsAddDialogOpen(true);
@@ -122,7 +121,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
 
       const fullTransaction = {
         ...saved,
-        category: categoryObj ?? saved.category, // garantir que seja objeto completo
+        category: categoryObj ?? saved.category,
         userId: user?.id,
       };
 
@@ -140,16 +139,21 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     [transactionToEdit, categories, user?.id]
   );
 
-  // Fetch transactions once
-
   const fetchTransactions = useCallback(async () => {
+    if (!user?.id) {
+      setTransactions([]);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction?userId=${
-          user?.id
-        }${searchTerm ? `&search=${searchTerm}` : ""}${
-          selectedDate ? `&date=${selectedDate.toISOString()}` : ""
-        }${sortOrder !== "none" ? `&sort=${sortOrder}` : ""}${
+        `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction?userId=${user.id}${
+          searchTerm ? `&search=${searchTerm}` : ""
+        }${selectedDate ? `&date=${selectedDate.toISOString()}` : ""}${
+          sortOrder !== "none" ? `&sort=${sortOrder}` : ""
+        }${
           transactionType !== TransactionTypeFilter.All
             ? `&type=${transactionType}`
             : ""
@@ -210,7 +214,6 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       handleSaveTransaction,
       periodTabs,
       period,
-      setPeriod,
     ]
   );
 

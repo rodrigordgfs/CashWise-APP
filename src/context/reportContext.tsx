@@ -67,25 +67,30 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const fetchReports = async () => {
+      if (!user?.id) {
+        setIsLoading(false);
+        return;
+      }
+
       setIsLoading(true);
       try {
         const [monthlyRes, categoryRes, balanceRes] = await Promise.all([
           fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/monthly?userId=${
-              user?.id
-            }${period && `&period__gte=${getRelativeDate(period)}`}`
+              user.id
+            }${period ? `&period__gte=${getRelativeDate(period)}` : ""}`
           ),
           fetch(
             `${
               process.env.NEXT_PUBLIC_BASE_URL_API
-            }/reports/categories?userId=${user?.id}${
-              period && `&period__gte=${getRelativeDate(period)}`
+            }/reports/categories?userId=${user.id}${
+              period ? `&period__gte=${getRelativeDate(period)}` : ""
             }`
           ),
           fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/balance?userId=${
-              user?.id
-            }${period && `&period__gte=${getRelativeDate(period)}`}`
+              user.id
+            }${period ? `&period__gte=${getRelativeDate(period)}` : ""}`
           ),
         ]);
 

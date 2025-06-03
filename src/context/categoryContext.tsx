@@ -39,7 +39,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
 
   const [categories, setCategories] = useState<Category[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [categoryType, setCategoryType] = useState<string>(
     TransactionTypeFilter.All
   );
@@ -55,20 +55,26 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     []
   );
 
-  // Buscar categorias
+  // Buscar categorias só se user.id existir
   const fetchCategories = useCallback(async () => {
-    const userId = user?.id;
+    if (!user?.id) {
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL_API}/category?${
           categoryType !== "" ? `type=${categoryType}&` : ""
-        }userId=${userId}`
+        }userId=${user.id}`
       );
       if (!res.ok) throw new Error("Erro ao buscar categorias");
       const data = await res.json();
       setCategories(data);
     } catch (error) {
       console.error("Erro ao carregar categorias:", error);
+      toast.error("Erro ao carregar categorias");
     } finally {
       setIsLoading(false);
     }
@@ -78,7 +84,6 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     fetchCategories();
   }, [fetchCategories]);
 
-  // Filtra categorias conforme tipo selecionado
   const filteredCategories = useMemo(() => {
     if (categoryType === TransactionTypeFilter.All) return categories;
     return categories.filter((cat) => cat.type === categoryType);
@@ -98,7 +103,9 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     (savedCategory: Category) => {
       if (categoryToEdit) {
         setCategories((prev) =>
-          prev.map((cat) => (cat.id === categoryToEdit.id ? { ...cat } : cat))
+          prev.map((cat) =>
+            cat.id === categoryToEdit.id ? { ...savedCategory } : cat
+          )
         );
       } else {
         setCategories((prev) => [...prev, savedCategory]);

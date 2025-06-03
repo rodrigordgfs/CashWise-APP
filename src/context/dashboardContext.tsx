@@ -34,7 +34,8 @@ const DashboardContext = createContext<DashboardContextProps | undefined>(
 
 export const DashboardProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
-  const [isLoading, setIsLoading] = useState(true);
+
+  const [isLoading, setIsLoading] = useState(false);
   const [period, setPeriod] = useState<Period>(Period.WEEK);
   const [summary, setSummary] = useState<Summary>({
     income: 0,
@@ -67,33 +68,48 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const fetchData = useCallback(async () => {
+    if (!user?.id) {
+      // Não tenta buscar se usuário não existir
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     try {
       const [summaryRes, monthlyRes, categoryRes, transactionsRes] =
         await Promise.all([
           fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/summary?userId=${
-              user?.id
+              user.id
             }&period__gte=${getRelevantDate(period)}`
           ),
           fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/monthly?userId=${
-              user?.id
-            }${period && `&period__gte=${getRelevantDate(period)}`}`
+              user.id
+            }${period ? `&period__gte=${getRelevantDate(period)}` : ""}`
           ),
           fetch(
             `${
               process.env.NEXT_PUBLIC_BASE_URL_API
             }/reports/categories?userId=${
-              user?.id
+              user.id
             }&period__gte=${getRelevantDate(period)}`
           ),
           fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction?userId=${
-              user?.id
+              user.id
             }&date__gte=${getRelevantDate(period)}&limit=5&sort=desc`
           ),
         ]);
+
+      if (
+        !summaryRes.ok ||
+        !monthlyRes.ok ||
+        !categoryRes.ok ||
+        !transactionsRes.ok
+      ) {
+        throw new Error("Erro ao buscar dados do dashboard");
+      }
 
       const summaryJson = await summaryRes.json();
       const monthlyJson = await monthlyRes.json();

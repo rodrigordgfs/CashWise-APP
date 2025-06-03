@@ -37,10 +37,17 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [budgets, setBudgets] = useState<Budget[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [editingBudget, setEditingBudget] = useState<Budget | null>(null);
 
   useEffect(() => {
+    if (!user?.id) {
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+
     async function fetchData() {
       try {
         const response = await fetch(
@@ -49,10 +56,10 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
 
         if (!response.ok) {
           toast.error("Erro ao buscar dados");
+          return;
         }
 
         const budgetsData = await response.json();
-
         setBudgets(budgetsData);
       } catch (error) {
         console.error("Erro ao carregar dados:", error);
@@ -62,7 +69,7 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
     }
 
     fetchData();
-  }, [user]);
+  }, [user?.id]);
 
   const openModalToCreate = useCallback(() => {
     setEditingBudget(null);
@@ -151,6 +158,7 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
 
       if (!res.ok) {
         toast.error("Erro ao deletar orçamento");
+        return;
       }
 
       toast.success("Orçamento excluído com sucesso!");
@@ -161,7 +169,6 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  // useMemo para memoizar o valor do contexto
   const value = useMemo(
     () => ({
       isLoading,
