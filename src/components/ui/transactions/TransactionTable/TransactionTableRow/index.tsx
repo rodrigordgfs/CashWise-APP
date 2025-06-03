@@ -37,6 +37,7 @@ export const TransactionTableRow = ({
       <td className="py-3 px-4">{formattedCategory}</td>
       <td className="py-3 px-4">{formattedDate}</td>
       <td className="py-3 px-4">{formattedAccount}</td>
+      <td className="py-3 px-4">{transaction.type === TransactionType.Expense ? transaction.paid ? "Sim" : "Não" : "-"}</td>	
       <td className={`py-3 px-4 text-right font-medium ${amountClass}`}>
         {type === TransactionType.Income ? "" : "- "}
         {formattedAmount}
