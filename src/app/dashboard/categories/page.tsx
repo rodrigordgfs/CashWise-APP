@@ -1,5 +1,6 @@
 "use client";
 
+import { FilterCard } from "@/components/shared/FilterCard";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Tabs } from "@/components/shared/Tabs";
 import { CategoryList } from "@/components/ui/categories/CategoryList";
@@ -34,19 +35,14 @@ export default function CategoriesPage() {
         actionDisabled={isLoading}
       />
 
-      <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
-        <div className="p-6 pb-3">
-          <h3 className="text-lg font-semibold">Filtros</h3>
-        </div>
-        <div className="p-6">
-          <Tabs
-            tabs={categoriesTabs}
-            selectedValue={categoryType}
-            onChange={setCategoryType}
-            disabled={isLoading}
-          />
-        </div>
-      </div>
+      <FilterCard>
+        <Tabs
+          tabs={categoriesTabs}
+          selectedValue={categoryType}
+          onChange={setCategoryType}
+          disabled={isLoading}
+        />
+      </FilterCard>
 
       <CategoryList
         categories={filteredCategories}

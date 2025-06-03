@@ -4,6 +4,7 @@ import { ReportType, ReportTypeEnum } from "@/types/Report.type";
 import { SelectField } from "@/components/shared/SelectField";
 import { Tabs } from "@/components/shared/Tabs";
 import { useState } from "react";
+import { FilterCard } from "@/components/shared/FilterCard";
 
 const reportTabs: { label: string; value: ReportType }[] = [
   { label: "Receitas vs Despesas", value: ReportTypeEnum.INCOME_EXPENSE },
@@ -45,29 +46,24 @@ export const ReportFilters = ({
   };
 
   return (
-    <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
-      <div className="p-6 pb-3">
-        <h3 className="text-lg font-semibold">Filtros</h3>
-      </div>
-      <div className="p-6">
-        <div className="flex flex-col items-end gap-4 md:flex-row">
-          <div className="flex-1">
-            <Tabs
-              tabs={reportTabs}
-              selectedValue={reportType}
-              onChange={handleReportChange}
-            />
-          </div>
-          <div className="w-full md:w-[200px]">
-            <SelectField
-              label="Período"
-              value={period}
-              onChange={(e) => handlePeriodChange(e.target.value)}
-              options={periodOptions}
-            />
-          </div>
+    <FilterCard>
+      <div className="flex flex-col items-end gap-4 md:flex-row">
+        <div className="flex-1">
+          <Tabs
+            tabs={reportTabs}
+            selectedValue={reportType}
+            onChange={handleReportChange}
+          />
+        </div>
+        <div className="w-full md:w-[200px]">
+          <SelectField
+            label="Período"
+            value={period}
+            onChange={(e) => handlePeriodChange(e.target.value)}
+            options={periodOptions}
+          />
         </div>
       </div>
-    </div>
+    </FilterCard>
   );
 };
