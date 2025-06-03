@@ -18,8 +18,10 @@ export function DatePickerField<TFormValues extends FieldValues>({
   label = "Data",
 }: DatePickerFieldProps<TFormValues>) {
   const [showCalendar, setShowCalendar] = useState(false);
+  const [positionAbove, setPositionAbove] = useState(false);
   const id = useId();
   const containerRef = useRef<HTMLDivElement>(null);
+  const calendarRef = useRef<HTMLDivElement>(null);
 
   const selectedDate = field.value
     ? new Date(field.value as unknown as string)
@@ -43,6 +45,17 @@ export function DatePickerField<TFormValues extends FieldValues>({
     };
   }, [showCalendar]);
 
+  // Verifica se o calendário ultrapassa a parte inferior da tela
+  useEffect(() => {
+    if (showCalendar && calendarRef.current && containerRef.current) {
+      const calendarRect = calendarRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const overflowBottom = calendarRect.bottom > windowHeight;
+
+      setPositionAbove(overflowBottom);
+    }
+  }, [showCalendar]);
+
   return (
     <div ref={containerRef} className="relative">
       <label
@@ -62,11 +75,15 @@ export function DatePickerField<TFormValues extends FieldValues>({
         onClick={() => setShowCalendar((v) => !v)}
         value={selectedDate ? format(selectedDate, "dd/MM/yyyy") : ""}
         placeholder="Selecione a data"
-        // removido onBlur para não fechar imediatamente
       />
 
       {showCalendar && (
-        <div className="absolute z-50 top-[calc(100%+0.25rem)] bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-lg p-4">
+        <div
+          ref={calendarRef}
+          className={`absolute z-50 ${
+            positionAbove ? "bottom-[calc(100%+20px)]" : "top-[calc(100%+4px)]"
+          } bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-lg p-4`}
+        >
           <div className="flex justify-between items-center mb-2">
             <span className="font-medium text-sm text-zinc-700 dark:text-zinc-200">
               Selecione uma data

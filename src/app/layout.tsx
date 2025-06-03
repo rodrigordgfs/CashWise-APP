@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     creator: "@cashwise_app", // se tiver um handle
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: "/favicon.png",
     shortcut: "/shortcut-icon.png",
     apple: "/apple-touch-icon.png",
   },
