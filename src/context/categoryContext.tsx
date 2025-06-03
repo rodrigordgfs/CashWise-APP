@@ -26,7 +26,7 @@ interface CategoryContextProps {
   setCategoryToEdit: (category: Category | null) => void;
   openModalToCreate: () => void;
   openModalToEdit: (category: Category) => void;
-  saveCategory: (category: Category) => void;
+  saveCategory: (category: Category) => Promise<void>;
   deleteCategory: (category: Category) => Promise<void>;
   categoriesTabs: { label: string; value: string }[];
 }
@@ -55,7 +55,6 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     []
   );
 
-  // Buscar categorias só se user.id existir
   const fetchCategories = useCallback(async () => {
     if (!user?.id) {
       setIsLoading(false);
@@ -100,48 +99,78 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const saveCategory = useCallback(
-    (savedCategory: Category) => {
-      if (categoryToEdit) {
-        setCategories((prev) =>
-          prev.map((cat) =>
-            cat.id === categoryToEdit.id ? { ...savedCategory } : cat
-          )
+    async (category: Category) => {
+      try {
+        const url = category.id
+          ? `${process.env.NEXT_PUBLIC_BASE_URL_API}/category/${category.id}`
+          : `${process.env.NEXT_PUBLIC_BASE_URL_API}/category`;
+        const method = category.id ? "PATCH" : "POST";
+
+        const res = await fetch(url, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: category.name,
+            type: category.type,
+            userId: user?.id,
+          }),
+        });
+
+        if (!res.ok) {
+          toast.error(
+            category.id
+              ? "Erro ao atualizar categoria"
+              : "Erro ao criar categoria"
+          );
+          return;
+        }
+
+        toast.success(
+          category.id
+            ? "Categoria atualizada com sucesso!"
+            : "Categoria criada com sucesso!"
         );
-      } else {
-        setCategories((prev) => [...prev, savedCategory]);
+
+        await fetchCategories();
+        setIsModalOpen(false);
+        setCategoryToEdit(null);
+      } catch (error) {
+        console.error("Erro ao salvar categoria:", error);
+        toast.error("Erro ao salvar categoria.");
       }
-      setIsModalOpen(false);
-      setCategoryToEdit(null);
     },
-    [categoryToEdit]
+    [fetchCategories, user?.id]
   );
 
-  const deleteCategory = useCallback(async (category: Category) => {
-    setIsLoading(true);
+  const deleteCategory = useCallback(
+    async (category: Category) => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/category/${category.id}`,
+          {
+            method: "DELETE",
+          }
+        );
 
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL_API}/category/${category.id}`,
-        {
-          method: "DELETE",
+        if (!response.ok) {
+          toast.error("Erro ao excluir categoria");
+          return;
         }
-      );
 
-      if (!response.ok) {
+        toast.success("Categoria excluída com sucesso!");
+        await fetchCategories();
+      } catch (error) {
+        console.error("Erro ao excluir categoria:", error);
         toast.error("Erro ao excluir categoria");
-        return;
+      } finally {
+        setIsLoading(false);
       }
-
-      await response.json();
-      setCategories((prev) => prev.filter((cat) => cat.id !== category.id));
-      toast.success("Categoria excluída com sucesso!");
-    } catch (error) {
-      console.error("Erro ao excluir categoria:", error);
-      toast.error("Erro ao excluir categoria");
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+    },
+    [fetchCategories]
+  );
 
   const value = useMemo(
     () => ({
@@ -161,6 +190,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
       deleteCategory,
     }),
     [
+      categoriesTabs,
       categories,
       isLoading,
       categoryType,
@@ -171,7 +201,6 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
       openModalToEdit,
       saveCategory,
       deleteCategory,
-      categoriesTabs,
     ]
   );
 

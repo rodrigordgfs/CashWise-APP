@@ -40,36 +40,32 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [editingBudget, setEditingBudget] = useState<Budget | null>(null);
 
-  useEffect(() => {
-    if (!user?.id) {
-      setIsLoading(false);
-      return;
-    }
+  const fetchBudgets = useCallback(async () => {
+    if (!user?.id) return;
 
     setIsLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget?userId=${user.id}`
+      );
 
-    async function fetchData() {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget?userId=${user?.id}`
-        );
-
-        if (!response.ok) {
-          toast.error("Erro ao buscar dados");
-          return;
-        }
-
-        const budgetsData = await response.json();
-        setBudgets(budgetsData);
-      } catch (error) {
-        console.error("Erro ao carregar dados:", error);
-      } finally {
-        setIsLoading(false);
+      if (!response.ok) {
+        toast.error("Erro ao buscar dados");
+        return;
       }
-    }
 
-    fetchData();
+      const budgetsData = await response.json();
+      setBudgets(budgetsData);
+    } catch (error) {
+      console.error("Erro ao carregar dados:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, [user?.id]);
+
+  useEffect(() => {
+    fetchBudgets();
+  }, [fetchBudgets]);
 
   const openModalToCreate = useCallback(() => {
     setEditingBudget(null);
@@ -116,24 +112,7 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
             : "Orçamento criado com sucesso!"
         );
 
-        setBudgets((prev) => {
-          if (data.id) {
-            return prev.map((b) =>
-              b.id === data.id
-                ? {
-                    category:
-                      categories.find((c) => c.id === data.category.id) ||
-                      b.category,
-                    limit: data.limit,
-                    spent: b.spent,
-                    date: `${data.date}-01`,
-                    id: b.id,
-                  }
-                : b
-            );
-          }
-          return [...prev, saved];
-        });
+        await fetchBudgets();
 
         setIsModalOpen(false);
         setEditingBudget(null);
@@ -144,30 +123,33 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
         toast.error("Não foi possível salvar o orçamento.");
       }
     },
-    [user, categories]
+    [user, fetchBudgets]
   );
 
-  const handleDelete = useCallback(async (budget: Budget) => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget/${budget.id}`,
-        {
-          method: "DELETE",
+  const handleDelete = useCallback(
+    async (budget: Budget) => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget/${budget.id}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (!res.ok) {
+          toast.error("Erro ao deletar orçamento");
+          return;
         }
-      );
 
-      if (!res.ok) {
-        toast.error("Erro ao deletar orçamento");
-        return;
+        toast.success("Orçamento excluído com sucesso!");
+        await fetchBudgets();
+      } catch (error) {
+        console.error("Erro ao excluir orçamento:", error);
+        toast.error("Não foi possível excluir o orçamento.");
       }
-
-      toast.success("Orçamento excluído com sucesso!");
-      setBudgets((prev) => prev.filter((b) => b.id !== budget.id));
-    } catch (error) {
-      console.error("Erro ao excluir orçamento:", error);
-      toast.error("Não foi possível excluir o orçamento.");
-    }
-  }, []);
+    },
+    [fetchBudgets]
+  );
 
   const value = useMemo(
     () => ({
@@ -189,11 +171,11 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
       categories,
       editingBudget,
       isModalOpen,
-      setIsModalOpen,
-      openModalToCreate,
-      openModalToEdit,
       saveBudget,
       handleDelete,
+      openModalToCreate,
+      openModalToEdit,
+      setIsModalOpen,
       setEditingBudget,
     ]
   );
