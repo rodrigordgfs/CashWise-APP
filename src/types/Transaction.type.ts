@@ -17,6 +17,7 @@ export interface Transaction {
   type: TransactionType;
   description: string;
   category: Category;
+  paid?: boolean;
   date: string;
   account: string;
   amount: number;

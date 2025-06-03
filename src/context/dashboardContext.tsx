@@ -11,7 +11,7 @@ import {
 } from "react";
 import { Period } from "@/context/transactionsContext";
 import { Transaction } from "@/types/Transaction.type";
-import { useUser } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { subDays, format, startOfMonth, startOfYear } from "date-fns";
 import { Summary } from "@/types/Dashboard.type";
 import { toast } from "sonner";
@@ -34,6 +34,7 @@ const DashboardContext = createContext<DashboardContextProps | undefined>(
 
 export const DashboardProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
+  const { getToken } = useAuth();
 
   const [isLoading, setIsLoading] = useState(false);
   const [period, setPeriod] = useState<Period>(Period.WEEK);
@@ -81,24 +82,44 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
           fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/summary?userId=${
               user.id
-            }&period__gte=${getRelevantDate(period)}`
+            }&period__gte=${getRelevantDate(period)}`,
+            {
+              headers: {
+                Authorization: `Bearer ${await getToken()}`,
+              },
+            }
           ),
           fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/monthly?userId=${
               user.id
-            }${period ? `&period__gte=${getRelevantDate(period)}` : ""}`
+            }${period ? `&period__gte=${getRelevantDate(period)}` : ""}`,
+            {
+              headers: {
+                Authorization: `Bearer ${await getToken()}`,
+              },
+            }
           ),
           fetch(
             `${
               process.env.NEXT_PUBLIC_BASE_URL_API
             }/reports/categories?userId=${
               user.id
-            }&period__gte=${getRelevantDate(period)}`
+            }&period__gte=${getRelevantDate(period)}`,
+            {
+              headers: {
+                Authorization: `Bearer ${await getToken()}`,
+              },
+            }
           ),
           fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction?userId=${
               user.id
-            }&date__gte=${getRelevantDate(period)}&limit=5&sort=desc`
+            }&date__gte=${getRelevantDate(period)}&limit=5&sort=desc`,
+            {
+              headers: {
+                Authorization: `Bearer ${await getToken()}`,
+              },
+            }
           ),
         ]);
 
@@ -128,7 +149,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [period, user?.id]);
+  }, [period, user?.id, getToken]);
 
   useEffect(() => {
     fetchData();

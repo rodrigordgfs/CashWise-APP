@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { Budget } from "@/types/Budge.type";
 import { Category } from "@/types/Category.type";
 import { useCategory } from "./categoryContext";
-import { useUser } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 interface BudgetContextProps {
   isLoading: boolean;
@@ -34,6 +34,7 @@ const BudgetContext = createContext<BudgetContextProps | undefined>(undefined);
 export const BudgetProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
   const { categories } = useCategory();
+  const { getToken } = useAuth();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [budgets, setBudgets] = useState<Budget[]>([]);
@@ -46,7 +47,12 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget?userId=${user.id}`
+        `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget?userId=${user.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
+          },
+        }
       );
 
       if (!response.ok) {
@@ -61,7 +67,7 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id]);
+  }, [user?.id, getToken]);
 
   useEffect(() => {
     fetchBudgets();
@@ -89,6 +95,7 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
           method,
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${await getToken()}`,
           },
           body: JSON.stringify({
             categoryId: data.category.id,
@@ -123,7 +130,7 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
         toast.error("Não foi possível salvar o orçamento.");
       }
     },
-    [user, fetchBudgets]
+    [user, fetchBudgets, getToken]
   );
 
   const handleDelete = useCallback(
@@ -133,6 +140,9 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
           `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget/${budget.id}`,
           {
             method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${await getToken()}`,
+            },
           }
         );
 
@@ -148,7 +158,7 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
         toast.error("Não foi possível excluir o orçamento.");
       }
     },
-    [fetchBudgets]
+    [fetchBudgets, getToken]
   );
 
   const value = useMemo(

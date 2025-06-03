@@ -6,7 +6,7 @@ import {
   CategoryReport,
   MonthlyReport,
 } from "@/types/Report.type";
-import { useUser } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { format, startOfMonth, subMonths, subYears } from "date-fns";
 import {
   createContext,
@@ -35,6 +35,8 @@ const ReportsContext = createContext<ReportsContextProps | undefined>(
 
 export const ReportsProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
+  const { getToken } = useAuth();
+
   const [period, setPeriod] = useState("1month");
   const [reportType, setReportType] = useState<ReportType>(
     ReportTypeEnum.INCOME_EXPENSE
@@ -78,19 +80,34 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
           fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/monthly?userId=${
               user.id
-            }${period ? `&period__gte=${getRelativeDate(period)}` : ""}`
+            }${period ? `&period__gte=${getRelativeDate(period)}` : ""}`,
+            {
+              headers: {
+                Authorization: `Bearer ${await getToken()}`,
+              },
+            }
           ),
           fetch(
             `${
               process.env.NEXT_PUBLIC_BASE_URL_API
             }/reports/categories?userId=${user.id}${
               period ? `&period__gte=${getRelativeDate(period)}` : ""
-            }`
+            }`,
+            {
+              headers: {
+                Authorization: `Bearer ${await getToken()}`,
+              },
+            }
           ),
           fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/balance?userId=${
               user.id
-            }${period ? `&period__gte=${getRelativeDate(period)}` : ""}`
+            }${period ? `&period__gte=${getRelativeDate(period)}` : ""}`,
+            {
+              headers: {
+                Authorization: `Bearer ${await getToken()}`,
+              },
+            }
           ),
         ]);
 
@@ -116,7 +133,7 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
     };
 
     fetchReports();
-  }, [period, reportType, user?.id]);
+  }, [period, reportType, user?.id, getToken]);
 
   const value = useMemo(
     () => ({

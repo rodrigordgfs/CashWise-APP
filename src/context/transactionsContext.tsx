@@ -11,7 +11,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { Transaction, TransactionTypeFilter } from "@/types/Transaction.type";
-import { useUser } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { useCategory } from "./categoryContext";
 
 export enum Period {
@@ -49,6 +49,7 @@ const TransactionContext = createContext<TransactionContextProps | undefined>(
 
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
+  const { getToken } = useAuth();
   const { categories } = useCategory();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -85,6 +86,9 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
           `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction/${transaction.id}`,
           {
             method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${await getToken()}`,
+            },
           }
         );
 
@@ -100,7 +104,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
         console.error(error);
       }
     },
-    []
+    [getToken]
   );
 
   const handleSaveTransaction = useCallback(
@@ -157,7 +161,12 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
           transactionType !== TransactionTypeFilter.All
             ? `&type=${transactionType}`
             : ""
-        }`
+        }`,
+        {
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
+          },
+        }
       );
       if (!response.ok) {
         toast.error("Erro ao buscar as transações");
@@ -171,7 +180,14 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id, searchTerm, selectedDate, sortOrder, transactionType]);
+  }, [
+    user?.id,
+    searchTerm,
+    selectedDate,
+    sortOrder,
+    transactionType,
+    getToken,
+  ]);
 
   useEffect(() => {
     fetchTransactions();

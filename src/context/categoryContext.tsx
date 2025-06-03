@@ -12,7 +12,7 @@ import {
 import { toast } from "sonner";
 import { Category } from "@/types/Category.type";
 import { TransactionTypeFilter } from "@/types/Transaction.type";
-import { useUser } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 interface CategoryContextProps {
   categories: Category[];
@@ -37,6 +37,7 @@ const CategoryContext = createContext<CategoryContextProps | undefined>(
 
 export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
+  const { getToken } = useAuth();
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -66,7 +67,12 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL_API}/category?${
           categoryType !== "" ? `type=${categoryType}&` : ""
-        }userId=${user.id}`
+        }userId=${user.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
+          },
+        }
       );
       if (!res.ok) throw new Error("Erro ao buscar categorias");
       const data = await res.json();
@@ -77,7 +83,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [categoryType, user?.id]);
+  }, [categoryType, user?.id, getToken]);
 
   useEffect(() => {
     fetchCategories();
@@ -110,6 +116,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
           method,
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${await getToken()}`,
           },
           body: JSON.stringify({
             name: category.name,
@@ -141,7 +148,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
         toast.error("Erro ao salvar categoria.");
       }
     },
-    [fetchCategories, user?.id]
+    [fetchCategories, user?.id, getToken]
   );
 
   const deleteCategory = useCallback(
@@ -152,6 +159,9 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
           `${process.env.NEXT_PUBLIC_BASE_URL_API}/category/${category.id}`,
           {
             method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${await getToken()}`,
+            },
           }
         );
 
@@ -169,7 +179,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(false);
       }
     },
-    [fetchCategories]
+    [fetchCategories, getToken]
   );
 
   const value = useMemo(

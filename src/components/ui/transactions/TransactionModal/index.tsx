@@ -11,7 +11,7 @@ import { SelectField } from "@/components/shared/SelectField";
 import { Transaction, TransactionType } from "@/types/Transaction.type";
 import { Modal } from "@/components/shared/Modal";
 import { DatePickerField } from "@/components/shared/DatePickerField";
-import { useUser } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { useCategory } from "@/context/categoryContext";
 
 type Account = {
@@ -48,6 +48,7 @@ export const TransactionModal = ({
   accounts,
 }: TransactionModalProps) => {
   const { user } = useUser();
+  const { getToken } = useAuth();
   const { categories } = useCategory();
   const {
     control,
@@ -111,6 +112,7 @@ export const TransactionModal = ({
       method,
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${await getToken()}`,
       },
       body: JSON.stringify({
         account: data.account,
