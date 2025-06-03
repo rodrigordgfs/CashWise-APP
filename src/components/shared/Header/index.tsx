@@ -2,7 +2,7 @@
 
 import { useMenu } from "@/context/menuContext";
 import { useSidebar } from "@/context/sidebarContext";
-import { Menu, Moon, Settings, Sun, User } from "lucide-react";
+import { Menu, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { IconButton } from "../IconButton";
 import { LogoButton } from "../LogoButton";
@@ -51,8 +51,6 @@ export const Header = () => {
             icon={darkMode ? Sun : Moon}
             name="Toggle theme"
           />
-          <IconButton icon={User} name="Perfil" onClick={() => {}} />
-          <IconButton icon={Settings} name="Configurações" onClick={() => {}} />
         </div>
       </div>
     </header>

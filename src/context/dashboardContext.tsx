@@ -12,7 +12,7 @@ import {
 import { Period } from "@/context/transactionsContext";
 import { Transaction } from "@/types/Transaction.type";
 import { useUser } from "@clerk/nextjs";
-import { subDays, subMonths, subYears, format } from "date-fns";
+import { subDays, format, startOfMonth, startOfYear } from "date-fns";
 import { Summary } from "@/types/Dashboard.type";
 import { toast } from "sonner";
 import { CategoryReport, MonthlyReport } from "@/types/Report.type";
@@ -55,9 +55,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         case Period.WEEK:
           return subDays(today, 7);
         case Period.MONTH:
-          return subMonths(today, 1);
+          return startOfMonth(today);
         case Period.YEAR:
-          return subYears(today, 1);
+          return startOfYear(today);
         default:
           return today;
       }

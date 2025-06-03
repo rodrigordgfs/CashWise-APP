@@ -68,7 +68,6 @@ export default function Home() {
               )}
               <span className="sr-only">Toggle theme</span>
             </button>
-
             {isSignedIn ? (
               <nav className="flex items-center space-x-3">
                 <Link href="/dashboard">
