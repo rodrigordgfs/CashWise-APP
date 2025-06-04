@@ -11,8 +11,8 @@ import { ptBR } from "date-fns/locale";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MonthYearPicker } from "@/components/shared/MonthPicker";
 import { Budget } from "@/types/Budge.type";
+import { MonthDatePicker } from "@/components/shared/MonthPicker";
 
 interface BudgetModalProps {
   isOpen: boolean;
@@ -189,15 +189,16 @@ export const BudgetModal = ({
 
               {showPicker && (
                 <div className="absolute z-50 mt-2">
-                  <MonthYearPicker
+                  <MonthDatePicker
+                    isOpen={showPicker}
+                    onClose={() => setShowPicker(false)}
                     selectedDate={selectedDate}
                     minDate={new Date()}
-                    onChange={(date) => {
+                    onChange={(date: Date) => {
                       setSelectedDate(date);
                       field.onChange(date.toISOString().slice(0, 7));
                       setShowPicker(false);
                     }}
-                    fullWidth
                   />
                 </div>
               )}
