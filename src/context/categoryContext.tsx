@@ -12,7 +12,7 @@ import {
 import { toast } from "sonner";
 import { Category } from "@/types/Category.type";
 import { TransactionTypeFilter } from "@/types/Transaction.type";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 
 interface CategoryContextProps {
   categories: Category[];
@@ -37,7 +37,6 @@ const CategoryContext = createContext<CategoryContextProps | undefined>(
 
 export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
-  const { getToken } = useAuth();
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -64,18 +63,12 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
 
     setIsLoading(true);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL_API}/category?${
-          categoryType !== "" ? `type=${categoryType}&` : ""
-        }userId=${user.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${await getToken()}`,
-          },
-        }
+      const response = await fetch(
+        `/api/category${categoryType ? `?type=${categoryType}` : ""}`
       );
-      if (!res.ok) throw new Error("Erro ao buscar categorias");
-      const data = await res.json();
+
+      if (!response.ok) throw new Error("Erro ao buscar categorias");
+      const data = await response.json();
       setCategories(data);
     } catch (error) {
       console.error("Erro ao carregar categorias:", error);
@@ -83,16 +76,11 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [categoryType, user?.id, getToken]);
+  }, [categoryType, user?.id]);
 
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
-
-  const filteredCategories = useMemo(() => {
-    if (categoryType === TransactionTypeFilter.All) return categories;
-    return categories.filter((cat) => cat.type === categoryType);
-  }, [categories, categoryType]);
 
   const openModalToCreate = useCallback(() => {
     setCategoryToEdit(null);
@@ -104,19 +92,23 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     setIsModalOpen(true);
   }, []);
 
+  const filteredCategories = useMemo(() => {
+    if (categoryType === TransactionTypeFilter.All) return categories;
+    return categories.filter((cat) => cat.type === categoryType);
+  }, [categories, categoryType]);
+
   const saveCategory = useCallback(
     async (category: Category) => {
       try {
         const url = category.id
-          ? `${process.env.NEXT_PUBLIC_BASE_URL_API}/category/${category.id}`
-          : `${process.env.NEXT_PUBLIC_BASE_URL_API}/category`;
+          ? `/api/category/${category.id}`
+          : `/api/category`;
         const method = category.id ? "PATCH" : "POST";
 
-        const res = await fetch(url, {
+        const response = await fetch(url, {
           method,
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${await getToken()}`,
           },
           body: JSON.stringify({
             name: category.name,
@@ -125,7 +117,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
           }),
         });
 
-        if (!res.ok) {
+        if (!response.ok) {
           toast.error(
             category.id
               ? "Erro ao atualizar categoria"
@@ -148,22 +140,16 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
         toast.error("Erro ao salvar categoria.");
       }
     },
-    [fetchCategories, user?.id, getToken]
+    [fetchCategories, user?.id]
   );
 
   const deleteCategory = useCallback(
     async (category: Category) => {
       setIsLoading(true);
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL_API}/category/${category.id}`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${await getToken()}`,
-            },
-          }
-        );
+        const response = await fetch(`/api/category/${category.id}`, {
+          method: "DELETE",
+        });
 
         if (!response.ok) {
           toast.error("Erro ao excluir categoria");
@@ -179,7 +165,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(false);
       }
     },
-    [fetchCategories, getToken]
+    [fetchCategories]
   );
 
   const value = useMemo(
