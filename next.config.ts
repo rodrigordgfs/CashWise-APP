@@ -1,7 +1,9 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    serverActions: {}, // se você realmente usa serverActions, coloque true aqui
+  },
 };
 
 export default nextConfig;

@@ -5,6 +5,7 @@ import { dark } from "@clerk/themes";
 import "./globals.css";
 import "react-day-picker/dist/style.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { I18nextProviderWrapper } from "./I18nextProviderWrapper";
 import { Providers } from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -66,11 +67,7 @@ export const viewport = {
 };
 
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider appearance={{ baseTheme: dark }}>
       <html lang="pt-BR" className="dark" suppressHydrationWarning>
@@ -78,7 +75,9 @@ export default function RootLayout({
           className={`${inter.className} bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100`}
           suppressHydrationWarning
         >
-          <Providers>{children}</Providers>
+          <I18nextProviderWrapper>
+            <Providers>{children}</Providers>
+          </I18nextProviderWrapper>
         </body>
       </html>
     </ClerkProvider>

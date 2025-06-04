@@ -9,6 +9,9 @@ import {
   useMemo,
 } from "react";
 
+import { useTranslation } from "next-i18next";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
 interface Notifications {
   budgetAlerts: boolean;
   weeklyReports: boolean;
@@ -47,6 +50,11 @@ const SettingsContext = createContext<SettingsContextProps | undefined>(
 );
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
+  const { i18n } = useTranslation();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const [isLoaded, setIsLoaded] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [currency, setCurrencyState] = useState("BRL");
@@ -100,6 +108,14 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("notifications", JSON.stringify(notifications));
   }, [notifications, isLoaded]);
 
+  useEffect(() => {
+    i18n.changeLanguage(language).then(() => {
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.set("locale", language);
+      router.push(`${pathname}?${params.toString()}`);
+    });
+  }, [language, i18n, router, pathname, searchParams]);
+
   const value = useMemo(() => {
     const currencies: Currency[] = [
       { value: "BRL", label: "Real (R$)" },
@@ -130,7 +146,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     };
   }, [isDarkMode, currency, language, notifications]);
 
-  if (!isLoaded) return null; // pode trocar por um loading spinner se quiser
+  if (!isLoaded) return null;
 
   return (
     <SettingsContext.Provider value={value}>

@@ -1,0 +1,12 @@
+{
+    "menu": {
+        "dashboard": "Dashboard",
+        "transactions": "Transações",
+        "categories": "Categorias",
+        "budgets": "Orçamentos",
+        "reports": "Relatórios",
+        "settings": "Configurações",
+        "profile": "Perfil",
+        "logout": "Sair"
+    }
+}

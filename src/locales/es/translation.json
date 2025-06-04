@@ -1,0 +1,12 @@
+{
+  "menu": {
+    "dashboard": "Tablero",
+    "transactions": "Transacciones",
+    "categories": "Categorías",
+    "budgets": "Presupuestos",
+    "reports": "Informes",
+    "settings": "Configuración",
+    "profile": "Perfil",
+    "logout": "Cerrar sesión"
+  }
+}
