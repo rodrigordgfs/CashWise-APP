@@ -9,6 +9,7 @@ import { BalanceEvolutionChart } from "@/components/ui/reports/BalanceEvolutionC
 import { ReportsPageSkeleton } from "@/components/ui/reports/ReportsPageSkeleton";
 import { useReports } from "@/context/reportContext";
 import { ReportTypeEnum } from "@/types/Report.type";
+import { Period } from "@/types/Period.type";
 
 export default function ReportsPage() {
   const {
@@ -43,7 +44,7 @@ export default function ReportsPage() {
       <ReportFilters
         initialPeriod={period}
         initialReportType={reportType}
-        onPeriodChange={setPeriod}
+        onPeriodChange={(newPeriod) => setPeriod(newPeriod as Period)}
         onReportTypeChange={setReportType}
       />
 

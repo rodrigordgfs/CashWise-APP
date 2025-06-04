@@ -11,7 +11,6 @@ import {
 } from "react";
 import { Transaction } from "@/types/Transaction.type";
 import { useUser } from "@clerk/nextjs";
-import { subDays, format, startOfMonth, startOfYear } from "date-fns";
 import { Summary } from "@/types/Dashboard.type";
 import { toast } from "sonner";
 import { CategoryReport, MonthlyReport } from "@/types/Report.type";
@@ -48,25 +47,6 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     []
   );
 
-  const getRelevantDate = (period: Period): string => {
-    const today = new Date();
-
-    const date = (() => {
-      switch (period) {
-        case Period.WEEK:
-          return subDays(today, 7);
-        case Period.MONTH:
-          return startOfMonth(today);
-        case Period.YEAR:
-          return startOfYear(today);
-        default:
-          return today;
-      }
-    })();
-
-    return format(date, "yyyy-MM-dd");
-  };
-
   const fetchData = useCallback(async () => {
     if (!user?.id) {
       // Não tenta buscar se usuário não existir
@@ -76,16 +56,26 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
     setIsLoading(true);
     try {
+      const transactionParams = {
+        date__gte: period,
+        limit: "5",
+        sort: "desc",
+      };
+      const transactionUrl = new URL(
+        "/api/transaction",
+        window.location.origin
+      );
+      Object.entries(transactionParams).forEach(([key, value]) => {
+        if (value !== undefined) {
+          transactionUrl.searchParams.append(key, value);
+        }
+      });
       const [summaryRes, monthlyRes, categoryRes, transactionsRes] =
         await Promise.all([
           fetch(`/api/reports/summary${period ? `?period=${period}` : ""}`),
           fetch(`/api/reports/monthly${period ? `?period=${period}` : ""}`),
           fetch(`/api/reports/categories${period ? `?period=${period}` : ""}`),
-          fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction?userId=${
-              user.id
-            }&date__gte=${getRelevantDate(period)}&limit=5&sort=desc`
-          ),
+          fetch(transactionUrl.toString()),
         ]);
 
       if (

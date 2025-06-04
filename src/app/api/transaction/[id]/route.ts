@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { getAuth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 // PATCH
@@ -8,14 +8,14 @@ export async function PATCH(
 ): Promise<NextResponse> {
   const { id } = await params;
 
-  const { userId, getToken } = await auth();
+  const { userId, getToken } = getAuth(request);
 
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   if (!id) {
-    return NextResponse.json({ error: "Missing category ID" }, { status: 400 });
+    return NextResponse.json({ error: "Missing budget ID" }, { status: 400 });
   }
 
   let body;
@@ -26,7 +26,8 @@ export async function PATCH(
   }
 
   const token = await getToken();
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/category/${id}`;
+
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction/${id}`;
 
   try {
     const res = await fetch(url, {
@@ -40,7 +41,7 @@ export async function PATCH(
 
     if (!res.ok) {
       return NextResponse.json(
-        { error: `Erro ao atualizar categoria: ${res.statusText}` },
+        { error: `Erro ao atualizar transação: ${res.statusText}` },
         { status: res.status }
       );
     }
@@ -50,7 +51,7 @@ export async function PATCH(
   } catch (error) {
     console.error("Fetch PATCH error:", error);
     return NextResponse.json(
-      { error: "Erro interno ao atualizar categoria" },
+      { error: "Erro interno ao atualizar transação" },
       { status: 500 }
     );
   }
@@ -63,40 +64,42 @@ export async function DELETE(
 ): Promise<NextResponse> {
   const { id } = await params;
 
-  const { userId, getToken } = await auth();
+  if (!id) {
+    return NextResponse.json(
+      { error: "Missing transaction ID" },
+      { status: 400 }
+    );
+  }
+
+  const { userId, getToken } = getAuth(request);
 
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (!id) {
-    return NextResponse.json({ error: "Missing category ID" }, { status: 400 });
-  }
-
   const token = await getToken();
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/category/${id}`;
 
   try {
-    const res = await fetch(url, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     if (!res.ok) {
       return NextResponse.json(
-        { error: `Erro ao deletar categoria: ${res.statusText}` },
+        { error: `Erro ao deletar transação: ${res.statusText}` },
         { status: res.status }
       );
     }
 
-    return NextResponse.json({ message: "Categoria deletada com sucesso." });
+    return NextResponse.json({ message: "Transação deletada com sucesso." });
   } catch (error) {
-    console.error("Fetch DELETE error:", error);
-    return NextResponse.json(
-      { error: "Erro interno ao deletar categoria" },
-      { status: 500 }
-    );
+    console.error("DELETE error", error);
+    return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }

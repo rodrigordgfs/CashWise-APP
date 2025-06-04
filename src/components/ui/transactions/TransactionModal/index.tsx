@@ -11,8 +11,8 @@ import { SelectField } from "@/components/shared/SelectField";
 import { Transaction, TransactionType } from "@/types/Transaction.type";
 import { Modal } from "@/components/shared/Modal";
 import { DatePickerField } from "@/components/shared/DatePickerField";
-import { useAuth, useUser } from "@clerk/nextjs";
 import { useCategory } from "@/context/categoryContext";
+import { useTransaction } from "@/context/transactionsContext";
 
 type Account = {
   id: number;
@@ -22,7 +22,6 @@ type Account = {
 interface TransactionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (transaction: Transaction) => void;
   initialData?: Transaction | null;
   accounts: Account[];
 }
@@ -43,13 +42,12 @@ type FormData = z.infer<typeof schema>;
 export const TransactionModal = ({
   isOpen,
   onClose,
-  onSave,
   initialData,
   accounts,
 }: TransactionModalProps) => {
-  const { user } = useUser();
-  const { getToken } = useAuth();
   const { categories } = useCategory();
+  const { saveOrUpdateTransaction } = useTransaction();
+
   const {
     control,
     handleSubmit,
@@ -57,23 +55,14 @@ export const TransactionModal = ({
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: initialData
-      ? {
-          type: initialData.type,
-          description: initialData.description,
-          amount: initialData.amount,
-          date: initialData.date,
-          category: initialData.category.id,
-          account: initialData.account,
-        }
-      : {
-          type: TransactionType.Expense,
-          description: "",
-          amount: 0,
-          date: "",
-          category: categories[0]?.id ?? "",
-          account: accounts[0]?.name ?? "",
-        },
+    defaultValues: {
+      type: initialData?.type ?? TransactionType.Expense,
+      description: initialData?.description ?? "",
+      amount: initialData?.amount ?? 0,
+      date: initialData?.date ?? "",
+      category: initialData?.category.id ?? categories[0]?.id ?? "",
+      account: initialData?.account ?? accounts[0]?.name ?? "",
+    },
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -103,57 +92,25 @@ export const TransactionModal = ({
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
 
-    const method = initialData ? "PATCH" : "POST";
-    const url = initialData
-      ? `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction/${initialData.id}`
-      : `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction`;
-
-    const response = await fetch(url, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${await getToken()}`,
-      },
-      body: JSON.stringify({
-        account: data.account,
-        description: data.description,
+    try {
+      await saveOrUpdateTransaction({
+        id: initialData?.id,
         type: data.type,
-        userId: user?.id,
-        date: new Date(data.date),
-        categoryId: data.category,
+        description: data.description,
         amount: Number(data.amount),
-      }),
-    });
+        date: data.date,
+        account: data.account,
+        categoryId: data.category,
+      });
 
-    setIsLoading(false);
-
-    if (!response.ok) {
+      reset();
+      onClose();
+    } catch (error) {
+      console.log(error);
       toast.error("Erro ao salvar transação");
-      return;
+    } finally {
+      setIsLoading(false);
     }
-
-    const savedTransaction = await response.json();
-
-    const category = categories.find((c) => c.id === data.category);
-
-    if (!category) {
-      toast.error("Categoria inválida ou não encontrada");
-      throw new Error("Categoria inválida ou não encontrada");
-    }
-
-    onSave({
-      id: savedTransaction.id,
-      type: data.type,
-      description: data.description,
-      amount: Number(data.amount),
-      date: new Date(data.date).toISOString(),
-      account: data.account,
-      userId: user?.id,
-      category: category,
-    });
-    toast.success("Transação salva com sucesso!");
-    reset();
-    onClose();
   };
 
   return (

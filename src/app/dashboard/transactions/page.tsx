@@ -31,7 +31,6 @@ export default function TransactionsPage() {
     setTransactionToEdit,
     handleEditTransaction,
     handleDeleteTransaction,
-    handleSaveTransaction,
   } = useTransaction();
 
   const accounts: Account[] = [
@@ -84,7 +83,6 @@ export default function TransactionsPage() {
             setIsAddDialogOpen(false);
             setTransactionToEdit(null);
           }}
-          onSave={handleSaveTransaction}
           initialData={transactionToEdit}
           accounts={accounts}
         />

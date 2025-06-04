@@ -21,7 +21,9 @@ interface CategoryContextProps {
   setCategoryType: (type: string) => void;
   filteredCategories: Category[];
   isModalOpen: boolean;
+  isDialogOpen: boolean;
   setIsModalOpen: (open: boolean) => void;
+  setIsDialogOpen: (open: boolean) => void;
   categoryToEdit: Category | null;
   setCategoryToEdit: (category: Category | null) => void;
   openModalToCreate: () => void;
@@ -44,6 +46,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     TransactionTypeFilter.All
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
 
   const categoriesTabs = useMemo(
@@ -184,6 +187,8 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
       openModalToEdit,
       saveCategory,
       deleteCategory,
+      isDialogOpen,
+      setIsDialogOpen,
     }),
     [
       categoriesTabs,
@@ -197,6 +202,8 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
       openModalToEdit,
       saveCategory,
       deleteCategory,
+      isDialogOpen,
+      setIsDialogOpen,
     ]
   );
 

@@ -1,3 +1,4 @@
+// context/transactionContext.tsx
 "use client";
 
 import {
@@ -12,7 +13,6 @@ import {
 import { toast } from "sonner";
 import { Transaction, TransactionTypeFilter } from "@/types/Transaction.type";
 import { useAuth, useUser } from "@clerk/nextjs";
-import { useCategory } from "./categoryContext";
 import { Period } from "@/types/Period.type";
 
 interface TransactionContextProps {
@@ -32,7 +32,12 @@ interface TransactionContextProps {
   setIsAddDialogOpen: (open: boolean) => void;
   handleEditTransaction: (transaction: Transaction) => void;
   handleDeleteTransaction: (transaction: Transaction) => Promise<void>;
-  handleSaveTransaction: (saved: Transaction) => void;
+  saveOrUpdateTransaction: (
+    data: Omit<Transaction, "id" | "category"> & {
+      categoryId: string;
+      id?: string;
+    }
+  ) => Promise<Transaction | null | undefined>;
   periodTabs: { label: string; value: string }[];
   period: Period;
   setPeriod: (period: Period) => void;
@@ -45,7 +50,6 @@ const TransactionContext = createContext<TransactionContextProps | undefined>(
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
   const { getToken } = useAuth();
-  const { categories } = useCategory();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
@@ -74,18 +78,62 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     setIsAddDialogOpen(true);
   }, []);
 
+  const fetchTransactions = useCallback(async () => {
+    if (!user?.id) {
+      setTransactions([]);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const params = {
+        search: searchTerm || undefined,
+        date: selectedDate ? selectedDate.toISOString() : undefined,
+        sort: sortOrder !== "none" ? sortOrder : undefined,
+        type:
+          transactionType !== TransactionTypeFilter.All
+            ? transactionType
+            : undefined,
+      };
+
+      console.log("Fetching transactions with params:", params);
+
+      const url = new URL("/api/transaction", window.location.origin);
+
+      console.log("Base URL:", window.location.origin);
+      console.log("Full URL:", url.toString());
+
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined) {
+          url.searchParams.append(key, value);
+        }
+      });
+
+      console.log("Final URL:", url.toString());
+
+      const response = await fetch(url.toString());
+
+      if (!response.ok) {
+        toast.error("Erro ao buscar transações");
+        throw new Error("Erro ao buscar transações");
+      }
+      const data = await response.json();
+      setTransactions(data);
+    } catch (error) {
+      toast.error("Erro ao carregar transações");
+      console.error("Erro ao carregar transações:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user?.id, searchTerm, selectedDate, sortOrder, transactionType]);
+
   const handleDeleteTransaction = useCallback(
     async (transaction: Transaction) => {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction/${transaction.id}`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${await getToken()}`,
-            },
-          }
-        );
+        const response = await fetch(`/api/transaction/${transaction.id}`, {
+          method: "DELETE",
+        });
 
         if (!response.ok) {
           toast.error("Erro ao excluir transação");
@@ -99,90 +147,55 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
         console.error(error);
       }
     },
-    [getToken]
+    []
   );
 
-  const handleSaveTransaction = useCallback(
-    (saved: Transaction) => {
-      const isCategoryObject = (
-        category: string | { id: string }
-      ): category is { id: string } => {
-        return (
-          typeof category === "object" && category !== null && "id" in category
-        );
-      };
-
-      const categoryObj = categories.find((c) =>
-        isCategoryObject(saved.category)
-          ? c.id === saved.category.id
-          : c.id === saved.category
-      );
-
-      const fullTransaction = {
-        ...saved,
-        category: categoryObj ?? saved.category,
-        userId: user?.id,
-      };
-
-      if (transactionToEdit) {
-        setTransactions((prev) =>
-          prev.map((t) => (t.id === saved.id ? fullTransaction : t))
-        );
-      } else {
-        setTransactions((prev) => [...prev, fullTransaction]);
+  const saveOrUpdateTransaction = useCallback(
+    async (
+      data: Omit<Transaction, "id" | "category"> & {
+        categoryId: string;
+        id?: string;
       }
+    ): Promise<Transaction | null | undefined> => {
+      try {
+        const method = data.id ? "PATCH" : "POST";
+        const url = data.id
+          ? `/api/transaction/${data.id}`
+          : `/api/transaction`;
 
-      setTransactionToEdit(null);
-      setIsAddDialogOpen(false);
-    },
-    [transactionToEdit, categories, user?.id]
-  );
-
-  const fetchTransactions = useCallback(async () => {
-    if (!user?.id) {
-      setTransactions([]);
-      setIsLoading(false);
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction?userId=${user.id}${
-          searchTerm ? `&search=${searchTerm}` : ""
-        }${selectedDate ? `&date=${selectedDate.toISOString()}` : ""}${
-          sortOrder !== "none" ? `&sort=${sortOrder}` : ""
-        }${
-          transactionType !== TransactionTypeFilter.All
-            ? `&type=${transactionType}`
-            : ""
-        }`,
-        {
+        const response = await fetch(url, {
+          method,
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${await getToken()}`,
           },
+          body: JSON.stringify({
+            ...data,
+            date: new Date(data.date),
+            userId: user?.id,
+          }),
+        });
+
+        if (!response.ok) {
+          toast.error("Erro ao salvar transação");
+          return null;
         }
-      );
-      if (!response.ok) {
-        toast.error("Erro ao buscar as transações");
-        throw new Error("Erro ao buscar as transações");
+
+        await fetchTransactions();
+
+        if (data.id) {
+          toast.success("Transação atualizada com sucesso!");
+        } else {
+          toast.success("Transação salva com sucesso!");
+        }
+      } catch (err) {
+        toast.error("Erro ao salvar transação");
+        console.error(err);
+        return null;
       }
-      const data = await response.json();
-      setTransactions(data);
-    } catch (error) {
-      toast.error("Erro ao carregar transações");
-      console.error("Erro ao carregar transações:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [
-    user?.id,
-    searchTerm,
-    selectedDate,
-    sortOrder,
-    transactionType,
-    getToken,
-  ]);
+    },
+    [getToken, user?.id, fetchTransactions]
+  );
 
   useEffect(() => {
     fetchTransactions();
@@ -206,7 +219,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       setIsAddDialogOpen,
       handleEditTransaction,
       handleDeleteTransaction,
-      handleSaveTransaction,
+      saveOrUpdateTransaction,
       periodTabs,
       period,
       setPeriod,
@@ -222,7 +235,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       isAddDialogOpen,
       handleEditTransaction,
       handleDeleteTransaction,
-      handleSaveTransaction,
+      saveOrUpdateTransaction,
       periodTabs,
       period,
     ]
