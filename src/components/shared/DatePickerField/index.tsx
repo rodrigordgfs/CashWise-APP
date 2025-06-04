@@ -5,6 +5,7 @@ import type { ControllerRenderProps, FieldValues, Path } from "react-hook-form";
 import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { XIcon } from "lucide-react";
 
 interface DatePickerFieldProps<TFormValues extends FieldValues> {
   field: ControllerRenderProps<TFormValues, Path<TFormValues>>;
@@ -18,7 +19,6 @@ export function DatePickerField<TFormValues extends FieldValues>({
   label = "Data",
 }: DatePickerFieldProps<TFormValues>) {
   const [showCalendar, setShowCalendar] = useState(false);
-  const [positionAbove, setPositionAbove] = useState(false);
   const id = useId();
   const containerRef = useRef<HTMLDivElement>(null);
   const calendarRef = useRef<HTMLDivElement>(null);
@@ -32,7 +32,9 @@ export function DatePickerField<TFormValues extends FieldValues>({
     function handleClickOutside(event: MouseEvent) {
       if (
         containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
+        !containerRef.current.contains(event.target as Node) &&
+        calendarRef.current &&
+        !calendarRef.current.contains(event.target as Node)
       ) {
         setShowCalendar(false);
       }
@@ -43,17 +45,6 @@ export function DatePickerField<TFormValues extends FieldValues>({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [showCalendar]);
-
-  // Verifica se o calendário ultrapassa a parte inferior da tela
-  useEffect(() => {
-    if (showCalendar && calendarRef.current && containerRef.current) {
-      const calendarRect = calendarRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const overflowBottom = calendarRect.bottom > windowHeight;
-
-      setPositionAbove(overflowBottom);
-    }
   }, [showCalendar]);
 
   return (
@@ -78,54 +69,69 @@ export function DatePickerField<TFormValues extends FieldValues>({
       />
 
       {showCalendar && (
-        <div
-          ref={calendarRef}
-          className={`absolute z-50 ${
-            positionAbove ? "bottom-[calc(100%+20px)]" : "top-[calc(100%+4px)]"
-          } bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-lg p-4`}
-        >
-          <div className="flex justify-between items-center mb-2">
-            <span className="font-medium text-sm text-zinc-700 dark:text-zinc-200">
-              Selecione uma data
-            </span>
-            <button
-              type="button"
-              className="text-xs text-emerald-500 cursor-pointer"
-              onClick={() => {
-                field.onChange("");
+        <>
+          {/* Overlay com desfoque */}
+          <div className="fixed inset-0 z-40 bg-black/10 backdrop-blur-sm" />
+
+          {/* Calendário centralizado na tela */}
+          <div
+            ref={calendarRef}
+            className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+              bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-lg p-4 w-[320px] max-w-full"
+          >
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-medium text-sm text-zinc-700 dark:text-zinc-200">
+                Selecione uma data
+              </span>
+              <div className="flex gap-2 items-center">
+                <button
+                  type="button"
+                  className="text-xs text-emerald-500 cursor-pointer"
+                  onClick={() => {
+                    field.onChange("");
+                    setShowCalendar(false);
+                  }}
+                >
+                  Limpar
+                </button>
+                <button
+                  type="button"
+                  className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 text-sm cursor-pointer p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full"
+                  onClick={() => setShowCalendar(false)}
+                  aria-label="Fechar calendário"
+                >
+                  <XIcon className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+            <DayPicker
+              mode="single"
+              navLayout="around"
+              selected={selectedDate}
+              onSelect={(date) => {
+                if (date) {
+                  field.onChange(date.toISOString().slice(0, 10));
+                } else {
+                  field.onChange("");
+                }
                 setShowCalendar(false);
               }}
-            >
-              Limpar
-            </button>
+              locale={ptBR}
+              formatters={{
+                formatCaption: (date, options) => {
+                  const formatted = format(date, "MMMM yyyy", {
+                    locale: options?.locale,
+                  });
+                  return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+                },
+              }}
+              classNames={{
+                selected: "bg-emerald-500 text-white rounded-full",
+                today: "text-emerald-100 dark:text-emerald-800",
+              }}
+            />
           </div>
-          <DayPicker
-            mode="single"
-            navLayout="around"
-            selected={selectedDate}
-            onSelect={(date) => {
-              if (date) {
-                field.onChange(date.toISOString().slice(0, 10));
-              } else {
-                field.onChange("");
-              }
-              setShowCalendar(false);
-            }}
-            locale={ptBR}
-            formatters={{
-              formatCaption: (date, options) => {
-                const formatted = format(date, "MMMM yyyy", {
-                  locale: options?.locale,
-                });
-                return formatted.charAt(0).toUpperCase() + formatted.slice(1);
-              },
-            }}
-            classNames={{
-              selected: "bg-emerald-500 text-white rounded-full",
-              today: "text-emerald-100 dark:text-emerald-800",
-            }}
-          />
-        </div>
+        </>
       )}
 
       {error && <p className="text-sm text-red-500 mt-2">{error}</p>}

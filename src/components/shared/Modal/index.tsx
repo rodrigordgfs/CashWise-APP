@@ -27,9 +27,17 @@ export const Modal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-zinc-950 rounded-lg border border-zinc-200 dark:border-zinc-800 w-full max-w-md">
-        <div className="p-6">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200 flex items-center justify-center p-4 sm:p-6">
+      <div
+        className="
+          w-full h-full sm:h-auto sm:max-w-md
+          bg-white dark:bg-zinc-950
+          border border-zinc-200 dark:border-zinc-800
+          sm:rounded-lg rounded-none
+          flex flex-col justify-between
+        "
+      >
+        <div className="p-6 overflow-y-auto">
           <h3 className="text-lg font-semibold mb-2">{title}</h3>
           {children}
         </div>
