@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     siteName: "CashWise",
     images: [
       {
-        url: "/og-image.png", // substitua pelo caminho real
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "CashWise - Gerenciamento Financeiro",
@@ -50,8 +50,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "CashWise - Gerenciamento Financeiro",
     description: "Controle suas finanças de forma inteligente com o CashWise.",
-    images: ["/og-image.png"], // substitua pelo caminho real
-    creator: "@cashwise_app", // se tiver um handle
+    images: ["/og-image.png"],
+    creator: "@cashwise_app",
   },
   icons: {
     icon: "/favicon.png",
@@ -59,8 +59,12 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   manifest: "/site.webmanifest",
-  themeColor: "#10b981", // verde-emerald
 };
+
+export const viewport = {
+  themeColor: "#10b981",
+};
+
 
 export default function RootLayout({
   children,
