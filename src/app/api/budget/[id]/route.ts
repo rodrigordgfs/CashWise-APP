@@ -64,6 +64,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ): Promise<NextResponse> {
+  const { id } = params;
   const { getToken } = await auth();
 
   const token = await getToken();
@@ -71,8 +72,6 @@ export async function DELETE(
   if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-
-  const id = params.id;
 
   if (!id) {
     return NextResponse.json({ error: "Missing budget ID" }, { status: 400 });

@@ -13,12 +13,7 @@ import { toast } from "sonner";
 import { Transaction, TransactionTypeFilter } from "@/types/Transaction.type";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { useCategory } from "./categoryContext";
-
-export enum Period {
-  WEEK = "week",
-  MONTH = "month",
-  YEAR = "year",
-}
+import { Period } from "@/types/Period.type";
 
 interface TransactionContextProps {
   searchTerm: string;

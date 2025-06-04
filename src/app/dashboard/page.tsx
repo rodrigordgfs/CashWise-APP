@@ -7,9 +7,9 @@ import { ExpensesByCategoryChart } from "@/components/ui/dashboard/ExpensesByCat
 import { RecentTransactionsList } from "@/components/ui/dashboard/RecentTransactionsList";
 import { Tabs } from "@/components/shared/Tabs";
 import { DashboardSkeleton } from "@/components/ui/dashboard/DashboardSkeleton";
-import { Period } from "@/context/transactionsContext";
 import { useDashboard } from "@/context/dashboardContext";
 import { EmptyState } from "@/components/shared/EmptyState";
+import { Period } from "@/types/Period.type";
 
 const periodTabs = [
   { label: "Semana", value: Period.WEEK },

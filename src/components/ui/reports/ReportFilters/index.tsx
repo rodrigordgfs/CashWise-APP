@@ -5,6 +5,7 @@ import { SelectField } from "@/components/shared/SelectField";
 import { Tabs } from "@/components/shared/Tabs";
 import { useState } from "react";
 import { FilterCard } from "@/components/shared/FilterCard";
+import { Period } from "@/types/Period.type";
 
 const reportTabs: { label: string; value: ReportType }[] = [
   { label: "Receitas vs Despesas", value: ReportTypeEnum.INCOME_EXPENSE },
@@ -13,10 +14,10 @@ const reportTabs: { label: string; value: ReportType }[] = [
 ];
 
 const periodOptions = [
-  { label: "Último mês", value: "1month" },
-  { label: "Últimos 3 meses", value: "3months" },
-  { label: "Últimos 6 meses", value: "6months" },
-  { label: "Último ano", value: "1year" },
+  { label: "Último mês", value: Period.MONTH },
+  { label: "Últimos 3 meses", value: Period.TRIMESTER },
+  { label: "Últimos 6 meses", value: Period.SEMESTER },
+  { label: "Último ano", value: Period.YEAR },
 ];
 
 interface FiltersCardProps {
@@ -28,7 +29,7 @@ interface FiltersCardProps {
 
 export const ReportFilters = ({
   initialReportType = ReportTypeEnum.INCOME_EXPENSE,
-  initialPeriod = "1month",
+  initialPeriod = Period.MONTH,
   onReportTypeChange,
   onPeriodChange,
 }: FiltersCardProps) => {

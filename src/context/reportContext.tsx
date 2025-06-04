@@ -1,5 +1,6 @@
 "use client";
 
+import { Period } from "@/types/Period.type";
 import { ReportType, ReportTypeEnum } from "@/types/Report.type";
 import {
   BalanceReport,
@@ -7,7 +8,6 @@ import {
   MonthlyReport,
 } from "@/types/Report.type";
 import { useAuth, useUser } from "@clerk/nextjs";
-import { format, startOfMonth, subMonths, subYears } from "date-fns";
 import {
   createContext,
   useContext,
@@ -15,14 +15,16 @@ import {
   useState,
   useMemo,
   ReactNode,
+  Dispatch,
+  SetStateAction,
 } from "react";
 import { toast } from "sonner";
 
 interface ReportsContextProps {
-  period: string;
-  setPeriod: (value: string) => void;
+  period: Period;
+  setPeriod: Dispatch<SetStateAction<Period>>;
   reportType: ReportType;
-  setReportType: (value: ReportType) => void;
+  setReportType: React.Dispatch<React.SetStateAction<ReportType>>;
   monthlyReports: MonthlyReport[];
   categoryReports: CategoryReport[];
   balanceReports: BalanceReport[];
@@ -37,7 +39,7 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
   const { getToken } = useAuth();
 
-  const [period, setPeriod] = useState("1month");
+  const [period, setPeriod] = useState(Period.MONTH);
   const [reportType, setReportType] = useState<ReportType>(
     ReportTypeEnum.INCOME_EXPENSE
   );
@@ -45,27 +47,6 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
   const [categoryReports, setCategoryReports] = useState<CategoryReport[]>([]);
   const [balanceReports, setBalanceReports] = useState<BalanceReport[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const getRelativeDate = (period: string) => {
-    const now = new Date();
-
-    const date = (() => {
-      switch (period) {
-        case "1month":
-          return subMonths(now, 1);
-        case "3months":
-          return subMonths(now, 3);
-        case "6months":
-          return subMonths(now, 6);
-        case "1year":
-          return subYears(now, 1);
-        default:
-          return now;
-      }
-    })();
-
-    return format(startOfMonth(date), "yyyy-MM-dd");
-  };
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -77,38 +58,9 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(true);
       try {
         const [monthlyRes, categoryRes, balanceRes] = await Promise.all([
-          fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/monthly?userId=${
-              user.id
-            }${period ? `&period__gte=${getRelativeDate(period)}` : ""}`,
-            {
-              headers: {
-                Authorization: `Bearer ${await getToken()}`,
-              },
-            }
-          ),
-          fetch(
-            `${
-              process.env.NEXT_PUBLIC_BASE_URL_API
-            }/reports/categories?userId=${user.id}${
-              period ? `&period__gte=${getRelativeDate(period)}` : ""
-            }`,
-            {
-              headers: {
-                Authorization: `Bearer ${await getToken()}`,
-              },
-            }
-          ),
-          fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/balance?userId=${
-              user.id
-            }${period ? `&period__gte=${getRelativeDate(period)}` : ""}`,
-            {
-              headers: {
-                Authorization: `Bearer ${await getToken()}`,
-              },
-            }
-          ),
+          fetch(`/api/reports/monthly${period ? `?period=${period}` : ""}`),
+          fetch(`/api/reports/categories${period ? `?period=${period}` : ""}`),
+          fetch(`/api/reports/balance${period ? `?period=${period}` : ""}`),
         ]);
 
         if (!monthlyRes.ok || !categoryRes.ok || !balanceRes.ok) {
