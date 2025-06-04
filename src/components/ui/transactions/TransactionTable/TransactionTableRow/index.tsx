@@ -3,6 +3,8 @@
 import { Edit, Trash } from "lucide-react";
 import { Transaction, TransactionType } from "@/types/Transaction.type";
 import { useCategory } from "@/context/categoryContext";
+import { useSettings } from "@/context/settingsContext";
+import { formatCurrency } from "@/utils/formatConvertCurrency";
 
 interface TransactionTableRowProps {
   transaction: Transaction;
@@ -16,6 +18,7 @@ export const TransactionTableRow = ({
   onClickDelete,
 }: TransactionTableRowProps) => {
   const { categories } = useCategory();
+  const { currency, language } = useSettings();
   const { description, category, date, account, amount, type } = transaction;
 
   const formattedDate = new Date(date).toLocaleDateString("pt-BR", {
@@ -24,10 +27,7 @@ export const TransactionTableRow = ({
   const categoryName = categories.find((c) => c.id === category?.id)?.name;
   const formattedCategory = categoryName || "Sem categoria";
   const formattedAccount = account || "Sem conta";
-  const formattedAmount = new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(Math.abs(amount));
+  const formattedAmount = formatCurrency(Math.abs(amount), currency, language);
   const amountClass =
     type === TransactionType.Income ? "text-green-500" : "text-red-500";
 
@@ -37,7 +37,13 @@ export const TransactionTableRow = ({
       <td className="py-3 px-4">{formattedCategory}</td>
       <td className="py-3 px-4">{formattedDate}</td>
       <td className="py-3 px-4">{formattedAccount}</td>
-      <td className="py-3 px-4">{transaction.type === TransactionType.Expense ? transaction.paid ? "Sim" : "Não" : "-"}</td>	
+      <td className="py-3 px-4">
+        {transaction.type === TransactionType.Expense
+          ? transaction.paid
+            ? "Sim"
+            : "Não"
+          : "-"}
+      </td>
       <td className={`py-3 px-4 text-right font-medium ${amountClass}`}>
         {type === TransactionType.Income ? "" : "- "}
         {formattedAmount}

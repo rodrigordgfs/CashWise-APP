@@ -1,57 +1,37 @@
 "use client";
 
-import { Button } from "@/components/shared/Button";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { RadioGroupField } from "@/components/shared/RadioGroupField";
 import { SelectField } from "@/components/shared/SelectField";
 import { ToggleSwitchField } from "@/components/shared/ToggleSwitchField";
 import { SettingCard } from "@/components/ui/settings/SettingsCard";
-import { useState, useEffect } from "react";
+import { useSettings } from "@/context/settingsContext";
+import { useEffect } from "react";
 
 export default function SettingsPage() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [currency, setCurrency] = useState("BRL");
-  const [language, setLanguage] = useState("pt-BR");
-  const [notifications, setNotifications] = useState({
-    budgetAlerts: true,
-    weeklyReports: true,
-    tips: false,
-  });
-
-  const currencies = [
-    { value: "BRL", label: "Real (R$)" },
-    { value: "USD", label: "Dólar ($)" },
-    { value: "EUR", label: "Euro (€)" },
-    { value: "GBP", label: "Libra (£)" },
-  ];
-
-  const languages = [
-    { value: "pt-BR", label: "Português (Brasil)" },
-    { value: "en-US", label: "English (US)" },
-    { value: "es", label: "Español" },
-  ];
+  const {
+    isDarkMode,
+    setDarkMode,
+    currency,
+    language,
+    notifications,
+    toggleTheme,
+    setCurrency,
+    setLanguage,
+    setNotifications,
+    currencies,
+    languages,
+  } = useSettings();
 
   useEffect(() => {
-    // Check if dark mode is enabled on initial load
     if (
       localStorage.theme === "dark" ||
       (!("theme" in localStorage) &&
         window.matchMedia("(prefers-color-scheme: dark)").matches)
     ) {
-      setDarkMode(true);
+      setDarkMode();
     }
-  }, []);
-
-  const toggleDarkMode = () => {
-    if (darkMode) {
-      document.documentElement.classList.remove("dark");
-      localStorage.theme = "light";
-    } else {
-      document.documentElement.classList.add("dark");
-      localStorage.theme = "dark";
-    }
-    setDarkMode(!darkMode);
-  };
+  }, [setDarkMode]);
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -62,21 +42,19 @@ export default function SettingsPage() {
           title="Aparência"
           description="Personalize a aparência do aplicativo"
         >
-          <div className="space-y-3">
-            <RadioGroupField
-              name="theme"
-              value={darkMode ? "dark" : "light"}
-              onChange={(theme) => {
-                if (theme === "light" && darkMode) toggleDarkMode();
-                if (theme === "dark" && !darkMode) toggleDarkMode();
-              }}
-              options={[
-                { value: "light", label: "Claro" },
-                { value: "dark", label: "Escuro" },
-                { value: "system", label: "Sistema" },
-              ]}
-            />
-          </div>
+          <RadioGroupField
+            name="theme"
+            value={isDarkMode ? "dark" : "light"}
+            onChange={(theme) => {
+              if (theme === "light" && isDarkMode) toggleTheme();
+              if (theme === "dark" && !isDarkMode) toggleTheme();
+            }}
+            options={[
+              { value: "light", label: "Claro" },
+              { value: "dark", label: "Escuro" },
+              { value: "system", label: "Sistema" },
+            ]}
+          />
         </SettingCard>
 
         {/* Moeda */}
@@ -113,7 +91,7 @@ export default function SettingsPage() {
               description="Receba alertas quando estiver próximo do limite de orçamento"
               checked={notifications.budgetAlerts}
               onChange={(checked) =>
-                setNotifications((prev) => ({ ...prev, budgetAlerts: checked }))
+                setNotifications({ ...notifications, budgetAlerts: checked })
               }
             />
             <ToggleSwitchField
@@ -121,10 +99,7 @@ export default function SettingsPage() {
               description="Receba um resumo semanal das suas finanças"
               checked={notifications.weeklyReports}
               onChange={(checked) =>
-                setNotifications((prev) => ({
-                  ...prev,
-                  weeklyReports: checked,
-                }))
+                setNotifications({ ...notifications, weeklyReports: checked })
               }
             />
             <ToggleSwitchField
@@ -132,25 +107,9 @@ export default function SettingsPage() {
               description="Receba dicas para melhorar suas finanças"
               checked={notifications.tips}
               onChange={(checked) =>
-                setNotifications((prev) => ({ ...prev, tips: checked }))
+                setNotifications({ ...notifications, tips: checked })
               }
             />
-          </div>
-          <div className="p-6 border-t border-zinc-200 dark:border-zinc-800">
-            <Button
-              variant="emerald"
-              onClick={() => {
-                // Save preferences logic here
-                console.log("Preferências salvas:", {
-                  darkMode,
-                  currency,
-                  language,
-                  notifications,
-                });
-              }}
-            >
-              Salvar preferências
-            </Button>
           </div>
         </div>
       </div>

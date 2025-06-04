@@ -39,13 +39,7 @@ export default function TransactionsPage() {
     { id: 3, name: "Carteira" },
   ];
 
-  if (isLoading) {
-    return (
-      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-        <TransactionsPageSkeleton />
-      </div>
-    );
-  }
+  if (isLoading) return <TransactionsPageSkeleton />;
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">

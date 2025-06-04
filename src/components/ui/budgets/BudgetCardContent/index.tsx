@@ -1,19 +1,16 @@
 import { Budget } from "@/types/Budge.type";
 import { BudgetProgressBar } from "../BudgetProgressBar";
 import { colorOptions } from "../../categories/CategoryModal";
+import { useSettings } from "@/context/settingsContext";
+import { formatCurrency } from "@/utils/formatConvertCurrency";
 
 interface BudgetCardContentProps {
   budget: Budget;
 }
 
-const formatBRL = (value: number) => {
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(value);
-};
-
 export const BudgetCardContent = ({ budget }: BudgetCardContentProps) => {
+  const { currency, language } = useSettings();
+
   const percentage = Math.round(
     ((budget.spent || 0) / (budget.limit || 0)) * 100
   );
@@ -39,7 +36,8 @@ export const BudgetCardContent = ({ budget }: BudgetCardContentProps) => {
             Gasto / Limite
           </p>
           <p className="font-medium">
-            {formatBRL(budget.spent || 0)} / {formatBRL(budget.limit || 0)}
+            {formatCurrency(budget.spent || 0, currency, language)} /{" "}
+            {formatCurrency(budget.limit || 0, currency, language)}
           </p>
         </div>
       </div>

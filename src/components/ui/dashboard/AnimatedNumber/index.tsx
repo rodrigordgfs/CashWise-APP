@@ -1,5 +1,7 @@
 "use client";
 
+import { useSettings } from "@/context/settingsContext";
+import { formatCurrency } from "@/utils/formatConvertCurrency";
 import { useEffect, useRef, useState } from "react";
 
 interface AnimatedNumberProps {
@@ -13,6 +15,7 @@ export const AnimatedNumber = ({
   duration = 1000,
   className = "",
 }: AnimatedNumberProps) => {
+  const { currency, language } = useSettings();
   const [displayValue, setDisplayValue] = useState(0);
   const startTimestamp = useRef<number | null>(null);
 
@@ -36,12 +39,9 @@ export const AnimatedNumber = ({
     requestAnimationFrame(step);
   }, [value, duration]);
 
-  const formattedValue = new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(displayValue);
-
-  return <span className={className}>{formattedValue}</span>;
+  return (
+    <span className={className}>
+      {formatCurrency(displayValue, currency, language)}
+    </span>
+  );
 };

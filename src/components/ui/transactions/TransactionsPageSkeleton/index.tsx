@@ -4,7 +4,7 @@ export const TransactionsPageSkeleton = () => {
       {/* PageHeader Skeleton */}
       <div className="flex items-center justify-between">
         <div className="h-8 w-48 bg-zinc-200 dark:bg-zinc-800 rounded" />
-        <div className="h-10 w-36 bg-zinc-300 dark:bg-zinc-700 rounded" />
+        <div className="h-10 w-10 md:w-36 bg-zinc-300 dark:bg-zinc-700 rounded" />
       </div>
 
       {/* Filters Skeleton */}

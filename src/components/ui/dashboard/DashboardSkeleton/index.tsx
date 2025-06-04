@@ -2,9 +2,9 @@
 
 export function DashboardSkeleton() {
   return (
-    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+    <div className=" flex-1 space-y-4 p-4 md:p-8 pt-6">
       {/* Título */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between ">
         <div className="h-10 w-48 rounded-md bg-zinc-300 dark:bg-zinc-700 animate-pulse" />
       </div>
 
@@ -32,15 +32,14 @@ export function DashboardSkeleton() {
       </div>
 
       {/* Lista estilizada */}
-      <div className="border-b border-zinc-200 dark:border-zinc-800">
+      <div className="border-b border-zinc-200 dark:border-zinc-800 pb-4">
         <div className="h-6 w-48 rounded-md bg-zinc-300 dark:bg-zinc-700 animate-pulse mb-2" />
         <div className="h-4 w-64 rounded-md bg-zinc-300 dark:bg-zinc-700 animate-pulse" />
       </div>
       <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="p-4">
-            <div className="h-4 w-full rounded-md bg-zinc-300 dark:bg-zinc-700 animate-pulse mb-2" />
-            <div className="h-3 w-1/2 rounded-md bg-zinc-300 dark:bg-zinc-700 animate-pulse" />
+          <div key={i} className="py-2 flex items-center justify-between">
+            <div className="h-8 w-full rounded-md bg-zinc-300 dark:bg-zinc-700 animate-pulse" />
           </div>
         ))}
       </div>
