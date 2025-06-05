@@ -28,17 +28,6 @@ interface GoalModalProps {
   initialData?: Goal;
 }
 
-const schema = z.object({
-  title: z.string().min(1, "Título é obrigatório"),
-  description: z.string().min(1, "Descrição é obrigatória"),
-  targetAmount: z.number().min(0.01, "Meta deve ser maior que zero"),
-  currentAmount: z.number().min(0, "Valor atual não pode ser negativo"),
-  deadline: z.string().min(1, "Data limite é obrigatória"),
-  categoryId: z.string().min(1, "Categoria é obrigatória"),
-});
-
-type FormData = z.infer<typeof schema>;
-
 export const GoalModal = ({
   isOpen,
   onClose,
@@ -47,6 +36,17 @@ export const GoalModal = ({
 }: GoalModalProps) => {
   const { categories } = useCategory();
   const { t } = useTranslation();
+
+  const schema = z.object({
+    title: z.string().min(1, t("goals.titleRequiredValidation")),
+    description: z.string().min(1, t("goals.descriptionRequiredValidation")),
+    targetAmount: z.number().min(0.01, t("goals.goalMinValidation")),
+    currentAmount: z.number().min(0, t("goals.currentAmmountMinValidation")),
+    deadline: z.string().min(1, t("goals.deadlineRequiredValidation")),
+    categoryId: z.string().min(1, t("goals.categoryRequiredValidation")),
+  });
+
+  type FormData = z.infer<typeof schema>;
 
   const {
     control,

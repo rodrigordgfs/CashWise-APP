@@ -148,7 +148,13 @@
     "currentAmmountPlaceholder": "Ej: $ 1.000,00",
     "categoryField": "Categoría",
     "deadlineField": "Fecha Límite",
-    "deadlinePlaceholder": "Selecciona una fecha"
+    "deadlinePlaceholder": "Selecciona una fecha",
+    "titleRequiredValidation": "El título es obligatorio",
+    "descriptionRequiredValidation": "La descripción es obligatoria",
+    "goalMinValidation": "La meta debe ser mayor que cero",
+    "currentAmmountMinValidation": "El valor actual debe ser mayor que cero",
+    "deadlineRequiredValidation": "La fecha límite es obligatoria",
+    "categoryRequiredValidation": "La categoría es obligatoria"
   },
   "reports": {
     "title": "Informes",

@@ -148,7 +148,13 @@
     "currentAmmountPlaceholder": "E.g. $1,000.00",
     "categoryField": "Category",
     "deadlineField": "Deadline",
-    "deadlinePlaceholder": "Select a date"
+    "deadlinePlaceholder": "Select a date",
+    "titleRequiredValidation": "Title is required",
+    "descriptionRequiredValidation": "Description is required",
+    "goalMinValidation": "Goal must be greater than zero",
+    "currentAmountMinValidation": "Current amount must be greater than zero",
+    "deadlineRequiredValidation": "Deadline is required",
+    "categoryRequiredValidation": "Category is required"
   },
   "reports": {
     "title": "Reports",
