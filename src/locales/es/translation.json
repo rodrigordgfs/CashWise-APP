@@ -118,7 +118,10 @@
     "category": "Categoría",
     "limit": "Límite",
     "month": "Mes",
-    "selectMonth": "Selecciona el mes"
+    "selectMonth": "Selecciona el mes",
+    "categoryRequiredValidation": "La categoría es obligatoria",
+    "limitMinValidation": "El límite debe ser mayor que cero",
+    "dateRequiredValidation": "La fecha es obligatoria"
   },
   "goals": {
     "title": "Metas",

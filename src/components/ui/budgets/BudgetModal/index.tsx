@@ -23,14 +23,6 @@ interface BudgetModalProps {
   initialData?: Budget;
 }
 
-const schema = z.object({
-  category: z.string().min(1, "Categoria inválida"),
-  limit: z.number().min(0.01, "Limite deve ser maior que zero"),
-  date: z.string().min(1, "Data é obrigatória"),
-});
-
-type FormData = z.infer<typeof schema>;
-
 const parseYearMonth = (ym: string) => {
   const [year, month] = ym.split("-").map(Number);
   return new Date(year, month - 1, 1);
@@ -52,6 +44,14 @@ export const BudgetModal = ({
 
   const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
   const [showPicker, setShowPicker] = useState(false);
+
+  const schema = z.object({
+    category: z.string().min(1, t("budgets.categoryRequiredValidation")),
+    limit: z.number().min(0.01, t("budgets.limitMinValidation")),
+    date: z.string().min(1, t("budgets.dateRequiredValidation")),
+  });
+
+  type FormData = z.infer<typeof schema>;
 
   const {
     control,
