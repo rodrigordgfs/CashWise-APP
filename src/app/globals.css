@@ -10,7 +10,6 @@
   --foreground: #ededed;
 }
 
-
 .custom-radial-background {
   background: radial-gradient(
     600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
@@ -21,4 +20,17 @@
 
 .rdp-chevron {
   fill: var(--color-emerald-500) !important;
+}
+
+@keyframes progress-wave {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-progress-wave {
+  animation: progress-wave 2s infinite linear;
 }
