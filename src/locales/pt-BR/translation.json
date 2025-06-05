@@ -226,6 +226,8 @@
     "save": "Salvar",
     "cancel": "Cancelar",
     "edit": "Editar",
-    "saving": "Salvando"
+    "saving": "Salvando",
+    "nameRequiredValidation": "Nome é obrigatório",
+    "emailRequiredValidation": "E-mail é obrigatório"
   }
 }

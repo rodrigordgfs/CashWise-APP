@@ -10,17 +10,17 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 
-const schema = z.object({
-  name: z.string().min(1, "Nome é obrigatório"),
-  email: z.string().email("E-mail inválido"),
-});
-
-type FormData = z.infer<typeof schema>;
-
 export const PersonalInfoCard = () => {
   const { t } = useTranslation();
   const { user } = useUser();
   const [isEditing, setIsEditing] = useState(false);
+
+  const schema = z.object({
+    name: z.string().min(1, t("profile.nameRequiredValidation")),
+    email: z.string().email(t("profile.emailRequiredValidation")),
+  });
+
+  type FormData = z.infer<typeof schema>;
 
   const {
     control,

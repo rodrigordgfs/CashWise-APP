@@ -226,6 +226,8 @@
     "save": "Guardar",
     "cancel": "Cancelar",
     "edit": "Editar",
-    "saving": "Guardando"
+    "saving": "Guardando",
+    "nameRequiredValidation": "El nombre es obligatorio",
+    "emailRequiredValidation": "El correo electrónico es obligatorio"
   }
 }
