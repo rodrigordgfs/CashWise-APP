@@ -6,6 +6,7 @@ import { SortButton } from "../SortButton";
 import { TransactionTypeSelector } from "../TransactionTypeSelector";
 import { TransactionTypeFilter } from "@/types/Transaction.type";
 import { FilterCard } from "@/components/shared/FilterCard";
+import { useTranslation } from "react-i18next";
 interface TransactionFiltersProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
@@ -27,8 +28,9 @@ export const TransactionFilters = ({
   setSortOrder,
   sortOrder,
 }: TransactionFiltersProps) => {
+  const { t } = useTranslation();
   return (
-    <FilterCard>
+    <FilterCard title={t("transactions.filters")}>
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
         <div className="flex-1">
           <SearchInput value={searchTerm} onChange={setSearchTerm} />

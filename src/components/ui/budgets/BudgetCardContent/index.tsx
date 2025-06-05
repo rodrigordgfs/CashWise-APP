@@ -1,5 +1,5 @@
 import { Budget } from "@/types/Budge.type";
-import { BudgetProgressBar } from "../BudgetProgressBar";
+import { ProgressBar } from "../../../shared/ProgressBar";
 import { colorOptions } from "../../categories/CategoryModal";
 import { useSettings } from "@/context/settingsContext";
 import { formatCurrency } from "@/utils/formatConvertCurrency";
@@ -42,7 +42,7 @@ export const BudgetCardContent = ({ budget }: BudgetCardContentProps) => {
         </div>
       </div>
 
-      <BudgetProgressBar percentage={percentage} />
+      <ProgressBar percentage={percentage} />
     </div>
   );
 };

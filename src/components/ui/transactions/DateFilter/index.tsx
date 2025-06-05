@@ -5,6 +5,7 @@ import { Calendar, XIcon } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { DayPicker } from "react-day-picker";
+import { useTranslation } from "react-i18next";
 
 interface DateFilterProps {
   selectedDate?: Date;
@@ -12,6 +13,8 @@ interface DateFilterProps {
 }
 
 export const DateFilter = ({ selectedDate, onChange }: DateFilterProps) => {
+  const { t } = useTranslation();
+
   const [showCalendar, setShowCalendar] = useState(false);
 
   return (
@@ -22,8 +25,8 @@ export const DateFilter = ({ selectedDate, onChange }: DateFilterProps) => {
             ? "bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400"
             : "border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800"
         }`}
-        aria-label="Filtrar por data"
-        title="Filtrar por data"
+        aria-label={t("transactions.filterByDate")}
+        title={t("transactions.filterByDate")}
         onClick={() => setShowCalendar(true)}
       >
         <Calendar className="h-4 w-4" />
@@ -51,7 +54,7 @@ export const DateFilter = ({ selectedDate, onChange }: DateFilterProps) => {
           >
             <div className="flex justify-between items-center w-full">
               <span className="font-medium text-sm text-zinc-700 dark:text-zinc-200">
-                Selecione uma data
+                {t("transactions.selectDate")}
               </span>
               <div className="flex gap-2 items-center">
                 <button
@@ -61,12 +64,12 @@ export const DateFilter = ({ selectedDate, onChange }: DateFilterProps) => {
                   }}
                   className="text-xs text-emerald-500 cursor-pointer"
                 >
-                  Limpar
+                  {t("transactions.clear")}
                 </button>
                 <button
                   onClick={() => setShowCalendar(false)}
                   className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800"
-                  aria-label="Fechar calendário"
+                  aria-label={t("transactions.closeCalendar")}
                 >
                   <XIcon className="w-4 h-4" />
                 </button>

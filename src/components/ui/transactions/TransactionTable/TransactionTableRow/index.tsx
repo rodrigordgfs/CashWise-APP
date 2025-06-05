@@ -5,6 +5,7 @@ import { Transaction, TransactionType } from "@/types/Transaction.type";
 import { useCategory } from "@/context/categoryContext";
 import { useSettings } from "@/context/settingsContext";
 import { formatCurrency } from "@/utils/formatConvertCurrency";
+import { useTranslation } from "react-i18next";
 
 interface TransactionTableRowProps {
   transaction: Transaction;
@@ -17,6 +18,7 @@ export const TransactionTableRow = ({
   onClickEdit,
   onClickDelete,
 }: TransactionTableRowProps) => {
+  const { t } = useTranslation();
   const { categories } = useCategory();
   const { currency, language } = useSettings();
   const { description, category, date, account, amount, type } = transaction;
@@ -25,8 +27,8 @@ export const TransactionTableRow = ({
     timeZone: "UTC",
   });
   const categoryName = categories.find((c) => c.id === category?.id)?.name;
-  const formattedCategory = categoryName || "Sem categoria";
-  const formattedAccount = account || "Sem conta";
+  const formattedCategory = categoryName || t("transactions.noCategory");
+  const formattedAccount = account || t("transactions.noAccount");
   const formattedAmount = formatCurrency(Math.abs(amount), currency, language);
   const amountClass =
     type === TransactionType.Income ? "text-green-500" : "text-red-500";
@@ -52,8 +54,8 @@ export const TransactionTableRow = ({
         <div className="flex justify-end gap-2">
           <button
             className="p-1 rounded-md text-zinc-500 hover:text-emerald-500 dark:text-zinc-400 dark:hover:text-emerald-500 cursor-pointer transition-all"
-            aria-label="Editar transação"
-            title="Editar transação"
+            aria-label={t("transactions.editTransaction")}
+            title={t("transactions.editTransaction")}
             onClick={() => {
               if (onClickEdit) {
                 onClickEdit(transaction);
@@ -65,8 +67,8 @@ export const TransactionTableRow = ({
 
           <button
             className="p-1 rounded-md text-zinc-500 hover:text-red-500 dark:text-zinc-400 dark:hover:text-red-400 cursor-pointer transition-all"
-            aria-label="Excluir transação"
-            title="Excluir transação"
+            aria-label={t("transactions.deleteTransaction")}
+            title={t("transactions.deleteTransaction")}
             onClick={() => {
               if (onClickDelete) {
                 onClickDelete(transaction);

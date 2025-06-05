@@ -4,10 +4,11 @@ import { ReactNode, useRef, useState, useEffect } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
 
 interface FilterCardProps {
+  title?: string;
   children?: ReactNode;
 }
 
-export const FilterCard = ({ children }: FilterCardProps) => {
+export const FilterCard = ({ children, title = "Filtros" }: FilterCardProps) => {
   const [isOpen, setIsOpen] = useState(true);
   const [height, setHeight] = useState<number | "auto">(0);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -28,7 +29,7 @@ export const FilterCard = ({ children }: FilterCardProps) => {
   return (
     <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
       <div className="p-6 pb-3 flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Filtros</h3>
+        <h3 className="text-lg font-semibold">{title}</h3>
         <button
           onClick={() => setIsOpen((prev) => !prev)}
           className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-all hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer p-2 rounded-full"

@@ -7,6 +7,7 @@ import {
   LogOut,
   PieChart,
   Settings,
+  Target,
   User,
   Wallet,
 } from "lucide-react";
@@ -60,6 +61,12 @@ export const SideBarDesktop = () => {
             icon={Wallet}
             title={t("menu.budgets")}
             isActive={pathname.startsWith("/dashboard/budgets")}
+          />
+          <NavItem
+            href="/dashboard/goals"
+            icon={Target}
+            title={t("menu.goals")}
+            isActive={pathname.startsWith("/dashboard/goals")}
           />
           <NavItem
             href="/dashboard/reports"

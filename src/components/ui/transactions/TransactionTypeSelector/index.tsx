@@ -1,6 +1,7 @@
 "use client";
 
 import { TransactionTypeFilter } from "@/types/Transaction.type";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   transactionType: TransactionTypeFilter;
@@ -11,6 +12,8 @@ export const TransactionTypeSelector = ({
   transactionType,
   setTransactionType,
 }: Props) => {
+  const { t } = useTranslation();
+
   return (
     <div className="flex border border-zinc-200 dark:border-zinc-800 rounded-md overflow-hidden h-[42px]">
       {(Object.values(TransactionTypeFilter) as TransactionTypeFilter[]).map(
@@ -25,10 +28,10 @@ export const TransactionTypeSelector = ({
             }`}
           >
             {type === TransactionTypeFilter.All
-              ? "Todos"
+              ? t("transactions.all")
               : type === TransactionTypeFilter.Income
-              ? "Receitas"
-              : "Despesas"}
+              ? t("transactions.income")
+              : t("transactions.expense")}
           </button>
         )
       )}

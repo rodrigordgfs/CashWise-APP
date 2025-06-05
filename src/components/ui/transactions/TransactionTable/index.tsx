@@ -4,6 +4,7 @@ import { EmptyState } from "@/components/shared/EmptyState";
 import { TransactionTableHeader } from "./TransactionTableHeader";
 import { TransactionTableRow } from "./TransactionTableRow";
 import { Transaction } from "@/types/Transaction.type";
+import { useTranslation } from "react-i18next";
 
 interface TransactionTableProps {
   transactions: Transaction[];
@@ -16,11 +17,13 @@ export const TransactionTable = ({
   onClickDelete,
   onClickEdit,
 }: TransactionTableProps) => {
+  const { t } = useTranslation();
+
   if (transactions.length === 0) {
     return (
       <EmptyState
-        title="Nenhuma transação encontrada"
-        description="Tente ajustar os filtros ou adicionar uma nova transação."
+        title={t("transactions.transactionsNotFound")}
+        description={t("transactions.transactionsNotFoundDescription")}
       />
     );
   }

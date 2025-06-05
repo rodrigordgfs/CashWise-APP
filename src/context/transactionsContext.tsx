@@ -97,20 +97,13 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
             : undefined,
       };
 
-      console.log("Fetching transactions with params:", params);
-
       const url = new URL("/api/transaction", window.location.origin);
-
-      console.log("Base URL:", window.location.origin);
-      console.log("Full URL:", url.toString());
 
       Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined) {
           url.searchParams.append(key, value);
         }
       });
-
-      console.log("Final URL:", url.toString());
 
       const response = await fetch(url.toString());
 

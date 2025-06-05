@@ -12,6 +12,7 @@ import { CategoryProvider } from "@/context/categoryContext";
 import { ReportsProvider } from "@/context/reportContext";
 import { DashboardProvider } from "@/context/dashboardContext";
 import { AppLoader } from "@/components/shared/AppLoader";
+import { GoalProvider } from "@/context/goalContext";
 
 export function Providers({ children }: { children: ReactNode }) {
   const { isLoaded } = useAuth();
@@ -26,14 +27,16 @@ export function Providers({ children }: { children: ReactNode }) {
         <CategoryProvider>
           <BudgetProvider>
             <TransactionProvider>
-              <SidebarProvider>
-                <MenuProvider>
-                  <SettingsProvider>
-                    {children}
-                    <Toaster richColors />
-                  </SettingsProvider>
-                </MenuProvider>
-              </SidebarProvider>
+              <GoalProvider>
+                <SidebarProvider>
+                  <MenuProvider>
+                    <SettingsProvider>
+                      {children}
+                      <Toaster richColors />
+                    </SettingsProvider>
+                  </MenuProvider>
+                </SidebarProvider>
+              </GoalProvider>
             </TransactionProvider>
           </BudgetProvider>
         </CategoryProvider>

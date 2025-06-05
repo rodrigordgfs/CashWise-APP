@@ -7,6 +7,7 @@ import { TransactionTable } from "@/components/ui/transactions/TransactionTable"
 import { TransactionModal } from "@/components/ui/transactions/TransactionModal";
 import { TransactionsPageSkeleton } from "@/components/ui/transactions/TransactionsPageSkeleton";
 import { useTransaction } from "@/context/transactionsContext";
+import { useTranslation } from "react-i18next";
 
 type Account = {
   id: number;
@@ -32,6 +33,7 @@ export default function TransactionsPage() {
     handleEditTransaction,
     handleDeleteTransaction,
   } = useTransaction();
+    const { t } = useTranslation();
 
   const accounts: Account[] = [
     { id: 1, name: "Nubank" },
@@ -44,9 +46,9 @@ export default function TransactionsPage() {
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <PageHeader
-        title="Transações"
+        title={t("transactions.title")}
         actionIcon={Plus}
-        actionTitle="Nova Transação"
+        actionTitle={t("transactions.newTransaction")}
         onActionClick={() => {
           setTransactionToEdit(null);
           setIsAddDialogOpen(true);

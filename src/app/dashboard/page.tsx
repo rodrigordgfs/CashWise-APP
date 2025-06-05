@@ -10,12 +10,7 @@ import { DashboardSkeleton } from "@/components/ui/dashboard/DashboardSkeleton";
 import { useDashboard } from "@/context/dashboardContext";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { Period } from "@/types/Period.type";
-
-const periodTabs = [
-  { label: "Semana", value: Period.WEEK },
-  { label: "Mês", value: Period.MONTH },
-  { label: "Ano", value: Period.YEAR },
-];
+import { useTranslation } from "react-i18next";
 
 export default function DashboardPage() {
   const {
@@ -27,12 +22,19 @@ export default function DashboardPage() {
     period,
     setPeriod,
   } = useDashboard();
+  const { t } = useTranslation();
+
+  const periodTabs = [
+    { label: t("dashboard.week"), value: Period.WEEK },
+    { label: t("dashboard.month"), value: Period.MONTH },
+    { label: t("dashboard.year"), value: Period.YEAR },
+  ];
 
   if (isLoading) return <DashboardSkeleton />;
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      <PageHeader title="Dashboard" />
+      <PageHeader title={t("dashboard.title")} />
 
       <div className="space-y-4">
         <Tabs tabs={periodTabs} selectedValue={period} onChange={setPeriod} />
@@ -50,8 +52,8 @@ export default function DashboardPage() {
             ) : (
               <div className="flex items-center justify-center h-[428px] w-full border rounded-lg border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
                 <EmptyState
-                  title="Nenhum dado mensal encontrado"
-                  description="Adicione uma nova transação para ver a evolução mensal."
+                  title={t("dashboard.monthlyEvolutionNoData")}
+                  description={t("dashboard.monthlyEvolutionNoDataDescription")}
                 />
               </div>
             )}
@@ -62,8 +64,10 @@ export default function DashboardPage() {
             ) : (
               <div className="flex items-center justify-center h-[428px] w-full border rounded-lg border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
                 <EmptyState
-                  title="Nenhuma despesa por categoria encontrada"
-                  description="Adicione uma nova despesa para ver a distribuição por categoria."
+                  title={t("dashboard.expenseByCategoryNoData")}
+                  description={t(
+                    "dashboard.expenseByCategoryNoDataDescription"
+                  )}
                 />
               </div>
             )}
@@ -75,8 +79,8 @@ export default function DashboardPage() {
         ) : (
           <div className="flex items-center justify-center h-[428px] w-full border rounded-lg border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
             <EmptyState
-              title="Nenhuma transação recente encontrada"
-              description="Adicione uma nova transação para ver as transações recentes."
+              title={t("dashboard.recentTransactionsNoData")}
+              description={t("dashboard.recentTransactionsNoDataDescription")}
             />
           </div>
         )}

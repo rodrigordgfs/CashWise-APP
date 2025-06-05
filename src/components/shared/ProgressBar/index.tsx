@@ -1,8 +1,8 @@
-interface BudgetProgressBarProps {
+interface ProgressBarProps {
   percentage: number;
 }
 
-export const BudgetProgressBar = ({ percentage }: BudgetProgressBarProps) => {
+export const ProgressBar = ({ percentage }: ProgressBarProps) => {
   const isWarning = percentage >= 75 && percentage < 90;
   const isDanger = percentage >= 90;
 

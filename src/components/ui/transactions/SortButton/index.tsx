@@ -2,6 +2,7 @@
 
 import { ArrowDownUp, ArrowDown, ArrowUp } from "lucide-react";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 interface SortButtonProps {
   sortOrder: "none" | "asc" | "desc";
@@ -9,6 +10,8 @@ interface SortButtonProps {
 }
 
 export const SortButton = ({ sortOrder, setSortOrder }: SortButtonProps) => {
+  const { t } = useTranslation();
+
   const toggleSort = () => {
     setSortOrder(
       sortOrder === "none" ? "desc" : sortOrder === "desc" ? "asc" : "none"
@@ -40,13 +43,13 @@ export const SortButton = ({ sortOrder, setSortOrder }: SortButtonProps) => {
     <button
       onClick={toggleSort}
       className={buttonClasses}
-      aria-label="Ordenar transações"
-      title="Ordenar transações"
+      aria-label={t("transactions.orderTransactions")}
+      title={t("transactions.orderTransactions")}
     >
       {renderIcon()}
       {isActive && (
         <span className="text-sm capitalize">
-          {sortOrder === "asc" ? "Crescente" : "Decrescente"}
+          {sortOrder === "asc" ? t("transactions.ascending") : t("transactions.descending")}
         </span>
       )}
     </button>
