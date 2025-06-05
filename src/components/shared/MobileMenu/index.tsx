@@ -7,6 +7,7 @@ import {
   LogOut,
   PieChart,
   Settings,
+  Target,
   User,
   Wallet,
   X,
@@ -29,17 +30,14 @@ export const MobileMenu = () => {
     router.push("/");
   };
 
-  // Fecha menu ao clicar em um item
   const handleItemClick = () => {
     closeMobileMenu();
   };
 
-  // Fecha se clicar fora do menu (overlay)
   const handleOverlayClick = () => {
     closeMobileMenu();
   };
 
-  // Impede fechamento ao clicar dentro do menu
   const handleMenuClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
@@ -85,6 +83,13 @@ export const MobileMenu = () => {
             icon={Wallet}
             title="Orçamentos"
             isActive={pathname.startsWith("/dashboard/budgets")}
+            onClick={handleItemClick}
+          />
+          <NavItem
+            href="/dashboard/goals"
+            icon={Target}
+            title="Metas"
+            isActive={pathname.startsWith("/dashboard/goals")}
             onClick={handleItemClick}
           />
           <NavItem
