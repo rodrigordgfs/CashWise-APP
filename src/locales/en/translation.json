@@ -1,4 +1,8 @@
 {
+  "app": {
+    "save": "Save",
+    "cancel": "Cancel"
+  },
   "menu": {
     "dashboard": "Dashboard",
     "transactions": "Transactions",
@@ -60,7 +64,12 @@
     "amount": "Amount",
     "actions": "Actions",
     "transactionsNotFound": "No transactions found",
-    "transactionsNotFoundDescription": "Try adjusting the filters or adding a new transaction."
+    "transactionsNotFoundDescription": "Try adjusting the filters or adding a new transaction.",
+    "type": "Type",
+    "descriptionPlaceholder": "E.g. Supermarket",
+    "ammount": "Amount",
+    "ammountPlaceholder": "100.00",
+    "datePlaceholder": "Select a date"
   },
   "categories": {
     "title": "Categories",

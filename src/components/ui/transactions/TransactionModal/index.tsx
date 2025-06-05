@@ -13,6 +13,7 @@ import { Modal } from "@/components/shared/Modal";
 import { DatePickerField } from "@/components/shared/DatePickerField";
 import { useCategory } from "@/context/categoryContext";
 import { useTransaction } from "@/context/transactionsContext";
+import { useTranslation } from "react-i18next";
 
 type Account = {
   id: number;
@@ -47,6 +48,7 @@ export const TransactionModal = ({
 }: TransactionModalProps) => {
   const { categories } = useCategory();
   const { saveOrUpdateTransaction } = useTransaction();
+  const { t } = useTranslation();
 
   const {
     control,
@@ -116,11 +118,15 @@ export const TransactionModal = ({
   return (
     <Modal
       isOpen={isOpen}
-      title={initialData ? "Editar Transação" : "Nova Transação"}
+      title={
+        initialData
+          ? t("transactions.editTransaction")
+          : t("transactions.newTransaction")
+      }
       onClose={onClose}
       onConfirm={handleSubmit(onSubmit)}
-      confirmLabel="Salvar"
-      cancelLabel="Cancelar"
+      confirmLabel={t("app.save")}
+      cancelLabel={t("app.cancel")}
       isLoading={isLoading}
     >
       <div className="space-y-4">
@@ -129,11 +135,17 @@ export const TransactionModal = ({
           name="type"
           render={({ field }) => (
             <SelectField
-              label="Tipo"
+              label={t("transactions.type")}
               {...field}
               options={[
-                { value: TransactionType.Income, label: "Receita" },
-                { value: TransactionType.Expense, label: "Despesa" },
+                {
+                  value: TransactionType.Income,
+                  label: t("transactions.income"),
+                },
+                {
+                  value: TransactionType.Expense,
+                  label: t("transactions.expense"),
+                },
               ]}
               error={errors.type?.message}
             />
@@ -145,8 +157,8 @@ export const TransactionModal = ({
           name="description"
           render={({ field }) => (
             <InputField
-              label="Descrição"
-              placeholder="Ex: Supermercado"
+              label={t("transactions.description")}
+              placeholder={t("transactions.descriptionPlaceholder")}
               {...field}
               error={errors.description?.message}
             />
@@ -158,9 +170,9 @@ export const TransactionModal = ({
           name="amount"
           render={({ field }) => (
             <InputField
-              label="Valor"
+              label={t("transactions.amount")}
               type="money"
-              placeholder="0.00"
+              placeholder={t("transactions.amountPlaceholder")}
               {...field}
               onChange={(val) => field.onChange(val)}
               error={errors.amount?.message}
@@ -173,7 +185,7 @@ export const TransactionModal = ({
           name="category"
           render={({ field }) => (
             <SelectField
-              label="Categoria"
+              label={t("transactions.category")}
               {...field}
               options={categories.map((c) => ({
                 value: c.id,
@@ -189,7 +201,7 @@ export const TransactionModal = ({
           name="account"
           render={({ field }) => (
             <SelectField
-              label="Conta"
+              label={t("transactions.account")}
               {...field}
               options={accounts.map((a) => ({
                 value: a.name,
@@ -205,6 +217,9 @@ export const TransactionModal = ({
           name="date"
           render={({ field }) => (
             <DatePickerField<FormData>
+              label={t("transactions.date")}
+              placeholder={t("transactions.datePlaceholder")}
+              {...field}
               field={field}
               error={errors.date?.message}
             />

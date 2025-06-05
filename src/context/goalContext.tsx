@@ -43,7 +43,7 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
   const fetchGoals = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/goal`);
+      const response = await fetch(`/api/goals`);
 
       if (!response.ok) {
         toast.error("Erro ao buscar metas");
@@ -78,7 +78,7 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
   const saveGoal = useCallback(
     async (data: Goal): Promise<Goal | undefined> => {
       try {
-        const url = data.id ? `/api/goal/${data.id}` : `/api/goal`;
+        const url = data.id ? `/api/goals/${data.id}` : `/api/goals`;
         const method = data.id ? "PATCH" : "POST";
 
         const res = await fetch(url, {
@@ -100,7 +100,9 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
         });
 
         if (!res.ok) {
-          toast.error(data.id ? "Erro ao atualizar meta" : "Erro ao criar meta");
+          toast.error(
+            data.id ? "Erro ao atualizar meta" : "Erro ao criar meta"
+          );
           return;
         }
 
@@ -125,7 +127,7 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
   const handleDelete = useCallback(
     async (goal: Goal) => {
       try {
-        const res = await fetch(`/api/goal/${goal.id}`, {
+        const res = await fetch(`/api/goals/${goal.id}`, {
           method: "DELETE",
         });
 
@@ -173,9 +175,7 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
     ]
   );
 
-  return (
-    <GoalContext.Provider value={value}>{children}</GoalContext.Provider>
-  );
+  return <GoalContext.Provider value={value}>{children}</GoalContext.Provider>;
 };
 
 export const useGoal = (): GoalContextProps => {

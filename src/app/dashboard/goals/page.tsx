@@ -5,51 +5,13 @@ import { PageHeader } from "@/components/shared/PageHeader";
 import { GoalModal } from "@/components/ui/goals/GoalModal";
 import { GoalCardSkeleton } from "@/components/ui/goals/GoalCardSkeleton";
 import { EmptyState } from "@/components/shared/EmptyState";
-import { useState } from "react";
 import { GoalCard } from "@/components/ui/goals/GoalCard";
-import { Goal } from "@/types/Goal.type";
-import { TransactionType } from "@/types/Transaction.type";
 import { useGoal } from "@/context/goalContext";
 import { useTranslation } from "react-i18next";
 
-const mockGoals: Goal[] = [
-  {
-    id: "1",
-    title: "Comprar um carro",
-    description: "Juntar dinheiro para comprar um carro novo",
-    targetAmount: 50000,
-    currentAmount: 30000,
-    deadline: "2026-12-31",
-    category: {
-      id: "1",
-      name: "Veículos",
-      type: TransactionType.Expense,
-      icon: "🚗",
-      color: "#ef4444",
-    },
-  },
-  {
-    id: "2",
-    title: "Viagem para Europa",
-    description: "Fazer uma viagem para conhecer a Europa",
-    targetAmount: 25000,
-    currentAmount: 15000,
-    deadline: "2026-06-30",
-    category: {
-      id: "2",
-      name: "Viagens",
-      type: TransactionType.Expense,
-      icon: "✈️",
-      color: "#3b82f6",
-    },
-  },
-];
-
 export default function GoalsPage() {
   const { t } = useTranslation();
-  const { isLoading, isModalOpen, setIsModalOpen } = useGoal();
-
-  const [goals] = useState(mockGoals);
+  const { goals, isLoading, isModalOpen, setIsModalOpen } = useGoal();
 
   const hasGoals = goals.length > 0;
 

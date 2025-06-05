@@ -11,12 +11,14 @@ interface DatePickerFieldProps<TFormValues extends FieldValues> {
   field: ControllerRenderProps<TFormValues, Path<TFormValues>>;
   error?: string;
   label?: string;
+  placeholder?: string;
 }
 
 export function DatePickerField<TFormValues extends FieldValues>({
   field,
   error,
   label = "Data",
+  placeholder = "Selecione a data",
 }: DatePickerFieldProps<TFormValues>) {
   const [showCalendar, setShowCalendar] = useState(false);
   const id = useId();
@@ -65,7 +67,7 @@ export function DatePickerField<TFormValues extends FieldValues>({
           ${error ? "border-red-500" : "border-zinc-300 dark:border-zinc-700"}`}
         onClick={() => setShowCalendar((v) => !v)}
         value={selectedDate ? format(selectedDate, "dd/MM/yyyy") : ""}
-        placeholder="Selecione a data"
+        placeholder={placeholder}
       />
 
       {showCalendar && (

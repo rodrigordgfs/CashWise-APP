@@ -1,4 +1,8 @@
 {
+  "app": {
+    "save": "Salvar",
+    "cancel": "Cancelar"
+  },
   "menu": {
     "dashboard": "Dashboard",
     "transactions": "Transações",
@@ -60,7 +64,12 @@
     "noCategory": "Nenhuma categoria",
     "noAccount": "Nenhuma conta",
     "transactionsNotFound": "Nenhuma transação encontrada",
-    "transactionsNotFoundDescription": "Tente ajustar os filtros ou adicionar uma nova transação."
+    "transactionsNotFoundDescription": "Tente ajustar os filtros ou adicionar uma nova transação.",
+    "type": "Tipo",
+    "descriptionPlaceholder": "Ex: Supermercado",
+    "ammount": "Valor",
+    "ammountPlaceholder": "100.00",
+    "datePlaceholder": "Selecione uma data"
   },
   "categories": {
     "title": "Categorias",
