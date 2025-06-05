@@ -8,6 +8,7 @@ import { BudgetCardSkeleton } from "@/components/ui/budgets/BudgetCardSkeleton";
 import { Budget } from "@/types/Budge.type";
 import { useBudget } from "@/context/budgetContext";
 import { EmptyState } from "@/components/shared/EmptyState";
+import { useTranslation } from "react-i18next";
 
 export default function BudgetsPage() {
   const {
@@ -24,14 +25,16 @@ export default function BudgetsPage() {
     setEditingBudget,
   } = useBudget();
 
+  const { t } = useTranslation();
+
   const hasBudgets = budgets.length > 0;
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <PageHeader
-        title="Orçamentos"
+        title={t("budgets.title")}
         actionIcon={Plus}
-        actionTitle="Novo Orçamento"
+        actionTitle={t("budgets.newBudget")}
         onActionClick={openModalToCreate}
         actionDisabled={isLoading}
       />
@@ -55,8 +58,8 @@ export default function BudgetsPage() {
         </div>
       ) : (
         <EmptyState
-          title="Nenhum orçamento encontrado"
-          description="Crie um orçamento para começar"
+          title={t("budgets.budgetNotFound")}
+          description={t("budgets.budgetNotFoundDescription")}
         />
       )}
 

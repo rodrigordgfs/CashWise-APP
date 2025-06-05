@@ -9,6 +9,8 @@ import { useState } from "react";
 import { GoalCard } from "@/components/ui/goals/GoalCard";
 import { Goal } from "@/types/Goal.type";
 import { TransactionType } from "@/types/Transaction.type";
+import { useGoal } from "@/context/goalContext";
+import { useTranslation } from "react-i18next";
 
 const mockGoals: Goal[] = [
   {
@@ -44,8 +46,9 @@ const mockGoals: Goal[] = [
 ];
 
 export default function GoalsPage() {
-  const [isLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { t } = useTranslation();
+  const { isLoading, isModalOpen, setIsModalOpen } = useGoal();
+
   const [goals] = useState(mockGoals);
 
   const hasGoals = goals.length > 0;
@@ -53,9 +56,9 @@ export default function GoalsPage() {
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <PageHeader
-        title="Metas"
+        title={t("goals.title")}
         actionIcon={Plus}
-        actionTitle="Nova Meta"
+        actionTitle={t("goals.newGoal")}
         onActionClick={() => setIsModalOpen(true)}
         actionDisabled={isLoading}
       />
@@ -79,8 +82,8 @@ export default function GoalsPage() {
         </div>
       ) : (
         <EmptyState
-          title="Nenhuma meta encontrada"
-          description="Crie uma meta para começar"
+          title={t("goals.goalNotFound")}
+          description={t("goals.goalNotFoundDescription")}
         />
       )}
 

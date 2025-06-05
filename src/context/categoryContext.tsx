@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { Category } from "@/types/Category.type";
 import { TransactionTypeFilter } from "@/types/Transaction.type";
 import { useUser } from "@clerk/nextjs";
+import { useTranslation } from "react-i18next";
 
 interface CategoryContextProps {
   categories: Category[];
@@ -39,6 +40,7 @@ const CategoryContext = createContext<CategoryContextProps | undefined>(
 
 export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
+  const { t } = useTranslation();
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -51,11 +53,11 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
 
   const categoriesTabs = useMemo(
     () => [
-      { label: "Todas", value: TransactionTypeFilter.All },
-      { label: "Despesas", value: TransactionTypeFilter.Expense },
-      { label: "Receitas", value: TransactionTypeFilter.Income },
+      { label: t("categories.all"), value: TransactionTypeFilter.All },
+      { label: t("categories.expense"), value: TransactionTypeFilter.Expense },
+      { label: t("categories.income"), value: TransactionTypeFilter.Income },
     ],
-    []
+    [t]
   );
 
   const fetchCategories = useCallback(async () => {

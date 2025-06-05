@@ -6,19 +6,7 @@ import { Tabs } from "@/components/shared/Tabs";
 import { useState } from "react";
 import { FilterCard } from "@/components/shared/FilterCard";
 import { Period } from "@/types/Period.type";
-
-const reportTabs: { label: string; value: ReportType }[] = [
-  { label: "Receitas vs Despesas", value: ReportTypeEnum.INCOME_EXPENSE },
-  { label: "Categorias", value: ReportTypeEnum.CATEGORIES },
-  { label: "Saldo", value: ReportTypeEnum.BALANCE },
-];
-
-const periodOptions = [
-  { label: "Último mês", value: Period.MONTH },
-  { label: "Últimos 3 meses", value: Period.TRIMESTER },
-  { label: "Últimos 6 meses", value: Period.SEMESTER },
-  { label: "Último ano", value: Period.YEAR },
-];
+import { useTranslation } from "react-i18next";
 
 interface FiltersCardProps {
   initialReportType?: ReportType;
@@ -33,8 +21,26 @@ export const ReportFilters = ({
   onReportTypeChange,
   onPeriodChange,
 }: FiltersCardProps) => {
+  const { t } = useTranslation();
+
   const [reportType, setReportType] = useState<ReportType>(initialReportType);
   const [period, setPeriod] = useState<string>(initialPeriod);
+
+  const reportTabs: { label: string; value: ReportType }[] = [
+    {
+      label: t("reports.incomeVsExpense"),
+      value: ReportTypeEnum.INCOME_EXPENSE,
+    },
+    { label: t("reports.category"), value: ReportTypeEnum.CATEGORIES },
+    { label: t("reports.balance"), value: ReportTypeEnum.BALANCE },
+  ];
+
+  const periodOptions = [
+    { label: t("reports.lastMonth"), value: Period.MONTH },
+    { label: t("reports.lastThreeMonths"), value: Period.TRIMESTER },
+    { label: t("reports.lastSixMonths"), value: Period.SEMESTER },
+    { label: t("reports.lastYear"), value: Period.YEAR },
+  ];
 
   const handleReportChange = (value: ReportType) => {
     setReportType(value);
@@ -47,7 +53,7 @@ export const ReportFilters = ({
   };
 
   return (
-    <FilterCard>
+    <FilterCard title={t("reports.filters")}>
       <div className="flex flex-col items-end gap-4 md:flex-row">
         <div className="flex-1">
           <Tabs
@@ -58,7 +64,7 @@ export const ReportFilters = ({
         </div>
         <div className="w-full md:w-[200px]">
           <SelectField
-            label="Período"
+            label={t("reports.period")}
             value={period}
             onChange={(e) => handlePeriodChange(e.target.value)}
             options={periodOptions}

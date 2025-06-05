@@ -10,8 +10,11 @@ import { ReportsPageSkeleton } from "@/components/ui/reports/ReportsPageSkeleton
 import { useReports } from "@/context/reportContext";
 import { ReportTypeEnum } from "@/types/Report.type";
 import { Period } from "@/types/Period.type";
+import { useTranslation } from "react-i18next";
 
 export default function ReportsPage() {
+  const { t } = useTranslation();
+
   const {
     period,
     setPeriod,
@@ -34,8 +37,8 @@ export default function ReportsPage() {
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <PageHeader
-        title="Relatórios"
-        actionTitle="Exportar"
+        title={t("reports.title")}
+        actionTitle={t("reports.export")}
         actionIcon={Download}
         onActionClick={() => {
           console.log("Exporting reports...");

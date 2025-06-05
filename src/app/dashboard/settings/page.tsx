@@ -7,8 +7,11 @@ import { ToggleSwitchField } from "@/components/shared/ToggleSwitchField";
 import { SettingCard } from "@/components/ui/settings/SettingsCard";
 import { useSettings } from "@/context/settingsContext";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function SettingsPage() {
+  const { t } = useTranslation();
+
   const {
     isDarkMode,
     setDarkMode,
@@ -35,12 +38,12 @@ export default function SettingsPage() {
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      <PageHeader title="Configurações" />
+      <PageHeader title={t("settings.title")} />
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {/* Aparência */}
         <SettingCard
-          title="Aparência"
-          description="Personalize a aparência do aplicativo"
+          title={t("settings.appearance")}
+          description={t("settings.appearanceDescription")}
         >
           <RadioGroupField
             name="theme"
@@ -50,17 +53,20 @@ export default function SettingsPage() {
               if (theme === "dark" && !isDarkMode) toggleTheme();
             }}
             options={[
-              { value: "light", label: "Claro" },
-              { value: "dark", label: "Escuro" },
-              { value: "system", label: "Sistema" },
+              { value: "light", label: t("settings.lightMode") },
+              { value: "dark", label: t("settings.darkMode") },
+              { value: "system", label: t("settings.systemDefault") },
             ]}
           />
         </SettingCard>
 
         {/* Moeda */}
-        <SettingCard title="Moeda" description="Defina a moeda padrão">
+        <SettingCard
+          title={t("settings.currency")}
+          description={t("settings.currencyDescription")}
+        >
           <SelectField
-            label="Moeda"
+            label={t("settings.currency")}
             value={currency}
             onChange={(e) => setCurrency(e.target.value)}
             options={currencies}
@@ -68,9 +74,12 @@ export default function SettingsPage() {
         </SettingCard>
 
         {/* Idioma */}
-        <SettingCard title="Idioma" description="Defina o idioma do aplicativo">
+        <SettingCard
+          title={t("settings.language")}
+          description={t("settings.languageDescription")}
+        >
           <SelectField
-            label="Idioma"
+            label={t("settings.language")}
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
             options={languages}
@@ -80,31 +89,33 @@ export default function SettingsPage() {
         {/* Notificações */}
         <div className="md:col-span-2 lg:col-span-3 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
           <div className="p-6">
-            <h3 className="text-lg font-semibold">Notificações</h3>
+            <h3 className="text-lg font-semibold">
+              {t("settings.notifications")}
+            </h3>
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Gerencie suas preferências de notificação
+              {t("settings.notificationsDescription")}
             </p>
           </div>
           <div className="p-6 pt-0 space-y-4">
             <ToggleSwitchField
-              label="Alertas de orçamento"
-              description="Receba alertas quando estiver próximo do limite de orçamento"
+              label={t("settings.budgetAlerts")}
+              description={t("settings.budgetAlertsDescription")}
               checked={notifications.budgetAlerts}
               onChange={(checked) =>
                 setNotifications({ ...notifications, budgetAlerts: checked })
               }
             />
             <ToggleSwitchField
-              label="Relatórios semanais"
-              description="Receba um resumo semanal das suas finanças"
+              label={t("settings.weaklyReport")}
+              description={t("settings.weaklyReportDescription")}
               checked={notifications.weeklyReports}
               onChange={(checked) =>
                 setNotifications({ ...notifications, weeklyReports: checked })
               }
             />
             <ToggleSwitchField
-              label="Dicas financeiras"
-              description="Receba dicas para melhorar suas finanças"
+              label={t("settings.financialTips")}
+              description={t("settings.financialTipsDescription")}
               checked={notifications.tips}
               onChange={(checked) =>
                 setNotifications({ ...notifications, tips: checked })

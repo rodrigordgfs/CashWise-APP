@@ -50,7 +50,7 @@ const SettingsContext = createContext<SettingsContextProps | undefined>(
 );
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -118,16 +118,16 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
 
   const value = useMemo(() => {
     const currencies: Currency[] = [
-      { value: "BRL", label: "Real (R$)" },
-      { value: "USD", label: "Dólar ($)" },
-      { value: "EUR", label: "Euro (€)" },
-      { value: "GBP", label: "Libra (£)" },
+      { value: "BRL", label: t("settings.real") },
+      { value: "USD", label: t("settings.dollar") },
+      { value: "EUR", label: t("settings.euro") },
+      { value: "GBP", label: t("settings.libra") },
     ];
 
     const languages: Language[] = [
-      { value: "pt-BR", label: "Português (Brasil)" },
-      { value: "en-US", label: "English (US)" },
-      { value: "es", label: "Español" },
+      { value: "pt-BR", label: t("settings.portuguese") },
+      { value: "en-US", label: t("settings.english") },
+      { value: "es", label: t("settings.spanish") },
     ];
 
     return {

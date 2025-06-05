@@ -2,6 +2,7 @@
 
 import { EmptyState } from "@/components/shared/EmptyState";
 import { MonthlyReport } from "@/types/Report.type";
+import { useTranslation } from "react-i18next";
 import {
   BarChart,
   Bar,
@@ -16,19 +17,23 @@ interface IncomeVsExpensesChartProps {
 }
 
 export const IncomeVsExpensesChart = ({ data }: IncomeVsExpensesChartProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
       <div className="p-6">
-        <h3 className="text-lg font-semibold">Receitas vs Despesas</h3>
+        <h3 className="text-lg font-semibold">
+          {t("reports.incomeVsExpense")}
+        </h3>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Comparativo mensal
+          {t("reports.incomeVsExpenseDescription")}
         </p>
       </div>
       {data.length === 0 ? (
         <div className="p-6 pt-0 text-center text-sm text-zinc-500">
           <EmptyState
-            title="Nenhum dado disponível para o período selecionado."
-            description="Tente alterar o período ou adicionar transações."
+            title={t("reports.incomeVsExpenseNoData")}
+            description={t("reports.incomeVsExpenseNoDataDescription")}
           />
         </div>
       ) : (
@@ -37,8 +42,8 @@ export const IncomeVsExpensesChart = ({ data }: IncomeVsExpensesChartProps) => {
             <XAxis dataKey="name" />
             <YAxis />
             <Legend />
-            <Bar dataKey="income" name="Receitas" fill="#22c55e" />
-            <Bar dataKey="expense" name="Despesas" fill="#ef4444" />
+            <Bar dataKey="income" name={t("reports.income")} fill="#22c55e" />
+            <Bar dataKey="expense" name={t("reports.expense")} fill="#ef4444" />
           </BarChart>
         </ResponsiveContainer>
       )}

@@ -1,8 +1,9 @@
 import { Budget } from "@/types/Budge.type";
 import { Edit, Trash } from "lucide-react";
-import { parseISO, format } from "date-fns";
-
-import { ptBR } from "date-fns/locale";
+import { parseISO } from "date-fns";
+import { useSettings } from "@/context/settingsContext";
+import { formatDate } from "@/utils/formatDate";
+import { useTranslation } from "react-i18next";
 
 interface BudgetCardHeaderProps {
   budget: Budget;
@@ -15,7 +16,8 @@ export const BudgetCardHeader = ({
   onEdit,
   onDelete,
 }: BudgetCardHeaderProps) => {
-  console.log("BudgetCardHeader", budget);
+  const { language } = useSettings();
+  const { t } = useTranslation();
 
   const date = budget.date ? parseISO(budget.date) : null;
   const isValidDate = date instanceof Date && !isNaN(date.getTime());
@@ -26,14 +28,14 @@ export const BudgetCardHeader = ({
         <h3 className="text-md font-medium">{budget.category.name}</h3>
         <div className="flex gap-1">
           <button
-            title="Editar orçamento"
+            title={t("budgets.editBudget")}
             onClick={() => onEdit?.(budget)}
             className="p-1 rounded-md text-zinc-500 hover:text-emerald-500 dark:text-zinc-400 dark:hover:text-emerald-500 cursor-pointer"
           >
             <Edit className="h-4 w-4" />
           </button>
           <button
-            title="Excluir orçamento"
+            title={t("budgets.deleteBudget")}
             onClick={() => onDelete?.(budget)}
             className="p-1 rounded-md text-zinc-500 hover:text-red-500 dark:text-zinc-400 dark:hover:text-red-400 cursor-pointer"
           >
@@ -43,11 +45,8 @@ export const BudgetCardHeader = ({
       </div>
       <p className="text-sm text-zinc-500 dark:text-zinc-400">
         {isValidDate
-          ? format(date, "MMMM 'de' yyyy", { locale: ptBR }).replace(
-              /^./,
-              (c) => c.toUpperCase()
-            )
-          : "Data inválida"}
+          ? formatDate(date, "MMMM 'de' yyyy", language)
+          : t("budgets.invalidDate")}
       </p>
     </div>
   );

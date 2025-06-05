@@ -2,6 +2,7 @@ import { Category } from "@/types/Category.type";
 import { CategoryCard } from "../CategoryCard";
 import { CategoryCardSkeleton } from "../CategoryCardSkeleton";
 import { EmptyState } from "@/components/shared/EmptyState";
+import { useTranslation } from "react-i18next";
 
 interface CategoryListProps {
   categories: Category[];
@@ -16,6 +17,8 @@ export const CategoryList = ({
   onEdit,
   onDelete,
 }: CategoryListProps) => {
+  const { t } = useTranslation();
+
   if (isLoading) {
     return (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -30,8 +33,8 @@ export const CategoryList = ({
     return (
       <div className="flex items-center justify-center">
         <EmptyState
-          title="Nenhuma categoria encontrada"
-          description="Você ainda não adicionou nenhuma categoria por aqui."
+          title={t("categories.categoryNotFound")}
+          description={t("categories.categoryNotFoundDescription")}
         />
       </div>
     );

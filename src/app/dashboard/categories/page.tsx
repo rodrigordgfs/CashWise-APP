@@ -7,6 +7,7 @@ import { CategoryList } from "@/components/ui/categories/CategoryList";
 import { CategoryModal } from "@/components/ui/categories/CategoryModal";
 import { useCategory } from "@/context/categoryContext";
 import { Plus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function CategoriesPage() {
   const {
@@ -24,18 +25,19 @@ export default function CategoriesPage() {
     setCategoryToEdit,
     categoriesTabs,
   } = useCategory();
+  const { t } = useTranslation();
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <PageHeader
-        title="Categorias"
+        title={t("categories.title")}
         actionIcon={Plus}
-        actionTitle="Nova Categoria"
+        actionTitle={t("categories.newCategory")}
         onActionClick={openModalToCreate}
         actionDisabled={isLoading}
       />
 
-      <FilterCard>
+      <FilterCard title={t("categories.filters")}>
         <Tabs
           tabs={categoriesTabs}
           selectedValue={categoryType}

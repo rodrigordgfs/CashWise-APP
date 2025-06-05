@@ -9,6 +9,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/shared/Button";
 import { InputField } from "@/components/shared/InputField";
+import { useTranslation } from "react-i18next";
 
 const schema = z
   .object({
@@ -25,6 +26,7 @@ const schema = z
 type FormData = z.infer<typeof schema>;
 
 export const SecurityCard = () => {
+  const { t } = useTranslation();
   const { user } = useUser();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -61,9 +63,9 @@ export const SecurityCard = () => {
   return (
     <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
       <div className="p-6">
-        <h3 className="text-lg font-semibold">Segurança</h3>
+        <h3 className="text-lg font-semibold">{t("profile.security")}</h3>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Gerencie sua senha
+          {t("profile.securityDescription")}
         </p>
       </div>
       <div className="p-6 pt-0">
@@ -73,7 +75,7 @@ export const SecurityCard = () => {
             control={control}
             render={({ field }) => (
               <InputField
-                label="Nova senha"
+                label={t("profile.newPassword")}
                 type="password"
                 {...field}
                 error={errors.newPassword?.message}
@@ -86,7 +88,7 @@ export const SecurityCard = () => {
             control={control}
             render={({ field }) => (
               <InputField
-                label="Confirmar nova senha"
+                label={t("profile.confirmPassword")}
                 type="password"
                 {...field}
                 error={errors.confirmPassword?.message}
@@ -96,7 +98,7 @@ export const SecurityCard = () => {
 
           <div className="pt-4">
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Salvando..." : "Alterar senha"}
+              {isLoading ? t("profile.saving") : t("profile.changePassword")}
             </Button>
           </div>
         </form>

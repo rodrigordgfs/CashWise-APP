@@ -2,13 +2,16 @@ import { ProgressBar } from "@/components/shared/ProgressBar";
 import { useSettings } from "@/context/settingsContext";
 import { Goal } from "@/types/Goal.type";
 import { formatCurrency } from "@/utils/formatConvertCurrency";
+import { useTranslation } from "react-i18next";
 
 interface GoalCardContentProps {
   goal: Goal;
 }
 
 export const GoalCardContent = ({ goal }: GoalCardContentProps) => {
+  const { t } = useTranslation();
   const { currency, language } = useSettings();
+
   const percentage = Math.round((goal.currentAmount / goal.targetAmount) * 100);
 
   return (
@@ -24,7 +27,7 @@ export const GoalCardContent = ({ goal }: GoalCardContentProps) => {
 
         <div>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Progresso / Meta
+            {t("goals.progressGoal")}
           </p>
           <p className="font-medium">
             {formatCurrency(goal.currentAmount, currency, language)} /{" "}
