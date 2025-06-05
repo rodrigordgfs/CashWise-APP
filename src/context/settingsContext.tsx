@@ -144,7 +144,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
       setLanguage: setLanguageState,
       setNotifications: setNotificationsState,
     };
-  }, [isDarkMode, currency, language, notifications]);
+  }, [isDarkMode, currency, language, notifications, t]);
 
   if (!isLoaded) return null;
 
