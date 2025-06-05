@@ -69,7 +69,13 @@
     "descriptionPlaceholder": "E.g. Supermarket",
     "ammount": "Amount",
     "ammountPlaceholder": "100.00",
-    "datePlaceholder": "Select a date"
+    "datePlaceholder": "Select a date",
+    "typeRequiredValidation": "Transaction type is required",
+    "descriptionRequiredValidation": "Description is required",
+    "ammountMinValidation": "Amount must be greater than zero",
+    "dateRequiredValidation": "Date is required",
+    "categoryRequiredValidation": "Category is required",
+    "accountRequiredValidation": "Account is required"
   },
   "categories": {
     "title": "Categories",

@@ -69,7 +69,13 @@
     "descriptionPlaceholder": "Ej: Supermercado",
     "ammount": "Valor",
     "ammountPlaceholder": "100.00",
-    "datePlaceholder": "Selecciona una fecha"
+    "datePlaceholder": "Selecciona una fecha",
+    "typeRequiredValidation": "El tipo de transacción es obligatorio",
+    "descriptionRequiredValidation": "La descripción es obligatoria",
+    "ammountMinValidation": "El valor debe ser mayor que cero",
+    "dateRequiredValidation": "La fecha es obligatoria",
+    "categoryRequiredValidation": "La categoría es obligatoria",
+    "accountRequiredValidation": "La cuenta es obligatoria"
   },
   "categories": {
     "title": "Categorías",

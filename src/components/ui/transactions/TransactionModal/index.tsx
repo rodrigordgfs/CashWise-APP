@@ -27,19 +27,6 @@ interface TransactionModalProps {
   accounts: Account[];
 }
 
-const schema = z.object({
-  type: z.nativeEnum(TransactionType, {
-    errorMap: () => ({ message: "Tipo de transação é obrigatório" }),
-  }),
-  description: z.string().min(1, "Descrição é obrigatória"),
-  amount: z.number().min(0.01, "Valor deve ser maior que zero"),
-  date: z.string().min(1, "Data é obrigatória"),
-  category: z.string().min(1, "Categoria é obrigatória"),
-  account: z.string().min(1, "Conta é obrigatória"),
-});
-
-type FormData = z.infer<typeof schema>;
-
 export const TransactionModal = ({
   isOpen,
   onClose,
@@ -49,6 +36,21 @@ export const TransactionModal = ({
   const { categories } = useCategory();
   const { saveOrUpdateTransaction } = useTransaction();
   const { t } = useTranslation();
+
+  const schema = z.object({
+    type: z.nativeEnum(TransactionType, {
+      errorMap: () => ({ message: t("transactions.typeRequiredValidation") }),
+    }),
+    description: z
+      .string()
+      .min(1, t("transactions.descriptionRequiredValidation")),
+    amount: z.number().min(0.01, t("transactions.ammountMinValidation")),
+    date: z.string().min(1, t("transactions.dateRequiredValidation")),
+    category: z.string().min(1, t("transactions.categoryRequiredValidation")),
+    account: z.string().min(1, t("transactions.accountRequiredValidation")),
+  });
+
+  type FormData = z.infer<typeof schema>;
 
   const {
     control,
