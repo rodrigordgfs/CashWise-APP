@@ -12,6 +12,7 @@ import { InputField } from "@/components/shared/InputField";
 import { Modal } from "@/components/shared/Modal";
 import { TransactionType } from "@/types/Transaction.type";
 import { useUser } from "@clerk/nextjs";
+import { useTranslation } from "react-i18next";
 
 interface CategoryModalProps {
   isOpen: boolean;
@@ -53,6 +54,8 @@ export function CategoryModal({
   initialData,
 }: CategoryModalProps) {
   const { user } = useUser();
+  const { t } = useTranslation();
+
   const {
     control,
     handleSubmit,
@@ -131,17 +134,19 @@ export function CategoryModal({
   return (
     <Modal
       isOpen={isOpen}
-      title={initialData ? "Editar Categoria" : "Nova Categoria"}
+      title={
+        initialData ? t("categories.editCategory") : t("categories.newCategory")
+      }
       onClose={onClose}
       onConfirm={handleSubmit(onSubmit)}
-      confirmLabel="Salvar"
-      cancelLabel="Cancelar"
+      confirmLabel={t("app.save")}
+      cancelLabel={t("app.cancel")}
       isLoading={isLoading}
     >
       <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">
         {initialData
-          ? "Altere os dados da categoria selecionada."
-          : "Crie uma nova categoria para organizar suas transações."}
+          ? t("categories.descriptionEdit")
+          : t("categories.descriptionAdd")}
       </p>
 
       <div className="space-y-4">
@@ -150,11 +155,17 @@ export function CategoryModal({
           control={control}
           render={({ field }) => (
             <SelectField
-              label="Tipo"
+              label={t("categories.type")}
               error={errors.type?.message}
               options={[
-                { value: TransactionType.Expense, label: "Despesa" },
-                { value: TransactionType.Income, label: "Receita" },
+                {
+                  value: TransactionType.Expense,
+                  label: t("categories.expense"),
+                },
+                {
+                  value: TransactionType.Income,
+                  label: t("categories.income"),
+                },
               ]}
               {...field}
             />
@@ -166,8 +177,8 @@ export function CategoryModal({
           control={control}
           render={({ field }) => (
             <InputField
-              label="Nome"
-              placeholder="Ex: Alimentação"
+              label={t("categories.name")}
+              placeholder={t("categories.namePlaceholder")}
               error={errors.name?.message}
               {...field}
             />
@@ -175,13 +186,15 @@ export function CategoryModal({
         />
 
         <div>
-          <label className="block text-sm font-medium mb-2">Cor</label>
+          <label className="block text-sm font-medium mb-2">
+            {t("categories.color")}
+          </label>
           <div className="flex flex-wrap gap-2">
             {Object.entries(colorOptions).map(([color, className]) => (
               <button
                 key={color}
                 type="button"
-                title={`Selecionar cor ${color}`}
+                title={`${t("categories.selectColor")} ${color}`}
                 className={`h-8 w-8 rounded-full cursor-pointer ${className} ${
                   selectedColor === color
                     ? "ring-2 ring-offset-2 ring-emerald-500"
@@ -190,7 +203,7 @@ export function CategoryModal({
                 onClick={() =>
                   setValue("color", color, { shouldValidate: true })
                 }
-                aria-label={`Selecionar cor ${color}`}
+                aria-label={`${t("categories.selectColor")} ${color}`}
               />
             ))}
             {errors.color && (
@@ -202,7 +215,9 @@ export function CategoryModal({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Ícone</label>
+          <label className="block text-sm font-medium mb-2">
+            {t("categories.icon")}
+          </label>
           <div className="flex flex-wrap gap-2">
             {icons.map((icon) => (
               <button
@@ -214,7 +229,7 @@ export function CategoryModal({
                     : ""
                 }`}
                 onClick={() => setValue("icon", icon, { shouldValidate: true })}
-                aria-label={`Selecionar ícone ${icon}`}
+                aria-label={`${t("categories.selectIcon")} ${icon}`}
               >
                 {icon}
               </button>

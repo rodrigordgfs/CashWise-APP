@@ -82,7 +82,15 @@
     "expense": "Gasto",
     "type": "Tipo",
     "categoryNotFound": "No se encontraron categorías",
-    "categoryNotFoundDescription": "Aún no has agregado ninguna categoría aquí."
+    "categoryNotFoundDescription": "Aún no has agregado ninguna categoría aquí.",
+    "descriptionAdd": "Crea una nueva categoría para organizar tus transacciones.",
+    "descriptionEdit": "Edita los datos de la categoría seleccionada.",
+    "name": "Nombre",
+    "namePlaceholder": "Ej: Alimentación",
+    "color": "Color",
+    "selectColor": "Seleccionar el color",
+    "icon": "Ícono",
+    "selectIcon": "Seleccionar el ícono"
   },
   "budgets": {
     "title": "Presupuestos",

@@ -82,7 +82,15 @@
     "expense": "Expense",
     "type": "Type",
     "categoryNotFound": "No categories found",
-    "categoryNotFoundDescription": "You haven't added any categories here yet."
+    "categoryNotFoundDescription": "You haven't added any categories here yet.",
+    "descriptionAdd": "Create a new category to organize your transactions.",
+    "descriptionEdit": "Edit the selected category's data.",
+    "name": "Name",
+    "namePlaceholder": "E.g. Food",
+    "color": "Color",
+    "selectColor": "Select color",
+    "icon": "Icon",
+    "selectIcon": "Select icon"
   },
   "budgets": {
     "title": "Budgets",

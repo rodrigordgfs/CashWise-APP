@@ -82,7 +82,15 @@
     "expense": "Despesa",
     "type": "Tipo",
     "categoryNotFound": "Nenhuma categoria encontrada",
-    "categoryNotFoundDescription": "Você ainda não adicionou nenhuma categoria por aqui."
+    "categoryNotFoundDescription": "Você ainda não adicionou nenhuma categoria por aqui.",
+    "descriptionAdd": "Crie uma nova categoria para organizar suas transações.",
+    "descriptionEdit": "Altere os dados da categoria selecionada.",
+    "name": "Nome",
+    "namePlaceholder": "Ex: Alimentação",
+    "color": "Cor",
+    "selectColor": "Selecionar a cor",
+    "icon": "Ícone",
+    "selectIcon": "Selecionar o ícone"
   },
   "budgets": {
     "title": "Orçamentos",
