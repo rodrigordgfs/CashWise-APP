@@ -96,7 +96,11 @@
     "color": "Color",
     "selectColor": "Select color",
     "icon": "Icon",
-    "selectIcon": "Select icon"
+    "selectIcon": "Select icon",
+    "nameRequiredValidation": "Name is required",
+    "typeRequiredValidation": "Type is required",
+    "colorRequiredValidation": "Color is required",
+    "iconRequiredValidation": "Icon is required"
   },
   "budgets": {
     "title": "Budgets",

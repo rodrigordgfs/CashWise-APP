@@ -36,17 +36,6 @@ export const colorOptions: Record<string, string> = {
 
 const icons = ["💸", "🍔", "🏠", "🚗", "🎮", "💼", "💊", "🎁", "🛒", "🏴‍☠️"];
 
-const schema = z.object({
-  name: z.string().trim().min(1, "Nome é obrigatório"),
-  type: z.nativeEnum(TransactionType, {
-    errorMap: () => ({ message: "Tipo é obrigatório" }),
-  }),
-  color: z.string().min(1, "Cor é obrigatória"),
-  icon: z.string().min(1, "Ícone é obrigatório"),
-});
-
-type FormValues = z.infer<typeof schema>;
-
 export function CategoryModal({
   isOpen,
   onClose,
@@ -55,6 +44,17 @@ export function CategoryModal({
 }: CategoryModalProps) {
   const { user } = useUser();
   const { t } = useTranslation();
+
+  const schema = z.object({
+    name: z.string().trim().min(1, t("categories.nameRequiredValidation")),
+    type: z.nativeEnum(TransactionType, {
+      errorMap: () => ({ message: t("categories.typeRequiredValidation") }),
+    }),
+    color: z.string().min(1, t("categories.colorRequiredValidation")),
+    icon: z.string().min(1, t("categories.iconRequiredValidation")),
+  });
+
+  type FormValues = z.infer<typeof schema>;
 
   const {
     control,

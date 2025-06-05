@@ -96,7 +96,11 @@
     "color": "Cor",
     "selectColor": "Selecionar a cor",
     "icon": "Ícone",
-    "selectIcon": "Selecionar o ícone"
+    "selectIcon": "Selecionar o ícone",
+    "nameRequiredValidation": "Nome é obrigatório",
+    "typeRequiredValidation": "Tipo é obrigatório",
+    "colorRequiredValidation": "Cor é obrigatória",
+    "iconRequiredValidation": "Ícone é obrigatório"
   },
   "budgets": {
     "title": "Orçamentos",
