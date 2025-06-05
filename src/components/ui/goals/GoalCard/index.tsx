@@ -4,7 +4,6 @@ import { GoalCardContent } from "../GoalCardContent";
 import { GoalCardFooter } from "../GoalCardFooter";
 import { Goal } from "@/types/Goal.type";
 
-
 interface GoalCardProps {
   goal: Goal;
   onEdit?: (goal: Goal) => void;

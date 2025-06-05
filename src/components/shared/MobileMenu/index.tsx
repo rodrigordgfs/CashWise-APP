@@ -32,17 +32,14 @@ export const MobileMenu = () => {
     router.push("/");
   };
 
-  // Fecha menu ao clicar em um item
   const handleItemClick = () => {
     closeMobileMenu();
   };
 
-  // Fecha se clicar fora do menu (overlay)
   const handleOverlayClick = () => {
     closeMobileMenu();
   };
 
-  // Impede fechamento ao clicar dentro do menu
   const handleMenuClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
