@@ -9,6 +9,7 @@ import { InputField } from "@/components/shared/InputField";
 import { SelectField } from "@/components/shared/SelectField";
 import { DatePickerField } from "@/components/shared/DatePickerField";
 import { useCategory } from "@/context/categoryContext";
+import { useTranslation } from "react-i18next";
 
 interface Goal {
   id?: string;
@@ -45,6 +46,7 @@ export const GoalModal = ({
   initialData,
 }: GoalModalProps) => {
   const { categories } = useCategory();
+  const { t } = useTranslation();
 
   const {
     control,
@@ -96,9 +98,11 @@ export const GoalModal = ({
   return (
     <Modal
       isOpen={isOpen}
-      title={initialData ? "Editar Meta" : "Nova Meta"}
+      title={initialData ? t("goals.editGoal") : t("goals.newGoal")}
       onClose={onClose}
       onConfirm={handleSubmit(onSubmit)}
+      cancelLabel={t("app.cancel")}
+      confirmLabel={t("app.save")}
     >
       <div className="space-y-4">
         <Controller
@@ -106,8 +110,8 @@ export const GoalModal = ({
           control={control}
           render={({ field }) => (
             <InputField
-              label="Título"
-              placeholder="Ex: Comprar um carro"
+              label={t("goals.titleField")}
+              placeholder={t("goals.titlePlaceholder")}
               {...field}
               error={errors.title?.message}
             />
@@ -119,8 +123,8 @@ export const GoalModal = ({
           control={control}
           render={({ field }) => (
             <InputField
-              label="Descrição"
-              placeholder="Ex: Juntar dinheiro para comprar um carro novo"
+              label={t("goals.descriptionField")}
+              placeholder={t("goals.descriptionPlaceholder")}
               {...field}
               error={errors.description?.message}
             />
@@ -132,7 +136,7 @@ export const GoalModal = ({
           control={control}
           render={({ field }) => (
             <InputField
-              label="Meta"
+              label={t("goals.goal")}
               type="money"
               {...field}
               error={errors.targetAmount?.message}
@@ -145,7 +149,7 @@ export const GoalModal = ({
           control={control}
           render={({ field }) => (
             <InputField
-              label="Valor atual"
+              label={t("goals.currentAmmount")}
               type="money"
               {...field}
               error={errors.currentAmount?.message}
@@ -158,7 +162,7 @@ export const GoalModal = ({
           control={control}
           render={({ field }) => (
             <SelectField
-              label="Categoria"
+              label={t("goals.categoryField")}
               options={categories.map((category) => ({
                 value: category.id,
                 label: `${category.icon} ${category.name}`,
@@ -175,8 +179,9 @@ export const GoalModal = ({
           render={({ field }) => (
             <DatePickerField
               field={field}
-              label="Data limite"
+              label={t("goals.deadlineField")}
               error={errors.deadline?.message}
+              placeholder={t("goals.deadlinePlaceholder")}
             />
           )}
         />

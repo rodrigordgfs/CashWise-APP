@@ -103,7 +103,12 @@
     "budgetCloseToLimit": "You're close to the limit!",
     "withinBudget": "Within budget",
     "invalidDate": "Invalid date",
-    "spentLimit": "Spent / Limit"
+    "spentLimit": "Spent / Limit",
+    "description": "Set a spending limit for a category",
+    "category": "Category",
+    "limit": "Limit",
+    "month": "Month",
+    "selectMonth": "Select month"
   },
   "goals": {
     "title": "Goals",
@@ -119,7 +124,18 @@
     "goalAchieved": "Goal achieved! 🎉",
     "almostThere": "Almost there! Keep saving.",
     "daysLeft": "Days left to reach the goal",
-    "deadelineExpired": "Deadline expired"
+    "deadelineExpired": "Deadline expired",
+    "titleField": "Title",
+    "titlePlaceholder": "E.g. Trip to Paris",
+    "descriptionField": "Description",
+    "descriptionPlaceholder": "E.g. Save for the holiday trip",
+    "goal": "Goal",
+    "goalPlaceholder": "E.g. $5,000.00",
+    "currentAmmount": "Current Amount",
+    "currentAmmountPlaceholder": "E.g. $1,000.00",
+    "categoryField": "Category",
+    "deadlineField": "Deadline",
+    "deadlinePlaceholder": "Select a date"
   },
   "reports": {
     "title": "Reports",

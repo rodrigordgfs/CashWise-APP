@@ -5,14 +5,15 @@ import { Modal } from "@/components/shared/Modal";
 import { SelectField } from "@/components/shared/SelectField";
 import { Category } from "@/types/Category.type";
 import { useEffect, useState } from "react";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
 
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Budget } from "@/types/Budge.type";
 import { MonthDatePicker } from "@/components/shared/MonthPicker";
+import { useTranslation } from "react-i18next";
+import { formatDate } from "@/utils/formatDate";
+import { useSettings } from "@/context/settingsContext";
 
 interface BudgetModalProps {
   isOpen: boolean;
@@ -42,6 +43,9 @@ export const BudgetModal = ({
   categories,
   initialData,
 }: BudgetModalProps) => {
+  const { t } = useTranslation();
+  const { language } = useSettings();
+
   const initialDate = initialData
     ? parseYearMonth(initialData.date)
     : new Date();
@@ -115,12 +119,14 @@ export const BudgetModal = ({
   return (
     <Modal
       isOpen={isOpen}
-      title={initialData ? "Editar Orçamento" : "Novo Orçamento"}
+      title={initialData ? t("budgets.editBudget") : t("budgets.newBudget")}
       onClose={onClose}
       onConfirm={handleSubmit(onSubmit)}
+      confirmLabel={t("app.save")}
+      cancelLabel={t("app.cancel")}
     >
       <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">
-        Defina um limite de gastos para uma categoria
+        {t("budgets.description")}
       </p>
 
       <div className="space-y-4 relative">
@@ -130,7 +136,7 @@ export const BudgetModal = ({
           name="category"
           render={({ field }) => (
             <SelectField
-              label="Categoria"
+              label={t("budgets.category")}
               options={categories.map((category) => ({
                 value: category.id,
                 label: `${category.icon} ${category.name}`,
@@ -147,7 +153,7 @@ export const BudgetModal = ({
           name="limit"
           render={({ field }) => (
             <InputField
-              label="Limite"
+              label={t("budgets.limit")}
               type="money"
               value={field.value}
               onChange={(val) => field.onChange(val)}
@@ -164,7 +170,7 @@ export const BudgetModal = ({
           render={({ field }) => (
             <div className="relative z-10">
               <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
-                Mês
+                {t("budgets.month")}
               </label>
               <button
                 type="button"
@@ -176,10 +182,8 @@ export const BudgetModal = ({
                 }`}
               >
                 {selectedDate
-                  ? format(selectedDate, "MMMM 'de' yyyy", {
-                      locale: ptBR,
-                    }).replace(/^./, (c) => c.toUpperCase())
-                  : "Selecionar mês"}
+                  ? formatDate(selectedDate, "MMMM yyyy", language)
+                  : t("budgets.selectMonth")}
               </button>
               {errors.date && (
                 <p className="text-sm text-red-500 mt-1">

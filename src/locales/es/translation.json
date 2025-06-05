@@ -103,7 +103,12 @@
     "budgetCloseToLimit": "¡Estás cerca del límite!",
     "withinBudget": "Dentro del presupuesto",
     "invalidDate": "Fecha inválida",
-    "spentLimit": "Gasto / Límite"
+    "spentLimit": "Gasto / Límite",
+    "description": "Establece un límite de gastos para una categoría",
+    "category": "Categoría",
+    "limit": "Límite",
+    "month": "Mes",
+    "selectMonth": "Selecciona el mes"
   },
   "goals": {
     "title": "Metas",
@@ -119,7 +124,18 @@
     "goalAchieved": "¡Meta alcanzada! 🎉",
     "almostThere": "¡Casi lo logras! Sigue ahorrando.",
     "daysLeft": "Días restantes para alcanzar la meta",
-    "deadelineExpired": "Fecha límite expirada"
+    "deadelineExpired": "Fecha límite expirada",
+    "titleField": "Título",
+    "titlePlaceholder": "Ej: Viaje a París",
+    "descriptionField": "Descripción",
+    "descriptionPlaceholder": "Ej: Ahorrar para las vacaciones",
+    "goal": "Meta",
+    "goalPlaceholder": "Ej: $ 5.000,00",
+    "currentAmmount": "Valor Actual",
+    "currentAmmountPlaceholder": "Ej: $ 1.000,00",
+    "categoryField": "Categoría",
+    "deadlineField": "Fecha Límite",
+    "deadlinePlaceholder": "Selecciona una fecha"
   },
   "reports": {
     "title": "Informes",
