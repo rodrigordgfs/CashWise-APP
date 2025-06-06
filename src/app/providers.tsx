@@ -13,6 +13,7 @@ import { ReportsProvider } from "@/context/reportContext";
 import { DashboardProvider } from "@/context/dashboardContext";
 import { AppLoader } from "@/components/shared/AppLoader";
 import { GoalProvider } from "@/context/goalContext";
+import { AuthProvider } from "@/context/authContext";
 
 export function Providers({ children }: { children: ReactNode }) {
   const { isLoaded } = useAuth();
@@ -31,8 +32,10 @@ export function Providers({ children }: { children: ReactNode }) {
                 <SidebarProvider>
                   <MenuProvider>
                     <SettingsProvider>
-                      {children}
-                      <Toaster richColors />
+                      <AuthProvider>
+                        {children}
+                        <Toaster richColors />
+                      </AuthProvider>
                     </SettingsProvider>
                   </MenuProvider>
                 </SidebarProvider>
