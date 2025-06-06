@@ -6,19 +6,21 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export function Features() {
+  const { t } = useTranslation();
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 bg-white dark:bg-zinc-950">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold tracking-tighter md:text-5xl">
-              Recursos Principais
+              {t("home.features.title")}
             </h2>
             <p className="max-w-[900px] text-zinc-500 dark:text-zinc-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Descubra todas as funcionalidades que fazem do CashWise a melhor
-              escolha para suas finanças
+              {t("home.features.description")}
             </p>
           </div>
         </div>
@@ -27,60 +29,66 @@ export function Features() {
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900">
               <LineChart className="h-6 w-6 text-emerald-600 dark:text-emerald-500" />
             </div>
-            <h3 className="text-lg font-bold mt-4">Dashboard Inteligente</h3>
+            <h3 className="text-lg font-bold mt-4">
+              {t("home.features.feature1.title")}
+            </h3>
             <p className="text-zinc-500 dark:text-zinc-400 mt-2">
-              Visualize suas finanças com gráficos interativos e insights em
-              tempo real.
+              {t("home.features.feature1.description")}
             </p>
           </div>
           <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 p-6">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900">
               <CreditCard className="h-6 w-6 text-blue-600 dark:text-blue-500" />
             </div>
-            <h3 className="text-lg font-bold mt-4">Controle de Transações</h3>
+            <h3 className="text-lg font-bold mt-4">
+              {t("home.features.feature2.title")}
+            </h3>
             <p className="text-zinc-500 dark:text-zinc-400 mt-2">
-              Gerencie todas suas transações com categorização automática e
-              filtros avançados.
+              {t("home.features.feature2.description")}
             </p>
           </div>
           <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 p-6">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900">
               <PieChart className="h-6 w-6 text-purple-600 dark:text-purple-500" />
             </div>
-            <h3 className="text-lg font-bold mt-4">Orçamentos Inteligentes</h3>
+            <h3 className="text-lg font-bold mt-4">
+              {t("home.features.feature3.title")}
+            </h3>
             <p className="text-zinc-500 dark:text-zinc-400 mt-2">
-              Crie e monitore orçamentos com alertas automáticos e análises
-              preditivas.
+              {t("home.features.feature3.description")}
             </p>
           </div>
           <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 p-6">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900">
               <TrendingUp className="h-6 w-6 text-amber-600 dark:text-amber-500" />
             </div>
-            <h3 className="text-lg font-bold mt-4">Relatórios Avançados</h3>
+            <h3 className="text-lg font-bold mt-4">
+              {t("home.features.feature4.title")}
+            </h3>
             <p className="text-zinc-500 dark:text-zinc-400 mt-2">
-              Gere relatórios detalhados com análises de tendências e projeções
-              futuras.
+              {t("home.features.feature4.description")}
             </p>
           </div>
           <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 p-6">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900">
               <Shield className="h-6 w-6 text-red-600 dark:text-red-500" />
             </div>
-            <h3 className="text-lg font-bold mt-4">Segurança Total</h3>
+            <h3 className="text-lg font-bold mt-4">
+              {t("home.features.feature5.title")}
+            </h3>
             <p className="text-zinc-500 dark:text-zinc-400 mt-2">
-              Seus dados protegidos com criptografia de nível bancário e
-              autenticação segura.
+              {t("home.features.feature5.description")}
             </p>
           </div>
           <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 p-6">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900">
               <Users className="h-6 w-6 text-indigo-600 dark:text-indigo-500" />
             </div>
-            <h3 className="text-lg font-bold mt-4">Colaboração</h3>
+            <h3 className="text-lg font-bold mt-4">
+              {t("home.features.feature6.title")}
+            </h3>
             <p className="text-zinc-500 dark:text-zinc-400 mt-2">
-              Compartilhe orçamentos familiares e empresariais com controles de
-              acesso.
+              {t("home.features.feature6.description")}
             </p>
           </div>
         </div>

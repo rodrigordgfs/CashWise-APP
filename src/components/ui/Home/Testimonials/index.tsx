@@ -1,17 +1,19 @@
 import { Star } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export function Testimonials() {
+  const { t } = useTranslation();
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold tracking-tighter md:text-5xl">
-              O que nossos usuários dizem
+              {t("home.testimonials.title")}
             </h2>
             <p className="max-w-[900px] text-zinc-500 dark:text-zinc-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Veja como o CashWise está transformando a vida financeira de
-              pessoas reais
+              {t("home.testimonials.description")}
             </p>
           </div>
         </div>
@@ -26,13 +28,14 @@ export function Testimonials() {
               ))}
             </div>
             <p className="text-zinc-500 dark:text-zinc-400 mb-4">
-              &quot;O CashWise revolucionou como gerencio as finanças da minha
-              empresa. A interface é incrível!&quot;
+              {t("home.testimonials.testimonial1.feedback")}
             </p>
             <div>
-              <div className="font-semibold">Maria Silva</div>
+              <div className="font-semibold">
+                {t("home.testimonials.testimonial1.name")}
+              </div>
               <div className="text-sm text-zinc-500 dark:text-zinc-400">
-                Empreendedora
+                {t("home.testimonials.testimonial1.role")}
               </div>
             </div>
           </div>
@@ -46,13 +49,14 @@ export function Testimonials() {
               ))}
             </div>
             <p className="text-zinc-500 dark:text-zinc-400 mb-4">
-              &quot;Interface incrível e funcionalidades que realmente fazem
-              diferença. Recomendo 100%!&quot;
+              {t("home.testimonials.testimonial2.feedback")}
             </p>
             <div>
-              <div className="font-semibold">João Santos</div>
+              <div className="font-semibold">
+                {t("home.testimonials.testimonial2.name")}
+              </div>
               <div className="text-sm text-zinc-500 dark:text-zinc-400">
-                Desenvolvedor
+                {t("home.testimonials.testimonial2.role")}
               </div>
             </div>
           </div>
@@ -66,13 +70,14 @@ export function Testimonials() {
               ))}
             </div>
             <p className="text-zinc-500 dark:text-zinc-400 mb-4">
-              &quot;Finalmente consegui organizar minhas finanças. O app é
-              intuitivo e muito poderoso.&quot;
+              {t("home.testimonials.testimonial3.feedback")}
             </p>
             <div>
-              <div className="font-semibold">Ana Costa</div>
+              <div className="font-semibold">
+                {t("home.testimonials.testimonial3.name")}
+              </div>
               <div className="text-sm text-zinc-500 dark:text-zinc-400">
-                Consultora
+                {t("home.testimonials.testimonial3.role")}
               </div>
             </div>
           </div>

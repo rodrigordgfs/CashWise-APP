@@ -4,8 +4,10 @@ import Link from "next/link";
 import { Wallet } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/shared/Button";
+import { useTranslation } from "react-i18next";
 
 export function Header() {
+  const { t } = useTranslation();
   const { isSignedIn } = useUser();
 
   return (
@@ -21,16 +23,16 @@ export function Header() {
           {isSignedIn ? (
             <nav className="flex items-center space-x-3">
               <Link href="/dashboard">
-                <Button variant="emerald">Dashboard</Button>
+                <Button variant="emerald">{t("home.header.dashboard")}</Button>
               </Link>
             </nav>
           ) : (
             <nav className="flex items-center space-x-3">
               <Link href="/login">
-                <Button variant="neutral">Entrar</Button>
+                <Button variant="neutral">{t("home.header.enter")}</Button>
               </Link>
               <Link href="/register">
-                <Button variant="emerald">Registrar</Button>
+                <Button variant="emerald">{t("home.header.register")}</Button>
               </Link>
             </nav>
           )}

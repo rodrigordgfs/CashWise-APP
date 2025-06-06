@@ -5,6 +5,96 @@
     "loading": "Cargando...",
     "loadingDescription": "Estamos preparando todo para ti."
   },
+  "home": {
+    "header": {
+      "dashboard": "Panel",
+      "enter": "Entrar",
+      "register": "Registrarse"
+    },
+    "hero": {
+      "title": "Controla tus finanzas de forma inteligente",
+      "description": "CashWise ofrece herramientas avanzadas para gestionar tus finanzas personales con facilidad y precisión.",
+      "cta": "Comenzar Gratis",
+      "plans": "Ver Planes",
+      "features": {
+        "feature1": {
+          "title": "Transacciones",
+          "description": "Control total"
+        },
+        "feature2": {
+          "title": "Categorías",
+          "description": "Organización inteligente"
+        },
+        "feature3": {
+          "title": "Categorías",
+          "description": "Organización inteligente"
+        },
+        "feature4": {
+          "title": "Seguridad",
+          "description": "Datos protegidos."
+        }
+      }
+    },
+    "features": {
+      "title": "Características Principales",
+      "description": "Descubre todas las funcionalidades que hacen de CashWise la mejor opción para tus finanzas",
+      "feature1": {
+        "title": "Panel Inteligente",
+        "description": "Visualiza tus finanzas con gráficos interactivos y análisis en tiempo real."
+      },
+      "feature2": {
+        "title": "Control de Transacciones",
+        "description": "Gestiona todas tus transacciones con categorización automática y filtros avanzados."
+      },
+      "feature3": {
+        "title": "Presupuestos Inteligentes",
+        "description": "Crea y monitorea presupuestos con alertas automáticas y análisis predictivos."
+      },
+      "feature4": {
+        "title": "Informes Avanzados",
+        "description": "Genera informes detallados con análisis de tendencias y proyecciones futuras."
+      },
+      "feature5": {
+        "title": "Seguridad Total",
+        "description": "Tus datos protegidos con encriptación de nivel bancario y autenticación segura."
+      },
+      "feature6": {
+        "title": "Colaboración",
+        "description": "Comparte presupuestos familiares y empresariales con controles de acceso."
+      }
+    },
+    "testimonials": {
+      "title": "Lo que dicen nuestros usuarios",
+      "description": "Mira cómo CashWise está transformando la vida financiera de personas reales",
+      "testimonial1": {
+        "name": "Maria Silva",
+        "role": "Emprendedora",
+        "feedback": "\"CashWise revolucionó cómo gestiono las finanzas de mi empresa. ¡La interfaz es increíble!\""
+      },
+      "testimonial2": {
+        "name": "Juan Santos",
+        "role": "Desarrollador",
+        "feedback": "\"Interfaz increíble y funcionalidades que realmente marcan la diferencia. ¡Recomiendo al 100%!\""
+      },
+      "testimonial3": {
+        "name": "Ana Costa",
+        "role": "Consultora",
+        "feedback": "\"Finalmente logré organizar mis finanzas. La app es intuitiva y muy poderosa.\""
+      }
+    },
+    "cta": {
+      "title": "¿Listo para transformar tus finanzas?",
+      "description": "Únete a miles de usuarios que ya han transformado su vida financiera con CashWise",
+      "startFree": "Comenzar Gratis",
+      "viewPlans": "Ver Planes"
+    },
+    "footer": {
+      "rights": "© 2025 CashWise. Todos los derechos reservados.",
+      "terms": "Términos de Uso",
+      "privacy": "Política de Privacidad",
+      "contact": "Contacto"
+    }
+  },
   "menu": {
     "dashboard": "Tablero",
     "transactions": "Transacciones",
