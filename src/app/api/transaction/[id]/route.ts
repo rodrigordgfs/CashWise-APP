@@ -7,7 +7,6 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const { id } = await params;
-
   const { userId, getToken } = getAuth(request);
 
   if (!userId) {
@@ -15,7 +14,7 @@ export async function PATCH(
   }
 
   if (!id) {
-    return NextResponse.json({ error: "Missing budget ID" }, { status: 400 });
+    return NextResponse.json({ error: "Missing transaction ID" }, { status: 400 });
   }
 
   let body;
@@ -26,7 +25,6 @@ export async function PATCH(
   }
 
   const token = await getToken();
-
   const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction/${id}`;
 
   try {
@@ -39,14 +37,15 @@ export async function PATCH(
       body: JSON.stringify(body),
     });
 
+    const data = await res.json();
+
     if (!res.ok) {
       return NextResponse.json(
-        { error: `Erro ao atualizar transação: ${res.statusText}` },
+        { error: `Erro ao atualizar transação: ${res.statusText}`, details: data },
         { status: res.status }
       );
     }
 
-    const data = await res.json();
     return NextResponse.json(data);
   } catch (error) {
     console.error("Fetch PATCH error:", error);

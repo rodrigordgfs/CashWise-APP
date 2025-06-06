@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const { userId, getToken } = await auth();
-
   const token = await getToken();
 
   if (!token) {
@@ -36,6 +35,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const res = await fetch(url.toString(), {
       headers: { Authorization: `Bearer ${token}` },
     });
+    const data = await res.json();
 
     if (!res.ok) {
       return NextResponse.json(
@@ -44,7 +44,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const data = await res.json();
     return NextResponse.json(data);
   } catch (error) {
     console.error("Fetch error:", error);
@@ -82,14 +81,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       body: JSON.stringify(body),
     });
 
+    const data = await res.json();
+
     if (!res.ok) {
       return NextResponse.json(
-        { error: `Erro ao criar transação: ${res.statusText}` },
+        { error: `Erro ao criar transação: ${res.statusText}`, details: data },
         { status: res.status }
       );
     }
 
-    const data = await res.json();
     return NextResponse.json(data);
   } catch (error) {
     console.error("Fetch POST error:", error);
@@ -99,3 +99,4 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 }
+
