@@ -60,7 +60,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         toast.success("Conta criada com sucesso!");
         router.push("/dashboard");
       } else {
+        // Usuário precisa verificar o email
         toast.info("Verifique seu e-mail para concluir o cadastro.");
+        router.push("/verify-email");
       }
     } catch (err: unknown) {
       const error = err as { errors?: { message: string }[] };

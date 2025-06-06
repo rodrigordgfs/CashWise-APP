@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
 
 // Rotas de autenticação (login e registro) — você redireciona dessas se já estiver logado
-const isAuthRoute = createRouteMatcher(["/login", "/register"]);
+const isAuthRoute = createRouteMatcher(["/login", "/register", "/verify-email"]);
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth();
@@ -31,5 +31,5 @@ export default clerkMiddleware(async (auth, req) => {
 });
 
 export const config = {
-  matcher: ["/api/:path*", "/dashboard/:path*", "/", "/login", "/register"],
+  matcher: ["/api/:path*", "/dashboard/:path*", "/", "/login", "/register", "/verify-email"],
 };
