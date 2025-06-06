@@ -1,78 +1,103 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import PasswordField from "../PasswordField";
 
-export default function LoginForm() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+import { InputField } from "@/components/shared/InputField";
+import { Button } from "@/components/shared/Button";
+import { useAuth } from "@/context/authContext";
+import { useTranslation } from "react-i18next";
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      router.push("/dashboard");
-    }, 1500);
+export function LoginForm() {
+  const { t } = useTranslation();
+
+  const { signInWithEmail } = useAuth();
+
+  const schema = z.object({
+    email: z
+      .string()
+      .nonempty(t("login.emailRequiredValidation"))
+      .email(t("login.emailInvalidValidation")),
+    password: z
+      .string()
+      .nonempty(t("login.passwordRequiredValidation"))
+      .min(8, t("login.passwordMinLengthValidation")),
+  });
+
+  type FormData = z.infer<typeof schema>;
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: { email: "", password: "" },
+  });
+
+  const onSubmit = async (data: FormData) => {
+    await signInWithEmail(data.email, data.password);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="relative px-8 pb-8">
-      <div className="space-y-6">
-        <div className="space-y-2">
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-          >
-            E-mail
-          </label>
-          <input
-            id="email"
-            type="email"
-            placeholder="seu@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full px-4 py-3 rounded-xl border border-white/20 dark:border-zinc-700/50 bg-white/50 dark:bg-zinc-800/50 backdrop-blur-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-500 dark:placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all duration-300"
-          />
-        </div>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="p-6 space-y-4">
+        <Controller
+          name="email"
+          control={control}
+          render={({ field }) => (
+            <InputField
+              id="email"
+              label={t("login.email")}
+              type="email"
+              placeholder={t("login.emailPlaceholder")}
+              error={errors.email?.message}
+              {...field}
+            />
+          )}
+        />
 
-        <PasswordField value={password} onChange={setPassword} />
+        <Controller
+          name="password"
+          control={control}
+          render={({ field }) => (
+            <InputField
+              label={t("login.password")}
+              placeholder={t("login.passwordPlaceholder")}
+              type="password"
+              error={errors.password?.message}
+              {...field}
+              headerRight={
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-emerald-600 dark:text-emerald-500 hover:underline"
+                >
+                  {t("login.forgotPassword")}
+                </Link>
+              }
+            />
+          )}
+        />
       </div>
 
-      <div className="mt-8 space-y-4">
-        <button
+      <div className="p-6 border-t border-zinc-200 dark:border-zinc-800 flex flex-col space-y-4">
+        <Button
+          variant="emerald"
           type="submit"
-          disabled={isLoading}
-          className="group w-full px-6 py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-blue-600 text-white font-medium hover:from-emerald-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-emerald-500/25 flex items-center justify-center gap-2"
+          disabled={isSubmitting}
+          className="w-full"
         >
-          {isLoading ? (
-            <>
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              Entrando...
-            </>
-          ) : (
-            <>
-              Entrar
-              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </>
-          )}
-        </button>
-
-        <div className="text-center">
-          <span className="text-sm text-zinc-600 dark:text-zinc-400">
-            Não tem uma conta?{" "}
-          </span>
+          {isSubmitting ? <>{t("login.loggingIn")}</> : t("login.loginButton")}
+        </Button>
+        <div className="text-center text-sm">
+          {t("login.noAccount")}{" "}
           <Link
             href="/register"
-            className="text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300"
+            className="text-emerald-600 dark:text-emerald-500 hover:underline"
           >
-            Registre-se gratuitamente
+            {t("login.signUp")}
           </Link>
         </div>
       </div>

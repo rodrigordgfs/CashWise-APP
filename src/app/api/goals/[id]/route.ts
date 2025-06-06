@@ -26,7 +26,7 @@ export async function PATCH(
   }
 
   const token = await getToken();
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/goals/${id}`;
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/goal/${id}`;
 
   try {
     const res = await fetch(url, {
@@ -74,7 +74,7 @@ export async function DELETE(
   }
 
   const token = await getToken();
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/goals/${id}`;
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/goal/${id}`;
 
   try {
     const res = await fetch(url, {

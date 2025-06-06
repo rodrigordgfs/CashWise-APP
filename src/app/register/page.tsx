@@ -1,44 +1,45 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { useSignUp } from "@clerk/nextjs";
 
 import { AuthHeader } from "@/components/ui/register/AuthHeader";
 import { AuthCard } from "@/components/ui/register/AuthCard";
 import { InputField } from "@/components/shared/InputField";
 import { Button } from "@/components/shared/Button";
-
-const schema = z
-  .object({
-    name: z.string().nonempty({ message: "Nome completo é obrigatório" }),
-    email: z
-      .string()
-      .nonempty({ message: "E-mail é obrigatório" })
-      .email({ message: "E-mail inválido" }),
-    password: z
-      .string()
-      .nonempty({ message: "Senha é obrigatória" })
-      .min(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
-    confirmPassword: z
-      .string()
-      .nonempty({ message: "Confirme sua senha" })
-      .min(6, { message: "A confirmação deve ter no mínimo 6 caracteres" }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "As senhas não coincidem",
-    path: ["confirmPassword"],
-  });
-
-type FormData = z.infer<typeof schema>;
+import { useAuth } from "@/context/authContext";
+import { useTranslation } from "react-i18next";
 
 export default function RegisterPage() {
-  const router = useRouter();
-  const { signUp, setActive } = useSignUp();
+  const { t } = useTranslation();
+  const { registerWithEmail } = useAuth();
+
+  const schema = z
+    .object({
+      name: z
+        .string()
+        .nonempty({ message: t("register.nameRequiredValidation") }),
+      email: z
+        .string()
+        .nonempty({ message: t("register.emailRequiredValidation") })
+        .email({ message: t("register.emailInvalidValidation") }),
+      password: z
+        .string()
+        .nonempty({ message: t("register.passwordRequiredValidation") })
+        .min(6, { message: t("register.passwordMinLengthValidation") }),
+      confirmPassword: z
+        .string()
+        .nonempty({ message: t("register.confirmPasswordRequiredValidation") })
+        .min(6, { message: t("register.confirmPasswordMinLengthValidation") }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("register.passwordsDoNotMatch"),
+      path: ["confirmPassword"],
+    });
+
+  type FormData = z.infer<typeof schema>;
 
   const {
     control,
@@ -55,42 +56,19 @@ export default function RegisterPage() {
   });
 
   const onSubmit = async (data: FormData) => {
-    if (!signUp) {
-      toast.error("Sistema de autenticação não está pronto. Tente novamente.");
-      return;
-    }
-
-    try {
-      const result = await signUp.create({
-        emailAddress: data.email,
-        password: data.password,
-        unsafeMetadata: {
-          name: data.name,
-        },
-      });
-
-      console.log("Resultado do signUp:", result);
-
-      if (result.status === "complete") {
-        await setActive({ session: result.createdSessionId });
-        toast.success("Conta criada com sucesso!");
-        router.push("/dashboard");
-      } else {
-        toast.info("Verifique seu e-mail para concluir o cadastro.");
-      }
-    } catch (err: unknown) {
-      const error = err as { errors?: { message: string }[] };
-      console.error("Erro ao criar conta:", err);
-      toast.error(error.errors?.[0]?.message || "Erro ao criar conta.");
-    }
+    await registerWithEmail({
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    });
   };
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-zinc-50 dark:bg-zinc-900 px-4 pt-24 pb-8">
       <AuthHeader />
       <AuthCard
-        title="Criar conta"
-        description="Preencha os dados abaixo para se registrar"
+        title={t("register.title")}
+        description={t("register.description")}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="p-6 space-y-4">
@@ -100,8 +78,8 @@ export default function RegisterPage() {
               render={({ field }) => (
                 <InputField
                   id="name"
-                  label="Nome completo"
-                  placeholder="Seu nome completo"
+                  label={t("register.fullName")}
+                  placeholder={t("register.fullNamePlaceholder")}
                   {...field}
                   error={errors.name?.message}
                 />
@@ -113,9 +91,9 @@ export default function RegisterPage() {
               render={({ field }) => (
                 <InputField
                   id="email"
-                  label="E-mail"
+                  label={t("register.email")}
                   type="email"
-                  placeholder="seu@email.com"
+                  placeholder={t("register.emailPlaceholder")}
                   {...field}
                   error={errors.email?.message}
                 />
@@ -127,7 +105,8 @@ export default function RegisterPage() {
               render={({ field }) => (
                 <InputField
                   id="password"
-                  label="Senha"
+                  label={t("register.password")}
+                  placeholder={t("register.passwordPlaceholder")}
                   type="password"
                   {...field}
                   error={errors.password?.message}
@@ -140,7 +119,8 @@ export default function RegisterPage() {
               render={({ field }) => (
                 <InputField
                   id="confirmPassword"
-                  label="Confirmar senha"
+                  label={t("register.confirmPassword")}
+                  placeholder={t("register.confirmPasswordPlaceholder")}
                   type="password"
                   {...field}
                   error={errors.confirmPassword?.message}
@@ -150,15 +130,15 @@ export default function RegisterPage() {
           </div>
           <div className="p-6 border-t border-zinc-200 dark:border-zinc-800 flex flex-col space-y-4">
             <Button variant="emerald" type="submit" disabled={isSubmitting}>
-              Criar conta
+              {t("register.registerButton")}
             </Button>
             <div className="text-center text-sm">
-              Já tem uma conta?{" "}
+              {t("register.alreadyHaveAccount")}{" "}
               <Link
                 href="/login"
                 className="text-emerald-600 dark:text-emerald-500 hover:underline"
               >
-                Entrar
+                {t("register.login")}
               </Link>
             </div>
           </div>

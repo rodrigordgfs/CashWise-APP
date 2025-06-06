@@ -3,7 +3,7 @@
 import { useState, useId, useRef, useEffect } from "react";
 import type { ControllerRenderProps, FieldValues, Path } from "react-hook-form";
 import { DayPicker } from "react-day-picker";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { XIcon } from "lucide-react";
 
@@ -21,15 +21,33 @@ export function DatePickerField<TFormValues extends FieldValues>({
   placeholder = "Selecione a data",
 }: DatePickerFieldProps<TFormValues>) {
   const [showCalendar, setShowCalendar] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const id = useId();
   const containerRef = useRef<HTMLDivElement>(null);
   const calendarRef = useRef<HTMLDivElement>(null);
 
-  const selectedDate = field.value
-    ? new Date(field.value as unknown as string)
-    : undefined;
+  useEffect(() => {
+    if (!field.value) {
+      setSelectedDate(undefined);
+      return;
+    }
 
-  // Fecha o calendário se clicar fora
+    try {
+      const [year, month, day] = field.value
+        .split("T")[0]
+        .split("-")
+        .map(Number);
+      const localDate = new Date(year, month - 1, day);
+      if (isValid(localDate)) {
+        setSelectedDate(localDate);
+      } else {
+        setSelectedDate(undefined);
+      }
+    } catch {
+      setSelectedDate(undefined);
+    }
+  }, [field.value]);
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -72,10 +90,8 @@ export function DatePickerField<TFormValues extends FieldValues>({
 
       {showCalendar && (
         <>
-          {/* Overlay com desfoque */}
           <div className="fixed inset-0 z-40 bg-black/10 backdrop-blur-sm" />
 
-          {/* Calendário centralizado na tela */}
           <div
             ref={calendarRef}
             className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
@@ -106,13 +122,27 @@ export function DatePickerField<TFormValues extends FieldValues>({
                 </button>
               </div>
             </div>
+
             <DayPicker
               mode="single"
               navLayout="around"
               selected={selectedDate}
               onSelect={(date) => {
                 if (date) {
-                  field.onChange(date.toISOString().slice(0, 10));
+                  const localDate = new Date(
+                    date.getFullYear(),
+                    date.getMonth(),
+                    date.getDate(),
+                    12,
+                    0,
+                    0
+                  );
+                  const yyyy = localDate.getFullYear();
+                  const mm = String(localDate.getMonth() + 1).padStart(2, "0");
+                  const dd = String(localDate.getDate()).padStart(2, "0");
+                  const formattedDate = `${yyyy}-${mm}-${dd}`;
+
+                  field.onChange(formattedDate);
                 } else {
                   field.onChange("");
                 }

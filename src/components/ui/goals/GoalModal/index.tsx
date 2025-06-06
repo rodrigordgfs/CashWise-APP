@@ -11,7 +11,7 @@ import { DatePickerField } from "@/components/shared/DatePickerField";
 import { useCategory } from "@/context/categoryContext";
 import { useTranslation } from "react-i18next";
 
-interface Goal {
+export interface GoalFormData {
   id?: string;
   title: string;
   description: string;
@@ -24,8 +24,8 @@ interface Goal {
 interface GoalModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (goal: Goal) => void;
-  initialData?: Goal;
+  onSave: (goal: GoalFormData) => void;
+  initialData?: GoalFormData;
 }
 
 export const GoalModal = ({
@@ -92,14 +92,23 @@ export const GoalModal = ({
       ...data,
       id: initialData?.id,
     });
-    onClose();
   };
 
   return (
     <Modal
       isOpen={isOpen}
       title={initialData ? t("goals.editGoal") : t("goals.newGoal")}
-      onClose={onClose}
+      onClose={() => {
+        onClose();
+        reset({
+          title: "",
+          description: "",
+          targetAmount: 0,
+          currentAmount: 0,
+          deadline: "",
+          categoryId: categories[0]?.id || "",
+        });
+      }}
       onConfirm={handleSubmit(onSubmit)}
       cancelLabel={t("app.cancel")}
       confirmLabel={t("app.save")}

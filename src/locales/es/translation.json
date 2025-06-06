@@ -1,7 +1,9 @@
 {
   "app": {
     "save": "Guardar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "loading": "Cargando...",
+    "loadingDescription": "Estamos preparando todo para ti."
   },
   "menu": {
     "dashboard": "Tablero",
@@ -229,5 +231,47 @@
     "saving": "Guardando",
     "nameRequiredValidation": "El nombre es obligatorio",
     "emailRequiredValidation": "El correo electrónico es obligatorio"
+  },
+  "login": {
+    "title": "Iniciar sesión",
+    "description": "Ingresa tu correo electrónico y contraseña para acceder a tu cuenta",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Ingresa tu contraseña",
+    "loginButton": "Iniciar sesión",
+    "logingIn": "Iniciando sesión...",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes una cuenta?",
+    "signUp": "Regístrate",
+    "emailRequiredValidation": "El correo electrónico es obligatorio",
+    "emailInvalidValidation": "Correo electrónico inválido",
+    "passwordRequiredValidation": "La contraseña es obligatoria",
+    "passwordMinLengthValidation": "La contraseña debe tener al menos 6 caracteres",
+    "invalidCredentials": "Credenciales inválidas. Intenta nuevamente."
+  },
+  "register": {
+    "title": "Crear Cuenta",
+    "description": "Completa los datos a continuación para registrarte",
+    "fullName": "Nombre Completo",
+    "fullNamePlaceholder": "Ingresa tu nombre completo",
+    "email": "Correo Electrónico",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Ingresa tu contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "confirmPasswordPlaceholder": "Confirma tu contraseña",
+    "registerButton": "Registrarse",
+    "registering": "Registrando",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "login": "Inicia sesión aquí",
+    "nameRequiredValidation": "El nombre es obligatorio",
+    "emailRequiredValidation": "El correo electrónico es obligatorio",
+    "emailInvalidValidation": "Correo electrónico inválido",
+    "passwordRequiredValidation": "La contraseña es obligatoria",
+    "passwordMinLengthValidation": "La contraseña debe tener al menos 6 caracteres",
+    "confirmPasswordRequiredValidation": "La confirmación de la contraseña es obligatoria",
+    "confirmPasswordMinLengthValidation": "La confirmación debe tener al menos 6 caracteres",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden"
   }
 }

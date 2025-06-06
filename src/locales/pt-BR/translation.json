@@ -1,7 +1,9 @@
 {
   "app": {
     "save": "Salvar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "loading": "Carregando...",
+    "loadingDescription": "Estamos preparando tudo para você."
   },
   "menu": {
     "dashboard": "Dashboard",
@@ -229,5 +231,47 @@
     "saving": "Salvando",
     "nameRequiredValidation": "Nome é obrigatório",
     "emailRequiredValidation": "E-mail é obrigatório"
+  },
+  "login": {
+    "title": "Entrar",
+    "description": "Entre com seu e-mail e senha para acessar sua conta",
+    "email": "E-mail",
+    "emailPlaceholder": "Digite seu e-mail",
+    "password": "Senha",
+    "passwordPlaceholder": "Digite sua senha",
+    "loginButton": "Entrar",
+    "logingIn": "Entrando",
+    "forgotPassword": "Esqueci minha senha",
+    "noAccount": "Não tem uma conta?",
+    "signUp": "Cadastre-se",
+    "emailRequiredValidation": "E-mail é obrigatório",
+    "emailInvalidValidation": "E-mail inválido",
+    "passwordRequiredValidation": "Senha é obrigatória",
+    "passwordMinLengthValidation": "Senha deve ter pelo menos 6 caracteres",
+    "invalidCredentials": "Credenciais inválidas. Tente novamente."
+  },
+  "register": {
+    "title": "Criar Conta",
+    "description": "Preencha os dados abaixo para se registrar",
+    "fullName": "Nome Completo",
+    "fullNamePlaceholder": "Digite seu nome completo",
+    "email": "E-mail",
+    "emailPlaceholder": "Digite seu e-mail",
+    "password": "Senha",
+    "passwordPlaceholder": "Digite sua senha",
+    "confirmPassword": "Confirmar Senha",
+    "confirmPasswordPlaceholder": "Confirme sua senha",
+    "registerButton": "Cadastrar",
+    "registering": "Cadastrando",
+    "alreadyHaveAccount": "Já tem uma conta?",
+    "login": "Entre aqui",
+    "nameRequiredValidation": "Nome é obrigatório",
+    "emailRequiredValidation": "E-mail é obrigatório",
+    "emailInvalidValidation": "E-mail inválido",
+    "passwordRequiredValidation": "Senha é obrigatória",
+    "passwordMinLengthValidation": "Senha deve ter pelo menos 6 caracteres",
+    "confirmPasswordRequiredValidation": "Confirmação de senha é obrigatória",
+    "confirmPasswordMinLengthValidation": "Confirmação de senha deve ter pelo menos 6 caracteres",
+    "passwordsDoNotMatch": "As senhas não coincidem"
   }
 }

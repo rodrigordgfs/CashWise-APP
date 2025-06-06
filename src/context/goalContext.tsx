@@ -14,6 +14,7 @@ import { Goal } from "@/types/Goal.type";
 import { Category } from "@/types/Category.type";
 import { useCategory } from "./categoryContext";
 import { useUser } from "@clerk/nextjs";
+import { GoalFormData } from "@/components/ui/goals/GoalModal";
 
 interface GoalContextProps {
   isLoading: boolean;
@@ -24,7 +25,7 @@ interface GoalContextProps {
   setIsModalOpen: (open: boolean) => void;
   openModalToCreate: () => void;
   openModalToEdit: (goal: Goal) => void;
-  saveGoal: (data: Goal) => Promise<Goal | undefined>;
+  saveGoal: (data: GoalFormData) => Promise<Goal | undefined>;
   handleDelete: (goal: Goal) => Promise<void>;
   setEditingGoal: (goal: Goal | null) => void;
 }
@@ -76,7 +77,7 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const saveGoal = useCallback(
-    async (data: Goal): Promise<Goal | undefined> => {
+    async (data: GoalFormData): Promise<Goal | undefined> => {
       try {
         const url = data.id ? `/api/goals/${data.id}` : `/api/goals`;
         const method = data.id ? "PATCH" : "POST";
@@ -92,10 +93,7 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
             targetAmount: data.targetAmount,
             currentAmount: data.currentAmount,
             deadline: data.deadline,
-            categoryId:
-              typeof data.category === "string"
-                ? data.category
-                : data.category.id,
+            categoryId: data.categoryId,
           }),
         });
 

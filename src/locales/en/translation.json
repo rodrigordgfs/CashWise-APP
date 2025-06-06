@@ -1,7 +1,9 @@
 {
   "app": {
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "loadingDescription": "We are getting everything ready for you."
   },
   "menu": {
     "dashboard": "Dashboard",
@@ -229,5 +231,47 @@
     "saving": "Saving",
     "nameRequiredValidation": "Name is required",
     "emailRequiredValidation": "Email is required"
+  },
+  "login": {
+    "title": "Sign In",
+    "description": "Enter your email and password to access your account",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "loginButton": "Sign In",
+    "logingIn": "Signing in...",
+    "forgotPassword": "Forgot your password?",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "emailRequiredValidation": "Email is required",
+    "emailInvalidValidation": "Invalid email",
+    "passwordRequiredValidation": "Password is required",
+    "passwordMinLengthValidation": "Password must be at least 6 characters long",
+    "invalidCredentials": "Invalid credentials. Please try again."
+  },
+  "register": {
+    "title": "Create Account",
+    "description": "Fill in the details below to register",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Enter your full name",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Confirm your password",
+    "registerButton": "Register",
+    "registering": "Registering",
+    "alreadyHaveAccount": "Already have an account?",
+    "login": "Sign in here",
+    "nameRequiredValidation": "Name is required",
+    "emailRequiredValidation": "Email is required",
+    "emailInvalidValidation": "Invalid email",
+    "passwordRequiredValidation": "Password is required",
+    "passwordMinLengthValidation": "Password must be at least 6 characters",
+    "confirmPasswordRequiredValidation": "Password confirmation is required",
+    "confirmPasswordMinLengthValidation": "Password confirmation must be at least 6 characters",
+    "passwordsDoNotMatch": "Passwords do not match"
   }
 }

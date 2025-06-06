@@ -8,12 +8,31 @@ import { EmptyState } from "@/components/shared/EmptyState";
 import { GoalCard } from "@/components/ui/goals/GoalCard";
 import { useGoal } from "@/context/goalContext";
 import { useTranslation } from "react-i18next";
+import { Goal } from "@/types/Goal.type";
+import { GoalFormData } from "@/components/ui/goals/GoalModal";
 
 export default function GoalsPage() {
   const { t } = useTranslation();
-  const { goals, isLoading, isModalOpen, setIsModalOpen } = useGoal();
+  const {
+    goals,
+    isLoading,
+    isModalOpen,
+    setIsModalOpen,
+    saveGoal,
+    editingGoal,
+    setEditingGoal,
+  } = useGoal();
 
   const hasGoals = goals.length > 0;
+
+  const handleEdit = (goal: Goal) => {
+    setEditingGoal(goal);
+    setIsModalOpen(true);
+  };
+
+  const handleSave = (data: GoalFormData) => {
+    saveGoal(data);
+  };
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -37,7 +56,7 @@ export default function GoalsPage() {
             <GoalCard
               key={goal.id}
               goal={goal}
-              onEdit={() => {}}
+              onEdit={() => handleEdit(goal)}
               onDelete={() => {}}
             />
           ))}
@@ -53,7 +72,23 @@ export default function GoalsPage() {
         <GoalModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onSave={() => {}}
+          onSave={handleSave}
+          initialData={
+            editingGoal
+              ? {
+                  id: editingGoal.id,
+                  title: editingGoal.title,
+                  description: editingGoal.description,
+                  targetAmount: editingGoal.targetAmount,
+                  currentAmount: editingGoal.currentAmount,
+                  deadline: editingGoal.deadline,
+                  categoryId:
+                    typeof editingGoal.category === "string"
+                      ? editingGoal.category
+                      : editingGoal.category.id,
+                }
+              : undefined
+          }
         />
       )}
     </div>
