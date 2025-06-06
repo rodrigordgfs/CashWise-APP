@@ -89,7 +89,7 @@ export function LoginForm() {
           disabled={isSubmitting}
           className="w-full"
         >
-          {isSubmitting ? <>{t("login.loggingIn")}</> : t("login.loginButton")}
+          {isSubmitting ? <>{t("login.logingIn")}</> : t("login.loginButton")}
         </Button>
         <div className="text-center text-sm">
           {t("login.noAccount")}{" "}
