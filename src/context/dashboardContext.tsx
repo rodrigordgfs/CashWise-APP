@@ -48,11 +48,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const fetchData = useCallback(async () => {
-    if (!user?.id) {
-      // Não tenta buscar se usuário não existir
-      setIsLoading(false);
-      return;
-    }
+    if (!user?.id || !user.hasVerifiedEmailAddress) return;
 
     setIsLoading(true);
     try {
@@ -104,7 +100,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [period, user?.id]);
+  }, [period, user?.id, user?.hasVerifiedEmailAddress]);
 
   useEffect(() => {
     fetchData();

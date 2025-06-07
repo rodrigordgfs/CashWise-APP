@@ -5,14 +5,26 @@ import { useSettings } from "@/context/settingsContext";
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   error?: string;
-  type?: string; // 'money', 'password', etc
+  type?: string;
   onChange?: (value: number | React.ChangeEvent<HTMLInputElement>) => void;
   headerRight?: React.ReactNode;
+  centerContent?: boolean;
 }
 
 export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
   (
-    { label, id, error, type = "text", onChange, value, headerRight, ...props },
+    {
+      label,
+      id,
+      error,
+      type = "text",
+      onChange,
+      value,
+      headerRight,
+      centerContent,
+      maxLength,
+      ...props
+    },
     ref
   ) => {
     const { currency, language } = useSettings();
@@ -20,7 +32,6 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
     const [moneyValue, setMoneyValue] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
-    // Memoize para não recriar a função a cada render
     const formatCurrency = useCallback(
       (num: number) => {
         if (isNaN(num) || num === null) return "";
@@ -61,13 +72,23 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
     };
 
     const renderLabel = () => (
-      <div className="flex items-center justify-between mb-2">
+      <div
+        className={`flex mb-2 ${
+          centerContent
+            ? "flex-col items-center text-center gap-1"
+            : "items-center justify-between"
+        }`}
+      >
         <label htmlFor={inputId} className="block text-sm font-medium">
           {label}
         </label>
         {headerRight && <div>{headerRight}</div>}
       </div>
     );
+
+    const baseInputClass = `w-full px-3 py-2 border rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600 ${
+      error ? "border-red-500" : "border-zinc-300 dark:border-zinc-700"
+    } ${centerContent ? "text-center" : ""}`;
 
     if (type === "money") {
       return (
@@ -80,9 +101,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             value={moneyValue}
             onChange={handleMoneyChange}
             placeholder={formatCurrency(0)}
-            className={`w-full px-3 py-2 border rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600 ${
-              error ? "border-red-500" : "border-zinc-300 dark:border-zinc-700"
-            }`}
+            className={baseInputClass}
             {...props}
           />
           {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
@@ -101,11 +120,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
               type={showPassword ? "text" : "password"}
               value={value ?? ""}
               onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
-              className={`w-full px-3 py-2 pr-10 border rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600 ${
-                error
-                  ? "border-red-500"
-                  : "border-zinc-300 dark:border-zinc-700"
-              }`}
+              className={`${baseInputClass} pr-10`}
               {...props}
             />
             <button
@@ -124,6 +139,45 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
       );
     }
 
+    if (type === "number") {
+      return (
+        <div>
+          {renderLabel()}
+          <input
+            id={inputId}
+            ref={ref}
+            type="text" // use texto para controlar maxLength
+            value={value ?? ""}
+            maxLength={maxLength}
+            onChange={(e) => {
+              let val = e.target.value;
+              // só permite dígitos
+              val = val.replace(/[^0-9]/g, "");
+              // aplica maxLength se definido
+              if (maxLength && val.length > maxLength) {
+                val = val.slice(0, maxLength);
+              }
+              // cria um evento de input com o valor filtrado
+              const syntheticEvent = {
+                ...e,
+                target: {
+                  ...e.target,
+                  value: val,
+                },
+              } as React.ChangeEvent<HTMLInputElement>;
+
+              if (onChange) {
+                onChange(syntheticEvent);
+              }
+            }}
+            className={baseInputClass}
+            {...props}
+          />
+          {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
+        </div>
+      );
+    }
+
     return (
       <div>
         {renderLabel()}
@@ -133,9 +187,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           type={type}
           value={value ?? ""}
           onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
-          className={`w-full px-3 py-2 border rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600 ${
-            error ? "border-red-500" : "border-zinc-300 dark:border-zinc-700"
-          }`}
+          className={baseInputClass}
           {...props}
         />
         {error && <p className="text-sm text-red-500 mt-2">{error}</p>}

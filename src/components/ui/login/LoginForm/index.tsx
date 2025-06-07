@@ -42,7 +42,7 @@ export function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} id="clerk-captcha">
       <div className="p-6 space-y-4">
         <Controller
           name="email"

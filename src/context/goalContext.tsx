@@ -42,6 +42,8 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
 
   const fetchGoals = useCallback(async () => {
+    if (!user?.id || !user.hasVerifiedEmailAddress) return;
+
     setIsLoading(true);
     try {
       const response = await fetch(`/api/goals`);
@@ -58,7 +60,7 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [user?.hasVerifiedEmailAddress, user?.id]);
 
   useEffect(() => {
     if (user?.id) {

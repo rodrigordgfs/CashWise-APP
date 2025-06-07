@@ -363,5 +363,26 @@
     "confirmPasswordRequiredValidation": "Password confirmation is required",
     "confirmPasswordMinLengthValidation": "Password confirmation must be at least 6 characters",
     "passwordsDoNotMatch": "Passwords do not match"
+  },
+  "verifyEmail": {
+    "title": "Verify Email",
+    "description": "Enter the verification code sent to your email",
+    "instructions": "We sent a 6-digit code to your email. Enter it below to verify your account.",
+    "checkSpam": "Can't find the email? Check your spam folder.",
+    "verificationCode": "Verification Code",
+    "codePlaceholder": "000000",
+    "verifyButton": "Verify Email",
+    "verifying": "Verifying...",
+    "resendCode": "Resend code",
+    "resending": "Resending...",
+    "resendCountdown": "Resend in {{seconds}}s",
+    "backToLogin": "Back to login",
+    "codeRequiredValidation": "Verification code is required",
+    "codeInvalidValidation": "Code must be 6 digits",
+    "verificationSuccess": "Email verified successfully!",
+    "verificationIncomplete": "Verification incomplete. Please try again.",
+    "verificationError": "Verification error. Check the code and try again.",
+    "codeResent": "Code resent successfully!",
+    "resendError": "Error resending code. Please try again."
   }
 }
