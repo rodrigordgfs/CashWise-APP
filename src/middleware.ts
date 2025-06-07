@@ -6,7 +6,11 @@ import { NextResponse } from "next/server";
 const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
 
 // Rotas de autenticação — redireciona se já estiver logado
-const isAuthRoute = createRouteMatcher(["/login", "/register", "/verify-account"]);
+const isAuthRoute = createRouteMatcher([
+  "/login",
+  "/register",
+  "/verify-account",
+]);
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth(); // 👈 Correto com await
@@ -52,5 +56,12 @@ export default clerkMiddleware(async (auth, req) => {
 });
 
 export const config = {
-  matcher: ["/api/:path*", "/dashboard/:path*", "/", "/login", "/register", "/verify-account"],
+  matcher: [
+    "/api/:path*",
+    "/dashboard/:path*",
+    "/",
+    "/login",
+    "/register",
+    "/verify-account",
+  ],
 };
