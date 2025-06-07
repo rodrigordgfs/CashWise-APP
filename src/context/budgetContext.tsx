@@ -32,7 +32,7 @@ interface BudgetContextProps {
 const BudgetContext = createContext<BudgetContextProps | undefined>(undefined);
 
 export const BudgetProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useUser();
+  const { user, } = useUser();
   const { categories } = useCategory();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,7 +41,7 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
   const [editingBudget, setEditingBudget] = useState<Budget | null>(null);
 
   const fetchBudgets = useCallback(async () => {
-    if (!user?.id) return;
+    if (!user?.id || !user.hasVerifiedEmailAddress) return;
 
     setIsLoading(true);
     try {
@@ -59,7 +59,7 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id]);
+  }, [user?.id, user?.hasVerifiedEmailAddress]);
 
   useEffect(() => {
     fetchBudgets();

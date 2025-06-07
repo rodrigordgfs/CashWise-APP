@@ -79,11 +79,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const fetchTransactions = useCallback(async () => {
-    if (!user?.id) {
-      setTransactions([]);
-      setIsLoading(false);
-      return;
-    }
+    if (!user?.id || !user.hasVerifiedEmailAddress) return;
 
     setIsLoading(true);
     try {
@@ -119,7 +115,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id, searchTerm, selectedDate, sortOrder, transactionType]);
+  }, [user?.id, searchTerm, selectedDate, sortOrder, transactionType, user?.hasVerifiedEmailAddress]);
 
   const handleDeleteTransaction = useCallback(
     async (transaction: Transaction) => {

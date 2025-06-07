@@ -61,10 +61,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const fetchCategories = useCallback(async () => {
-    if (!user?.id) {
-      setIsLoading(false);
-      return;
-    }
+    if (!user?.id || !user.hasVerifiedEmailAddress) return;
 
     setIsLoading(true);
     try {
@@ -81,7 +78,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [categoryType, user?.id]);
+  }, [categoryType, user?.id, user?.hasVerifiedEmailAddress]);
 
   useEffect(() => {
     fetchCategories();

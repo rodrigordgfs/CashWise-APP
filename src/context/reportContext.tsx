@@ -50,10 +50,7 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const fetchReports = async () => {
-      if (!user?.id) {
-        setIsLoading(false);
-        return;
-      }
+      if (!user?.id || !user.hasVerifiedEmailAddress) return;
 
       setIsLoading(true);
       try {
@@ -85,7 +82,7 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
     };
 
     fetchReports();
-  }, [period, reportType, user?.id, getToken]);
+  }, [period, reportType, user?.id, getToken, user?.hasVerifiedEmailAddress]);
 
   const value = useMemo(
     () => ({

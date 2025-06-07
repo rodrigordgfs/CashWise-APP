@@ -34,3 +34,15 @@
 .animate-progress-wave {
   animation: progress-wave 2s infinite linear;
 }
+
+/* Remove spinners do input number em Chrome, Safari, Edge */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove spinners do input number no Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
