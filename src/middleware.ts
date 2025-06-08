@@ -1,11 +1,9 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { clerkClient } from "@clerk/clerk-sdk-node"; // 👈 Correto
+import { clerkClient } from "@clerk/clerk-sdk-node";
 import { NextResponse } from "next/server";
 
-// Rota protegida
 const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
 
-// Rotas de autenticação — redireciona se já estiver logado
 const isAuthRoute = createRouteMatcher([
   "/login",
   "/register",
@@ -13,11 +11,10 @@ const isAuthRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
-  const { userId } = await auth(); // 👈 Correto com await
+  const { userId } = await auth();
   const url = req.nextUrl.clone();
   const pathname = req.nextUrl.pathname;
 
-  // Redireciona para login se não autenticado e tentando acessar rota protegida
   if (!userId && isProtectedRoute(req)) {
     if (pathname !== "/login") {
       url.pathname = "/login";
@@ -26,7 +23,6 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.next();
   }
 
-  // Se autenticado, buscamos o user para verificar o e-mail
   let user;
   if (userId) {
     try {
@@ -36,16 +32,15 @@ export default clerkMiddleware(async (auth, req) => {
     }
   }
 
-  // Se logado e acessando rota de login/register, redireciona para dashboard
   if (userId && isAuthRoute(req)) {
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 
-  // Se logado e acessando rota protegida, mas email não verificado
   if (
     userId &&
     isProtectedRoute(req) &&
+    pathname !== "/verify-account" &&
     user?.primaryEmailAddress?.verification?.status !== "verified"
   ) {
     url.pathname = "/verify-account";

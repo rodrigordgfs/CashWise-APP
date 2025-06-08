@@ -2,7 +2,7 @@
 
 import { ReactNode, createContext, useContext } from "react";
 import { useRouter } from "next/navigation";
-import { useSignIn, useSignUp, useUser } from "@clerk/nextjs";
+import { useSignIn, useSignUp } from "@clerk/nextjs";
 import { toast } from "sonner";
 
 type AuthContextType = {
@@ -22,11 +22,7 @@ const AuthContext = createContext({} as AuthContextType);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { signIn, setActive: setSignInActive } = useSignIn();
   const { signUp, setActive: setSignUpActive } = useSignUp();
-  const { user } = useUser();
   const router = useRouter();
-
-  console.log("UserId:", user?.id);
-  console.log("Verified Email:", user?.hasVerifiedEmailAddress);
 
   function isClerkError(
     err: unknown
