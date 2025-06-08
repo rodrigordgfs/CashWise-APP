@@ -2,7 +2,7 @@
 
 import { ReactNode, createContext, useContext } from "react";
 import { useRouter } from "next/navigation";
-import { useSignIn, useSignUp } from "@clerk/nextjs";
+import { useSignIn, useSignUp, useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 
 type AuthContextType = {
@@ -22,6 +22,7 @@ const AuthContext = createContext({} as AuthContextType);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { signIn, setActive: setSignInActive } = useSignIn();
   const { signUp, setActive: setSignUpActive } = useSignUp();
+  const { user } = useUser();
   const router = useRouter();
 
   function isClerkError(
@@ -76,24 +77,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (err: unknown) {
       console.error(err);
       if (isClerkError(err)) {
-        toast.error(err.errors?.[0]?.message || "Erro ao fazer login.");
+        toast.error(err.errors?.[0]?.message || "Erro ao fazer cadastro.");
       } else {
-        toast.error("Erro ao fazer login.");
+        toast.error("Erro ao fazer cadastro.");
       }
     }
   }
 
   async function verifyEmailCode(code: string): Promise<boolean> {
-    if (!signUp) throw new Error("signUp não disponível");
     try {
-      const completeSignUp = await signUp.attemptEmailAddressVerification({
-        code,
-      });
-      if (completeSignUp.status === "complete") {
-        await setSignUpActive({ session: completeSignUp.createdSessionId });
+      // Se há um processo de signup em andamento, use signUp
+      if (signUp && signUp.status !== "complete") {
+        const completeSignUp = await signUp.attemptEmailAddressVerification({
+          code,
+        });
+        if (completeSignUp.status === "complete") {
+          await setSignUpActive({ session: completeSignUp.createdSessionId });
+          return true;
+        }
+        return false;
+      }
+
+      // Se o usuário já está logado mas precisa verificar o email
+      if (user && user.primaryEmailAddress) {
+        await user.primaryEmailAddress.attemptVerification({ code });
+        // Recarrega os dados do usuário
+        await user.reload();
         return true;
       }
-      return false;
+
+      throw new Error("Nenhum processo de verificação encontrado");
     } catch (err) {
       console.error("Erro na verificação:", err);
       throw err;
@@ -101,9 +114,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function resendVerificationCode() {
-    if (!signUp) throw new Error("signUp não disponível");
     try {
-      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+      // Se há um processo de signup em andamento, use signUp
+      if (signUp && signUp.status !== "complete") {
+        await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+        return;
+      }
+
+      // Se o usuário já está logado mas precisa verificar o email
+      if (user && user.primaryEmailAddress) {
+        await user.primaryEmailAddress.prepareVerification({ strategy: "email_code" });
+        return;
+      }
+
+      throw new Error("Nenhum processo de verificação encontrado");
     } catch (err) {
       console.error("Erro ao reenviar código:", err);
       throw err;
