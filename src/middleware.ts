@@ -3,13 +3,9 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { clerkClient } from "@clerk/clerk-sdk-node";
 import { NextResponse } from "next/server";
 
-const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
-const isAuthRoute = createRouteMatcher([
-  "/login",
-  "/register",
-  "/verify-account",
-]);
-const isVerifyRoute = createRouteMatcher(["/"]);
+const isDashboardRoute = createRouteMatcher(["/dashboard(.*)"]);
+const isPublicAuthRoute = createRouteMatcher(["/login", "/register"]);
+const isVerifyAccountRoute = createRouteMatcher(["/verify-account"]);
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth();
@@ -17,12 +13,12 @@ export default clerkMiddleware(async (auth, req) => {
   const pathname = req.nextUrl.pathname;
 
   if (!userId) {
-    if (isVerifyRoute(req)) {
+    if (isVerifyAccountRoute(req)) {
       url.pathname = "/";
       return NextResponse.redirect(url);
     }
 
-    if (isProtectedRoute(req)) {
+    if (isDashboardRoute(req)) {
       url.pathname = "/login";
       return NextResponse.redirect(url);
     }
@@ -41,16 +37,15 @@ export default clerkMiddleware(async (auth, req) => {
   const emailVerified =
     user?.primaryEmailAddress?.verification?.status === "verified";
 
-  if (user.id && !emailVerified) {
-    if (!isVerifyRoute(req)) {
+  if (!emailVerified) {
+    if (!isVerifyAccountRoute(req)) {
       url.pathname = "/verify-account";
       return NextResponse.redirect(url);
     }
-    // return NextResponse.next();
+    return NextResponse.next();
   }
 
-  // Email verificado
-  if (isAuthRoute(req) || isVerifyRoute(req) || pathname === "/") {
+  if (isPublicAuthRoute(req) || isVerifyAccountRoute(req) || pathname === "/") {
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
