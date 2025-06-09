@@ -46,7 +46,7 @@ export default clerkMiddleware(async (auth, req) => {
       url.pathname = "/verify-account";
       return NextResponse.redirect(url);
     }
-    return NextResponse.next();
+    // return NextResponse.next();
   }
 
   // Email verificado
