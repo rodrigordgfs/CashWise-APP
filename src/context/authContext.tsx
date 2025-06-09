@@ -63,13 +63,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       if (!signUp) throw new Error("signUp não disponível");
 
-      await signUp.create({
+      const result = await signUp.create({
         emailAddress: data.email,
         password: data.password,
         unsafeMetadata: { name: data.name },
       });
 
-      router.push("/dashboard");
+      if (result.status === "complete") {
+        await setSignUpActive({ session: result.createdSessionId });
+        toast.success("Cadastro realizado com sucesso!");
+        router.push("/dashboard");
+      } else {
+        router.push("/verify-account");
+        toast.info(
+          "Verificação pendente. Verifique o código enviado para o seu e-mail."
+        );
+      }
     } catch (err: unknown) {
       console.error(err);
       if (isClerkError(err)) {
