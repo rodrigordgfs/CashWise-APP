@@ -74,10 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         toast.success("Cadastro realizado com sucesso!");
         router.push("/dashboard");
       } else {
-        router.push("/verify-account");
-        toast.info(
-          "Verificação pendente. Verifique o código enviado para o seu e-mail."
-        );
+        toast.error("Não foi possível concluir o cadastro.");
       }
     } catch (err: unknown) {
       console.error(err);
