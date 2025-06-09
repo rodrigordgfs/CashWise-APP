@@ -13,11 +13,6 @@ export default clerkMiddleware(async (auth, req) => {
   const pathname = req.nextUrl.pathname;
 
   if (!userId) {
-    if (isVerifyAccountRoute(req)) {
-      url.pathname = "/";
-      return NextResponse.redirect(url);
-    }
-
     if (isDashboardRoute(req)) {
       url.pathname = "/login";
       return NextResponse.redirect(url);
