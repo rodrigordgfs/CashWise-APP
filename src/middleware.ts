@@ -17,20 +17,21 @@ export default clerkMiddleware(async (auth, req) => {
       url.pathname = "/login";
       return NextResponse.redirect(url);
     }
-
     return NextResponse.next();
   }
 
   let user;
   try {
     user = await clerkClient.users.getUser(userId);
+    console.log("User fetched:", JSON.stringify(user, null, 2));
   } catch (err) {
     console.error("Erro ao buscar usuário:", err);
     return NextResponse.next();
   }
 
-  const emailVerified =
-    user?.primaryEmailAddress?.verification?.status === "verified";
+  const emailVerified = user.emailAddresses.some(
+    (email) => email?.verification?.status === "verified"
+  );
 
   if (!emailVerified) {
     if (!isVerifyAccountRoute(req)) {
@@ -47,14 +48,3 @@ export default clerkMiddleware(async (auth, req) => {
 
   return NextResponse.next();
 });
-
-export const config = {
-  matcher: [
-    "/",
-    "/login",
-    "/register",
-    "/verify-account",
-    "/dashboard/:path*",
-    "/api/:path*",
-  ],
-};
