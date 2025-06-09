@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 const isDashboardRoute = createRouteMatcher(["/dashboard(.*)"]);
 const isPublicAuthRoute = createRouteMatcher(["/login", "/register"]);
-const isVerifyAccountRoute = createRouteMatcher(["/verify-account"]);
+// Removi a constante isVerifyAccountRoute pois não será mais usada
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth();
@@ -20,31 +20,31 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.next();
   }
 
-  let user;
+  // Pode manter a busca do usuário, se quiser usar depois
   try {
-    user = await clerkClient.users.getUser(userId);
-    console.log("User fetched:", JSON.stringify(user, null, 2));
+    await clerkClient.users.getUser(userId);
   } catch (err) {
     console.error("Erro ao buscar usuário:", err);
     return NextResponse.next();
   }
 
-  const emailVerified = user.emailAddresses.some(
-    (email) => email?.verification?.status === "verified"
-  );
+  // Removeu-se a verificação de email e redirecionamento para /verify-account
 
-  if (!emailVerified) {
-    if (!isVerifyAccountRoute(req)) {
-      url.pathname = "/verify-account";
-      return NextResponse.redirect(url);
-    }
-    return NextResponse.next();
-  }
-
-  if (isPublicAuthRoute(req) || isVerifyAccountRoute(req) || pathname === "/") {
+  if (isPublicAuthRoute(req) || pathname === "/") {
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 
   return NextResponse.next();
 });
+
+export const config = {
+  matcher: [
+    "/",
+    "/login",
+    "/register",
+    // "/verify-account", removido da lista pois a rota não precisa ser protegida aqui
+    "/dashboard/:path*",
+    "/api/:path*",
+  ],
+};

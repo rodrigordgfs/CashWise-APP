@@ -69,11 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         unsafeMetadata: { name: data.name },
       });
 
-      // Solicita o envio do código de verificação para o e-mail
-      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-
-      toast.info("Verifique seu e-mail para concluir o cadastro.");
-      router.push("/verify-account");
+      router.push("/dashboard");
     } catch (err: unknown) {
       console.error(err);
       if (isClerkError(err)) {
@@ -117,13 +113,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       // Se há um processo de signup em andamento, use signUp
       if (signUp && signUp.status !== "complete") {
-        await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+        await signUp.prepareEmailAddressVerification({
+          strategy: "email_code",
+        });
         return;
       }
 
       // Se o usuário já está logado mas precisa verificar o email
       if (user && user.primaryEmailAddress) {
-        await user.primaryEmailAddress.prepareVerification({ strategy: "email_code" });
+        await user.primaryEmailAddress.prepareVerification({
+          strategy: "email_code",
+        });
         return;
       }
 
