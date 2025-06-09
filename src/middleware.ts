@@ -41,7 +41,7 @@ export default clerkMiddleware(async (auth, req) => {
   const emailVerified =
     user?.primaryEmailAddress?.verification?.status === "verified";
 
-  if (!emailVerified) {
+  if (user.id && !emailVerified) {
     if (!isVerifyRoute(req)) {
       url.pathname = "/verify-account";
       return NextResponse.redirect(url);
