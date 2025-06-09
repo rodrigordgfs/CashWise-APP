@@ -366,23 +366,18 @@
   },
   "verifyEmail": {
     "title": "Verificar Correo",
-    "description": "Ingresa el código de verificación enviado a tu correo",
-    "instructions": "Enviamos un código de 6 dígitos a tu correo electrónico. Ingrésalo a continuación para verificar tu cuenta.",
+    "description": "Enviamos un enlace de verificación a tu correo",
+    "linkSent": "¡Enlace enviado exitosamente!",
+    "linkInstructions": "Enviamos un enlace de verificación a tu correo electrónico. Haz clic en el enlace para verificar tu cuenta y ser redirigido automáticamente.",
     "checkSpam": "¿No encuentras el correo? Revisa tu carpeta de spam.",
-    "verificationCode": "Código de Verificación",
-    "codePlaceholder": "000000",
-    "verifyButton": "Verificar Correo",
-    "verifying": "Verificando...",
-    "resendCode": "Reenviar código",
+    "waitingVerification": "Esperando verificación...",
+    "automaticRedirect": "Serás redirigido automáticamente después de la verificación.",
+    "resendLink": "Reenviar enlace",
     "resending": "Reenviando...",
     "resendCountdown": "Reenviar en {{seconds}}s",
     "backToLogin": "Volver al login",
-    "codeRequiredValidation": "El código de verificación es obligatorio",
-    "codeInvalidValidation": "El código debe tener 6 dígitos",
-    "verificationSuccess": "¡Correo verificado exitosamente!",
-    "verificationIncomplete": "Verificación incompleta. Inténtalo de nuevo.",
-    "verificationError": "Error en la verificación. Verifica el código e inténtalo de nuevo.",
-    "codeResent": "¡Código reenviado exitosamente!",
-    "resendError": "Error al reenviar código. Inténtalo de nuevo."
+    "linkResent": "¡Enlace reenviado exitosamente!",
+    "resendError": "Error al reenviar enlace. Inténtalo de nuevo.",
+    "troubleAccessing": "¿Problemas para acceder? Intenta reenviar el enlace o vuelve al login."
   }
 }

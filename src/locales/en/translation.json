@@ -366,23 +366,18 @@
   },
   "verifyEmail": {
     "title": "Verify Email",
-    "description": "Enter the verification code sent to your email",
-    "instructions": "We sent a 6-digit code to your email. Enter it below to verify your account.",
+    "description": "We sent a verification link to your email",
+    "linkSent": "Link sent successfully!",
+    "linkInstructions": "We sent a verification link to your email. Click the link to verify your account and be automatically redirected.",
     "checkSpam": "Can't find the email? Check your spam folder.",
-    "verificationCode": "Verification Code",
-    "codePlaceholder": "000000",
-    "verifyButton": "Verify Email",
-    "verifying": "Verifying...",
-    "resendCode": "Resend code",
+    "waitingVerification": "Waiting for verification...",
+    "automaticRedirect": "You will be automatically redirected after verification.",
+    "resendLink": "Resend link",
     "resending": "Resending...",
     "resendCountdown": "Resend in {{seconds}}s",
     "backToLogin": "Back to login",
-    "codeRequiredValidation": "Verification code is required",
-    "codeInvalidValidation": "Code must be 6 digits",
-    "verificationSuccess": "Email verified successfully!",
-    "verificationIncomplete": "Verification incomplete. Please try again.",
-    "verificationError": "Verification error. Check the code and try again.",
-    "codeResent": "Code resent successfully!",
-    "resendError": "Error resending code. Please try again."
+    "linkResent": "Link resent successfully!",
+    "resendError": "Error resending link. Please try again.",
+    "troubleAccessing": "Trouble accessing? Try resending the link or go back to login."
   }
 }
