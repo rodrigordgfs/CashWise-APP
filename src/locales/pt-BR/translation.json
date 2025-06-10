@@ -366,18 +366,25 @@
   },
   "verifyEmail": {
     "title": "Verificar E-mail",
-    "description": "Enviamos um link de verificação para seu e-mail",
-    "linkSent": "Link enviado com sucesso!",
-    "linkInstructions": "Enviamos um link de verificação para seu e-mail. Clique no link para verificar sua conta e ser redirecionado automaticamente.",
+    "description": "Digite o código de verificação enviado para seu e-mail",
+    "codeSent": "Código enviado com sucesso!",
+    "codeInstructions": "Digite o código de 6 dígitos que enviamos para seu e-mail.",
     "checkSpam": "Não encontrou o e-mail? Verifique sua pasta de spam.",
     "waitingVerification": "Aguardando verificação...",
-    "automaticRedirect": "Você será redirecionado automaticamente após a verificação.",
-    "resendLink": "Reenviar link",
+    "codeExpiration": "O código expira em 10 minutos.",
+    "verificationCode": "Código de Verificação",
+    "codePlaceholder": "123456",
+    "verify": "Verificar",
+    "verifying": "Verificando...",
+    "resendCode": "Reenviar código",
     "resending": "Reenviando...",
     "resendCountdown": "Reenviar em {{seconds}}s",
     "backToLogin": "Voltar ao login",
-    "linkResent": "Link reenviado com sucesso!",
-    "resendError": "Erro ao reenviar link. Tente novamente.",
-    "troubleAccessing": "Problemas para acessar? Tente reenviar o link ou volte ao login."
+    "codeResent": "Código reenviado com sucesso!",
+    "resendError": "Erro ao reenviar código. Tente novamente.",
+    "troubleAccessing": "Problemas para acessar? Tente reenviar o código ou volte ao login.",
+    "codeMinLength": "O código deve ter 6 dígitos",
+    "codeMaxLength": "O código deve ter 6 dígitos",
+    "codeOnlyNumbers": "O código deve conter apenas números"
   }
 }

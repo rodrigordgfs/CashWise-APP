@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 type AuthContextType = {
   resendVerificationCode: () => Promise<void>;
+  verifyEmailCode: (code: string) => Promise<void>;
   signOut: () => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   registerWithEmail: (data: {
@@ -41,7 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         router.push("/verify-account");
         toast.info(
-          "Verificação pendente. Verifique o link enviado para o seu e-mail."
+          "Verificação pendente. Verifique o código enviado para o seu e-mail."
         );
       }
     } catch (err: unknown) {
@@ -73,13 +74,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         toast.success("Cadastro realizado com sucesso!");
         router.push("/dashboard");
       } else {
-        // Prepare email verification with link strategy
+        // Prepare email verification with code strategy
         await signUp.prepareEmailAddressVerification({
-          strategy: "email_link",
-          redirectUrl: `${window.location.origin}/dashboard`,
+          strategy: "email_code",
         });
         
-        toast.success("Cadastro iniciado! Verifique seu e-mail para continuar.");
+        toast.success("Cadastro iniciado! Verifique seu e-mail para o código de verificação.");
         router.push("/verify-account");
       }
     } catch (err: unknown) {
@@ -92,13 +92,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function verifyEmailCode(code: string) {
+    try {
+      if (!signUp) throw new Error("signUp não disponível");
+
+      const result = await signUp.attemptEmailAddressVerification({
+        code,
+      });
+
+      if (result.status === "complete") {
+        await setSignUpActive({ session: result.createdSessionId });
+        toast.success("E-mail verificado com sucesso!");
+        router.push("/dashboard");
+      } else {
+        throw new Error("Verificação não completada");
+      }
+    } catch (err: unknown) {
+      console.error("Erro ao verificar código:", err);
+      if (isClerkError(err)) {
+        toast.error(err.errors?.[0]?.message || "Código inválido ou expirado.");
+      } else {
+        toast.error("Código inválido ou expirado.");
+      }
+      throw err;
+    }
+  }
+
   async function resendVerificationCode() {
     try {
       // Se há um processo de signup em andamento, use signUp
       if (signUp && signUp.status !== "complete") {
         await signUp.prepareEmailAddressVerification({
-          strategy: "email_link",
-          redirectUrl: `${window.location.origin}/dashboard`,
+          strategy: "email_code",
         });
         return;
       }
@@ -106,15 +131,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Se o usuário já está logado mas precisa verificar o email
       if (user && user.primaryEmailAddress) {
         await user.primaryEmailAddress.prepareVerification({
-          strategy: "email_link",
-          redirectUrl: `${window.location.origin}/dashboard`,
+          strategy: "email_code",
         });
         return;
       }
 
       throw new Error("Nenhum processo de verificação encontrado");
     } catch (err) {
-      console.error("Erro ao reenviar link:", err);
+      console.error("Erro ao reenviar código:", err);
       throw err;
     }
   }
@@ -135,6 +159,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         signInWithEmail,
         registerWithEmail,
+        verifyEmailCode,
         resendVerificationCode,
         signOut,
       }}

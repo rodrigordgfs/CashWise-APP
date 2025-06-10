@@ -1,8 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Mail, CheckCircle, RefreshCw } from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/shared/Button";
+import { InputField } from "@/components/shared/InputField";
+import { useAuth } from "@/context/authContext";
 import { useTranslation } from "react-i18next";
 
 interface VerifyEmailFormProps {
@@ -15,7 +20,31 @@ export function VerifyEmailForm({
   isResending
 }: VerifyEmailFormProps) {
   const { t } = useTranslation();
+  const { verifyEmailCode } = useAuth();
   const [countdown, setCountdown] = useState(0);
+  const [isVerifying, setIsVerifying] = useState(false);
+
+  const schema = z.object({
+    code: z
+      .string()
+      .min(6, t("verifyEmail.codeMinLength"))
+      .max(6, t("verifyEmail.codeMaxLength"))
+      .regex(/^\d+$/, t("verifyEmail.codeOnlyNumbers")),
+  });
+
+  type FormData = z.infer<typeof schema>;
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      code: "",
+    },
+  });
 
   useEffect(() => {
     if (countdown > 0) {
@@ -30,6 +59,18 @@ export function VerifyEmailForm({
     setCountdown(60);
   };
 
+  const onSubmit = async (data: FormData) => {
+    setIsVerifying(true);
+    try {
+      await verifyEmailCode(data.code);
+      reset();
+    } catch (error) {
+      console.error("Erro na verificação:", error);
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
   return (
     <div className="px-6 py-2 space-y-6">
       <div className="flex justify-center">
@@ -41,17 +82,44 @@ export function VerifyEmailForm({
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-2 text-emerald-600 dark:text-emerald-500">
           <CheckCircle className="h-5 w-5" />
-          <span className="font-medium">{t("verifyEmail.linkSent")}</span>
+          <span className="font-medium">{t("verifyEmail.codeSent")}</span>
         </div>
         
         <div className="space-y-2">
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            {t("verifyEmail.linkInstructions")}
+            {t("verifyEmail.codeInstructions")}
           </p>
           <p className="text-xs text-zinc-500 dark:text-zinc-500">
             {t("verifyEmail.checkSpam")}
           </p>
         </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <Controller
+            name="code"
+            control={control}
+            render={({ field }) => (
+              <InputField
+                label={t("verifyEmail.verificationCode")}
+                placeholder={t("verifyEmail.codePlaceholder")}
+                type="number"
+                maxLength={6}
+                centerContent
+                {...field}
+                error={errors.code?.message}
+              />
+            )}
+          />
+
+          <Button
+            type="submit"
+            variant="emerald"
+            disabled={isVerifying}
+            className="w-full"
+          >
+            {isVerifying ? t("verifyEmail.verifying") : t("verifyEmail.verify")}
+          </Button>
+        </form>
 
         <div className="bg-zinc-50 dark:bg-zinc-800 rounded-lg p-4 space-y-3">
           <div className="flex items-center justify-center gap-2 text-zinc-700 dark:text-zinc-300">
@@ -59,7 +127,7 @@ export function VerifyEmailForm({
             <span className="text-sm font-medium">{t("verifyEmail.waitingVerification")}</span>
           </div>
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            {t("verifyEmail.automaticRedirect")}
+            {t("verifyEmail.codeExpiration")}
           </p>
         </div>
       </div>
@@ -75,7 +143,7 @@ export function VerifyEmailForm({
             ? t("verifyEmail.resendCountdown", { seconds: countdown })
             : isResending
             ? t("verifyEmail.resending")
-            : t("verifyEmail.resendLink")}
+            : t("verifyEmail.resendCode")}
         </button>
       </div>
 

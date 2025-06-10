@@ -22,7 +22,7 @@ export default function VerifyEmailPage() {
     setIsResending(true);
     try {
       await resendVerificationCode();
-      toast.success(t("verifyEmail.linkResent"));
+      toast.success(t("verifyEmail.codeResent"));
     } catch (err) {
       console.error(err);
       toast.error(t("verifyEmail.resendError"));
