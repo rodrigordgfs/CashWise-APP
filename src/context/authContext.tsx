@@ -6,8 +6,8 @@ import { useSignIn, useSignUp, useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 
 type AuthContextType = {
-  verifyEmailCode: (code: string) => Promise<boolean>;
   resendVerificationCode: () => Promise<void>;
+  verifyEmailCode: (code: string) => Promise<void>;
   signOut: () => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   registerWithEmail: (data: {
@@ -74,7 +74,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         toast.success("Cadastro realizado com sucesso!");
         router.push("/dashboard");
       } else {
-        toast.error("Não foi possível concluir o cadastro.");
+        // Prepare email verification with code strategy
+        await signUp.prepareEmailAddressVerification({
+          strategy: "email_code",
+        });
+
+        toast.success(
+          "Cadastro iniciado! Verifique seu e-mail para o código de verificação."
+        );
+        router.push("/verify-account");
       }
     } catch (err: unknown) {
       console.error(err);
@@ -86,31 +94,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  async function verifyEmailCode(code: string): Promise<boolean> {
+  async function verifyEmailCode(code: string) {
     try {
-      // Se há um processo de signup em andamento, use signUp
-      if (signUp && signUp.status !== "complete") {
-        const completeSignUp = await signUp.attemptEmailAddressVerification({
-          code,
-        });
-        if (completeSignUp.status === "complete") {
-          await setSignUpActive({ session: completeSignUp.createdSessionId });
-          return true;
-        }
-        return false;
-      }
+      if (!signUp) throw new Error("signUp não disponível");
 
-      // Se o usuário já está logado mas precisa verificar o email
-      if (user && user.primaryEmailAddress) {
-        await user.primaryEmailAddress.attemptVerification({ code });
-        // Recarrega os dados do usuário
-        await user.reload();
-        return true;
-      }
+      const result = await signUp.attemptEmailAddressVerification({
+        code,
+      });
 
-      throw new Error("Nenhum processo de verificação encontrado");
-    } catch (err) {
-      console.error("Erro na verificação:", err);
+      if (result.status === "complete") {
+        await setSignUpActive({ session: result.createdSessionId });
+        toast.success("E-mail verificado com sucesso!");
+        router.push("/dashboard");
+      } else {
+        throw new Error("Verificação não completada");
+      }
+    } catch (err: unknown) {
+      console.error("Erro ao verificar código:", err);
+      if (isClerkError(err)) {
+        toast.error(err.errors?.[0]?.message || "Código inválido ou expirado.");
+      } else {
+        toast.error("Código inválido ou expirado.");
+      }
       throw err;
     }
   }

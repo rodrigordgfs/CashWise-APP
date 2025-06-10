@@ -7,7 +7,7 @@ export function AuthCard({
   centerContent = false,
 }: {
   title: string;
-  description: string;
+  description?: string;
   children: React.ReactNode;
   centerContent?: boolean;
 }) {

@@ -367,22 +367,22 @@
   "verifyEmail": {
     "title": "Verificar Correo",
     "description": "Ingresa el código de verificación enviado a tu correo",
-    "instructions": "Enviamos un código de 6 dígitos a tu correo electrónico. Ingrésalo a continuación para verificar tu cuenta.",
+    "codeSent": "¡Código enviado exitosamente!",
+    "codeInstructions": "Ingresa el código de 6 dígitos que enviamos a tu correo electrónico.",
     "checkSpam": "¿No encuentras el correo? Revisa tu carpeta de spam.",
     "verificationCode": "Código de Verificación",
-    "codePlaceholder": "000000",
-    "verifyButton": "Verificar Correo",
+    "codePlaceholder": "123456",
+    "verify": "Verificar",
     "verifying": "Verificando...",
     "resendCode": "Reenviar código",
     "resending": "Reenviando...",
     "resendCountdown": "Reenviar en {{seconds}}s",
     "backToLogin": "Volver al login",
-    "codeRequiredValidation": "El código de verificación es obligatorio",
-    "codeInvalidValidation": "El código debe tener 6 dígitos",
-    "verificationSuccess": "¡Correo verificado exitosamente!",
-    "verificationIncomplete": "Verificación incompleta. Inténtalo de nuevo.",
-    "verificationError": "Error en la verificación. Verifica el código e inténtalo de nuevo.",
     "codeResent": "¡Código reenviado exitosamente!",
-    "resendError": "Error al reenviar código. Inténtalo de nuevo."
+    "resendError": "Error al reenviar código. Inténtalo de nuevo.",
+    "troubleAccessing": "¿Problemas para acceder? Intenta reenviar el código o vuelve al login.",
+    "codeMinLength": "El código debe tener 6 dígitos",
+    "codeMaxLength": "El código debe tener 6 dígitos",
+    "codeOnlyNumbers": "El código debe contener solo números"
   }
 }

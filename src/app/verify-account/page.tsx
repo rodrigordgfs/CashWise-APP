@@ -14,28 +14,9 @@ export default function VerifyEmailPage() {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const { verifyEmailCode, resendVerificationCode } = useAuth();
+  const { resendVerificationCode } = useAuth();
 
-  const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
-
-  const handleSubmit = async (code: string) => {
-    setIsLoading(true);
-    try {
-      const success = await verifyEmailCode(code);
-      if (success) {
-        toast.success(t("verifyEmail.verificationSuccess"));
-        router.push("/dashboard");
-      } else {
-        toast.error(t("verifyEmail.verificationIncomplete"));
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error(t("verifyEmail.verificationError"));
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleResend = async () => {
     setIsResending(true);
@@ -53,13 +34,8 @@ export default function VerifyEmailPage() {
   return (
     <div className="flex min-h-screen flex-col items-center bg-zinc-50 dark:bg-zinc-900 px-4 pt-24 pb-8">
       <AuthHeader />
-      <AuthCard title={t("verifyEmail.title")} description={t("verifyEmail.description")} centerContent>
-        <VerifyEmailForm
-          onSubmit={handleSubmit}
-          onResend={handleResend}
-          isLoading={isLoading}
-          isResending={isResending}
-        />
+      <AuthCard title={t("verifyEmail.title")} centerContent>
+        <VerifyEmailForm onResend={handleResend} isResending={isResending} />
         <div className="text-center text-sm mb-6">
           <button
             type="button"
