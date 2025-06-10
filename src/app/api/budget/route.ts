@@ -63,7 +63,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      body,
     });
 
     if (!res.ok) {

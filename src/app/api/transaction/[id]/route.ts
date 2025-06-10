@@ -41,7 +41,7 @@ export async function PATCH(
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      body,
     });
 
     const data = await res.json();

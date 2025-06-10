@@ -40,7 +40,7 @@ export async function PATCH(
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      body,
     });
 
     if (!res.ok) {
