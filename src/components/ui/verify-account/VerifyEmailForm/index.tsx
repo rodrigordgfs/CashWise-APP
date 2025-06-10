@@ -84,7 +84,6 @@ export function VerifyEmailForm({
           <CheckCircle className="h-5 w-5" />
           <span className="font-medium">{t("verifyEmail.codeSent")}</span>
         </div>
-
         <div className="space-y-2">
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
             {t("verifyEmail.codeInstructions")}

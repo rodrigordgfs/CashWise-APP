@@ -370,6 +370,8 @@
     "codeSent": "¡Código enviado exitosamente!",
     "codeInstructions": "Ingresa el código de 6 dígitos que enviamos a tu correo electrónico.",
     "checkSpam": "¿No encuentras el correo? Revisa tu carpeta de spam.",
+    "waitingVerification": "Esperando verificación...",
+    "codeExpiration": "El código expira en 10 minutos.",
     "verificationCode": "Código de Verificación",
     "codePlaceholder": "123456",
     "verify": "Verificar",
