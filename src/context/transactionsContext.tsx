@@ -41,6 +41,7 @@ interface TransactionContextProps {
   periodTabs: { label: string; value: string }[];
   period: Period;
   setPeriod: (period: Period) => void;
+  fetchTransactions: () => Promise<void>;
 }
 
 const TransactionContext = createContext<TransactionContextProps | undefined>(
@@ -115,7 +116,14 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id, searchTerm, selectedDate, sortOrder, transactionType, user?.hasVerifiedEmailAddress]);
+  }, [
+    user?.id,
+    searchTerm,
+    selectedDate,
+    sortOrder,
+    transactionType,
+    user?.hasVerifiedEmailAddress,
+  ]);
 
   const handleDeleteTransaction = useCallback(
     async (transaction: Transaction) => {
@@ -212,6 +220,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       periodTabs,
       period,
       setPeriod,
+      fetchTransactions,
     }),
     [
       searchTerm,
@@ -227,6 +236,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       saveOrUpdateTransaction,
       periodTabs,
       period,
+      fetchTransactions,
     ]
   );
 

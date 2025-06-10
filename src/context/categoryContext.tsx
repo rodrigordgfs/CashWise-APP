@@ -32,6 +32,7 @@ interface CategoryContextProps {
   saveCategory: (category: Category) => Promise<void>;
   deleteCategory: (category: Category) => Promise<void>;
   categoriesTabs: { label: string; value: string }[];
+  fetchCategories: () => Promise<void>;
 }
 
 const CategoryContext = createContext<CategoryContextProps | undefined>(
@@ -188,6 +189,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
       deleteCategory,
       isDialogOpen,
       setIsDialogOpen,
+      fetchCategories,
     }),
     [
       categoriesTabs,
@@ -203,6 +205,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
       deleteCategory,
       isDialogOpen,
       setIsDialogOpen,
+      fetchCategories,
     ]
   );
 

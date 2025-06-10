@@ -33,7 +33,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   try {
     const res = await fetch(url.toString(), {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
     });
     const data = await res.json();
 
@@ -99,4 +102,3 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 }
-

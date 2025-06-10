@@ -14,7 +14,10 @@ export async function PATCH(
   }
 
   if (!id) {
-    return NextResponse.json({ error: "Missing transaction ID" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Missing transaction ID" },
+      { status: 400 }
+    );
   }
 
   let body;
@@ -41,7 +44,10 @@ export async function PATCH(
 
     if (!res.ok) {
       return NextResponse.json(
-        { error: `Erro ao atualizar transação: ${res.statusText}`, details: data },
+        {
+          error: `Erro ao atualizar transação: ${res.statusText}`,
+          details: data,
+        },
         { status: res.status }
       );
     }
@@ -85,6 +91,7 @@ export async function DELETE(
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       }
     );

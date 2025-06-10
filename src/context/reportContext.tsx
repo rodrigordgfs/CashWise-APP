@@ -17,6 +17,7 @@ import {
   ReactNode,
   Dispatch,
   SetStateAction,
+  useCallback,
 } from "react";
 import { toast } from "sonner";
 
@@ -29,6 +30,7 @@ interface ReportsContextProps {
   categoryReports: CategoryReport[];
   balanceReports: BalanceReport[];
   isLoading: boolean;
+  fetchReports: () => Promise<void>;
 }
 
 const ReportsContext = createContext<ReportsContextProps | undefined>(
@@ -48,41 +50,48 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
   const [balanceReports, setBalanceReports] = useState<BalanceReport[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchReports = async () => {
-      if (!user?.id || !user.hasVerifiedEmailAddress) return;
+  const fetchReports = useCallback(async () => {
+    if (!user?.id || !user.hasVerifiedEmailAddress) return;
 
-      setIsLoading(true);
-      try {
-        const [monthlyRes, categoryRes, balanceRes] = await Promise.all([
-          fetch(`/api/reports/monthly${period ? `?period=${period}` : ""}`),
-          fetch(`/api/reports/categories${period ? `?period=${period}` : ""}`),
-          fetch(`/api/reports/balance${period ? `?period=${period}` : ""}`),
-        ]);
+    setIsLoading(true);
+    try {
+      const [monthlyRes, categoryRes, balanceRes] = await Promise.all([
+        fetch(`/api/reports/monthly${period ? `?period=${period}` : ""}`),
+        fetch(`/api/reports/categories${period ? `?period=${period}` : ""}`),
+        fetch(`/api/reports/balance${period ? `?period=${period}` : ""}`),
+      ]);
 
-        if (!monthlyRes.ok || !categoryRes.ok || !balanceRes.ok) {
-          throw new Error("Erro ao buscar relatórios");
-        }
-
-        const [monthlyData, categoryData, balanceData] = await Promise.all([
-          monthlyRes.json(),
-          categoryRes.json(),
-          balanceRes.json(),
-        ]);
-
-        setMonthlyReports(monthlyData);
-        setCategoryReports(categoryData);
-        setBalanceReports(balanceData);
-      } catch (error) {
-        toast.error("Erro ao carregar relatórios. Tente novamente mais tarde.");
-        console.error("Erro ao carregar relatórios:", error);
-      } finally {
-        setIsLoading(false);
+      if (!monthlyRes.ok || !categoryRes.ok || !balanceRes.ok) {
+        throw new Error("Erro ao buscar relatórios");
       }
-    };
 
+      const [monthlyData, categoryData, balanceData] = await Promise.all([
+        monthlyRes.json(),
+        categoryRes.json(),
+        balanceRes.json(),
+      ]);
+
+      setMonthlyReports(monthlyData);
+      setCategoryReports(categoryData);
+      setBalanceReports(balanceData);
+    } catch (error) {
+      toast.error("Erro ao carregar relatórios. Tente novamente mais tarde.");
+      console.error("Erro ao carregar relatórios:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [period, user?.id, user?.hasVerifiedEmailAddress]);
+
+  useEffect(() => {
     fetchReports();
-  }, [period, reportType, user?.id, getToken, user?.hasVerifiedEmailAddress]);
+  }, [
+    period,
+    reportType,
+    user?.id,
+    getToken,
+    user?.hasVerifiedEmailAddress,
+    fetchReports,
+  ]);
 
   const value = useMemo(
     () => ({
@@ -94,6 +103,7 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
       categoryReports,
       balanceReports,
       isLoading,
+      fetchReports,
     }),
     [
       period,
@@ -102,6 +112,7 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
       categoryReports,
       balanceReports,
       isLoading,
+      fetchReports,
     ]
   );
 

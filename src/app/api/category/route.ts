@@ -18,7 +18,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   try {
     const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
     });
 
     if (!res.ok) {
@@ -42,6 +45,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const { getToken } = await auth();
   const token = await getToken();
+
+  console.log("token:", token);
+  console.log("request:", request);
 
   if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
