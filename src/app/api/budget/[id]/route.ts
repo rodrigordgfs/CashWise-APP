@@ -10,6 +10,10 @@ export async function PATCH(
 
   const { userId, getToken } = getAuth(request);
 
+  console.log("PATCH request for budget ID:", id);
+  console.log("User ID:", userId);
+  console.log("Token:", await getToken());
+
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -69,6 +73,10 @@ export async function DELETE(
   }
 
   const { userId, getToken } = getAuth(request);
+
+  console.log("DELETE request for budget ID:", id);
+  console.log("User ID:", userId);
+  console.log("Token:", await getToken());
 
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

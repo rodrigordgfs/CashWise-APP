@@ -10,12 +10,16 @@ export async function PATCH(
 
   const { userId, getToken } = await auth();
 
+  console.log("PATCH request for goal ID:", id);
+  console.log("User ID:", userId);
+  console.log("Token:", await getToken());
+
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   if (!id) {
-    return NextResponse.json({ error: "Missing category ID" }, { status: 400 });
+    return NextResponse.json({ error: "Missing goal ID" }, { status: 400 });
   }
 
   let body;
@@ -65,12 +69,16 @@ export async function DELETE(
 
   const { userId, getToken } = await auth();
 
+  console.log("DELETE request for goal ID:", id);
+  console.log("User ID:", userId);
+  console.log("Token:", await getToken());
+
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   if (!id) {
-    return NextResponse.json({ error: "Missing category ID" }, { status: 400 });
+    return NextResponse.json({ error: "Missing goal ID" }, { status: 400 });
   }
 
   const token = await getToken();
