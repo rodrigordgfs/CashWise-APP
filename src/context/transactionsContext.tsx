@@ -84,12 +84,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
 
     setIsLoading(true);
     try {
-      if (
-        searchTerm ||
-        selectedDate ||
-        sortOrder !== "none" ||
-        transactionType !== TransactionTypeFilter.All
-      ) {
+      if (searchTerm || selectedDate || sortOrder !== "none") {
         const params = {
           search: searchTerm || undefined,
           date: selectedDate ? selectedDate.toISOString() : undefined,
