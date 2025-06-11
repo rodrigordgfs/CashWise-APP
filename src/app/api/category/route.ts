@@ -48,9 +48,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { getToken } = await auth();
   const token = await getToken();
 
-  console.log("token:", token);
-  console.log("request:", request);
-
   if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -71,10 +68,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body,
+      body: JSON.stringify(body),
     });
 
     if (!res.ok) {
+      console.log("Body:", await res.text());
+
       return NextResponse.json(
         { error: `Erro ao criar categoria: ${res.statusText}` },
         { status: res.status }

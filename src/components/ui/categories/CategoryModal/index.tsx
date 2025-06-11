@@ -11,7 +11,6 @@ import { SelectField } from "@/components/shared/SelectField";
 import { InputField } from "@/components/shared/InputField";
 import { Modal } from "@/components/shared/Modal";
 import { TransactionType } from "@/types/Transaction.type";
-import { useUser } from "@clerk/nextjs";
 import { useTranslation } from "react-i18next";
 
 interface CategoryModalProps {
@@ -42,7 +41,6 @@ export function CategoryModal({
   onSave,
   initialData,
 }: CategoryModalProps) {
-  const { user } = useUser();
   const { t } = useTranslation();
 
   const schema = z.object({
@@ -99,36 +97,17 @@ export function CategoryModal({
 
   const onSubmit = async (data: FormValues) => {
     setIsLoading(true);
-
-    const method = initialData ? "PATCH" : "POST";
-
-    const url = initialData
-      ? `${process.env.NEXT_PUBLIC_BASE_URL_API}/category/${initialData.id}`
-      : `${process.env.NEXT_PUBLIC_BASE_URL_API}/category`;
-
-    const response = await fetch(url, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    try {
+      await onSave({
         ...data,
-        userId: user?.id,
-      }),
-    });
-
-    setIsLoading(false);
-
-    if (!response.ok) {
-      toast.error("Erro ao salvar categoria");
-      return;
+        id: initialData?.id || undefined,
+      });
+    } catch (error) {
+      console.error("Error saving category:", error);
+      toast.error(t("categories.saveError"));
+    } finally {
+      setIsLoading(false);
     }
-
-    const savedCategory = await response.json();
-    onSave(savedCategory);
-    toast.success("Categoria salva com sucesso!");
-    reset();
-    onClose();
   };
 
   return (
