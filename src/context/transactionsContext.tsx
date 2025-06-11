@@ -84,32 +84,49 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
 
     setIsLoading(true);
     try {
-      const params = {
-        search: searchTerm || undefined,
-        date: selectedDate ? selectedDate.toISOString() : undefined,
-        sort: sortOrder !== "none" ? sortOrder : undefined,
-        type:
-          transactionType !== TransactionTypeFilter.All
-            ? transactionType
-            : undefined,
-      };
+      if (
+        searchTerm ||
+        selectedDate ||
+        sortOrder !== "none" ||
+        transactionType !== TransactionTypeFilter.All
+      ) {
+        const params = {
+          search: searchTerm || undefined,
+          date: selectedDate ? selectedDate.toISOString() : undefined,
+          sort: sortOrder !== "none" ? sortOrder : undefined,
+          type:
+            transactionType !== TransactionTypeFilter.All
+              ? transactionType
+              : undefined,
+        };
 
-      const url = new URL("/api/transaction", window.location.origin);
+        const url = new URL(
+          "/transaction",
+          process.env.NEXT_PUBLIC_BASE_URL_API
+        );
 
-      Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined) {
-          url.searchParams.append(key, value);
+        Object.entries(params).forEach(([key, value]) => {
+          if (value !== undefined) {
+            url.searchParams.append(key, value);
+          }
+        });
+
+        const response = await fetch(url.toString(), {
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
+            "Content-Type": "application/json",
+          },
+          cache: "no-store",
+          next: { revalidate: 0 },
+        });
+
+        if (!response.ok) {
+          toast.error("Erro ao buscar transações");
+          throw new Error("Erro ao buscar transações");
         }
-      });
-
-      const response = await fetch(url.toString());
-
-      if (!response.ok) {
-        toast.error("Erro ao buscar transações");
-        throw new Error("Erro ao buscar transações");
+        const data = await response.json();
+        setTransactions(data);
       }
-      const data = await response.json();
-      setTransactions(data);
     } catch (error) {
       toast.error("Erro ao carregar transações");
       console.error("Erro ao carregar transações:", error);
@@ -123,14 +140,21 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     sortOrder,
     transactionType,
     user?.hasVerifiedEmailAddress,
+    getToken,
   ]);
 
   const handleDeleteTransaction = useCallback(
     async (transaction: Transaction) => {
       try {
-        const response = await fetch(`/api/transaction/${transaction.id}`, {
-          method: "DELETE",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction/${transaction.id}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${await getToken()}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           toast.error("Erro ao excluir transação");
@@ -144,7 +168,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
         console.error(error);
       }
     },
-    []
+    [getToken]
   );
 
   const saveOrUpdateTransaction = useCallback(
@@ -157,8 +181,8 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       try {
         const method = data.id ? "PATCH" : "POST";
         const url = data.id
-          ? `/api/transaction/${data.id}`
-          : `/api/transaction`;
+          ? `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction/${data.id}`
+          : `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction`;
 
         const response = await fetch(url, {
           method,
@@ -169,7 +193,6 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
           body: JSON.stringify({
             ...data,
             date: new Date(data.date),
-            userId: user?.id,
           }),
         });
 
@@ -191,7 +214,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
         return null;
       }
     },
-    [getToken, user?.id, fetchTransactions]
+    [getToken, fetchTransactions]
   );
 
   useEffect(() => {

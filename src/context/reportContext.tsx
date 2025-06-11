@@ -20,6 +20,7 @@ import {
   useCallback,
 } from "react";
 import { toast } from "sonner";
+import { getRelativeDate } from "@/utils/relativeDate";
 
 interface ReportsContextProps {
   period: Period;
@@ -55,32 +56,76 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
 
     setIsLoading(true);
     try {
-      const [monthlyRes, categoryRes, balanceRes] = await Promise.all([
-        fetch(`/api/reports/monthly${period ? `?period=${period}` : ""}`),
-        fetch(`/api/reports/categories${period ? `?period=${period}` : ""}`),
-        fetch(`/api/reports/balance${period ? `?period=${period}` : ""}`),
-      ]);
+      if (period) {
+        const [monthlyRes, categoryRes, balanceRes] = await Promise.all([
+          fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/monthly${
+              period
+                ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
+                : ""
+            }`,
+            {
+              headers: {
+                Authorization: `Bearer ${await getToken()}`,
+                "Content-Type": "application/json",
+              },
+              cache: "no-store",
+              next: { revalidate: 0 },
+            }
+          ),
+          fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/categories${
+              period
+                ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
+                : ""
+            }`,
+            {
+              headers: {
+                Authorization: `Bearer ${await getToken()}`,
+                "Content-Type": "application/json",
+              },
+              cache: "no-store",
+              next: { revalidate: 0 },
+            }
+          ),
+          fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/balance${
+              period
+                ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
+                : ""
+            }`,
+            {
+              headers: {
+                Authorization: `Bearer ${await getToken()}`,
+                "Content-Type": "application/json",
+              },
+              cache: "no-store",
+              next: { revalidate: 0 },
+            }
+          ),
+        ]);
 
-      if (!monthlyRes.ok || !categoryRes.ok || !balanceRes.ok) {
-        throw new Error("Erro ao buscar relatórios");
+        if (!monthlyRes.ok || !categoryRes.ok || !balanceRes.ok) {
+          throw new Error("Erro ao buscar relatórios");
+        }
+
+        const [monthlyData, categoryData, balanceData] = await Promise.all([
+          monthlyRes.json(),
+          categoryRes.json(),
+          balanceRes.json(),
+        ]);
+
+        setMonthlyReports(monthlyData);
+        setCategoryReports(categoryData);
+        setBalanceReports(balanceData);
       }
-
-      const [monthlyData, categoryData, balanceData] = await Promise.all([
-        monthlyRes.json(),
-        categoryRes.json(),
-        balanceRes.json(),
-      ]);
-
-      setMonthlyReports(monthlyData);
-      setCategoryReports(categoryData);
-      setBalanceReports(balanceData);
     } catch (error) {
       toast.error("Erro ao carregar relatórios. Tente novamente mais tarde.");
       console.error("Erro ao carregar relatórios:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [period, user?.id, user?.hasVerifiedEmailAddress]);
+  }, [period, user?.id, user?.hasVerifiedEmailAddress, getToken]);
 
   useEffect(() => {
     fetchReports();

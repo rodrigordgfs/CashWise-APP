@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { Budget } from "@/types/Budge.type";
 import { Category } from "@/types/Category.type";
 import { useCategory } from "./categoryContext";
-import { useUser } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 interface BudgetContextProps {
   isLoading: boolean;
@@ -32,7 +32,8 @@ interface BudgetContextProps {
 const BudgetContext = createContext<BudgetContextProps | undefined>(undefined);
 
 export const BudgetProvider = ({ children }: { children: ReactNode }) => {
-  const { user, } = useUser();
+  const { user } = useUser();
+  const { getToken } = useAuth();
   const { categories } = useCategory();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,7 +46,15 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
 
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/budget`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${await getToken()}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         toast.error("Erro ao buscar dados");
@@ -59,7 +68,7 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id, user?.hasVerifiedEmailAddress]);
+  }, [user?.id, user?.hasVerifiedEmailAddress, getToken]);
 
   useEffect(() => {
     fetchBudgets();
@@ -78,19 +87,21 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
   const saveBudget = useCallback(
     async (data: Budget): Promise<Budget | undefined> => {
       try {
-        const url = data.id ? `/api/budget/${data.id}` : `/api/budget`;
+        const url = data.id
+          ? `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget/${data.id}`
+          : `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget`;
         const method = data.id ? "PATCH" : "POST";
 
         const res = await fetch(url, {
           method,
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${await getToken()}`,
           },
           body: JSON.stringify({
             categoryId: data.category.id,
             limit: data.limit,
             date: data.date,
-            userId: user?.id,
           }),
         });
 
@@ -119,15 +130,21 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
         toast.error("Não foi possível salvar o orçamento.");
       }
     },
-    [user, fetchBudgets]
+    [user, fetchBudgets, getToken]
   );
 
   const handleDelete = useCallback(
     async (budget: Budget) => {
       try {
-        const res = await fetch(`/api/budget/${budget.id}`, {
-          method: "DELETE",
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget/${budget.id}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${await getToken()}`,
+            },
+          }
+        );
 
         if (!res.ok) {
           toast.error("Erro ao deletar orçamento");
@@ -141,7 +158,7 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
         toast.error("Não foi possível excluir o orçamento.");
       }
     },
-    [fetchBudgets]
+    [fetchBudgets, getToken]
   );
 
   const value = useMemo(

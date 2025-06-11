@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { Goal } from "@/types/Goal.type";
 import { Category } from "@/types/Category.type";
 import { useCategory } from "./categoryContext";
-import { useUser } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { GoalFormData } from "@/components/ui/goals/GoalModal";
 
 interface GoalContextProps {
@@ -34,6 +34,7 @@ const GoalContext = createContext<GoalContextProps | undefined>(undefined);
 
 export const GoalProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
+  const { getToken } = useAuth();
   const { categories } = useCategory();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,7 +47,14 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
 
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/goals`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget`,
+        {
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         toast.error("Erro ao buscar metas");
@@ -60,13 +68,13 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.hasVerifiedEmailAddress, user?.id]);
+  }, [user?.hasVerifiedEmailAddress, user?.id, getToken]);
 
   useEffect(() => {
     if (user?.id) {
       fetchGoals();
     }
-  }, [user?.id, fetchGoals]);
+  }, [user?.id, fetchGoals, getToken]);
 
   const openModalToCreate = useCallback(() => {
     setEditingGoal(null);
@@ -81,13 +89,16 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
   const saveGoal = useCallback(
     async (data: GoalFormData): Promise<Goal | undefined> => {
       try {
-        const url = data.id ? `/api/goals/${data.id}` : `/api/goals`;
+        const url = data.id
+          ? `${process.env.NEXT_PUBLIC_BASE_URL_API}/goals/${data.id}`
+          : `${process.env.NEXT_PUBLIC_BASE_URL_API}/goals`;
         const method = data.id ? "PATCH" : "POST";
 
         const res = await fetch(url, {
           method,
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${await getToken()}`,
           },
           body: JSON.stringify({
             title: data.title,
@@ -121,15 +132,21 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
         toast.error("Não foi possível salvar a meta.");
       }
     },
-    [fetchGoals]
+    [fetchGoals, getToken]
   );
 
   const handleDelete = useCallback(
     async (goal: Goal) => {
       try {
-        const res = await fetch(`/api/goals/${goal.id}`, {
-          method: "DELETE",
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/goals/${goal.id}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${await getToken()}`,
+            },
+          }
+        );
 
         if (!res.ok) {
           toast.error("Erro ao deletar meta");
@@ -143,7 +160,7 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
         toast.error("Não foi possível excluir a meta.");
       }
     },
-    [fetchGoals]
+    [fetchGoals, getToken]
   );
 
   const value = useMemo(

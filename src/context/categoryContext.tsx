@@ -12,7 +12,7 @@ import {
 import { toast } from "sonner";
 import { Category } from "@/types/Category.type";
 import { TransactionTypeFilter } from "@/types/Transaction.type";
-import { useUser } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { useTranslation } from "react-i18next";
 
 interface CategoryContextProps {
@@ -42,6 +42,7 @@ const CategoryContext = createContext<CategoryContextProps | undefined>(
 export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
   const { t } = useTranslation();
+  const { getToken } = useAuth();
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -66,9 +67,18 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
 
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `/api/category${categoryType ? `?type=${categoryType}` : ""}`
-      );
+      const url =
+        `${process.env.NEXT_PUBLIC_BASE_URL_API}/category` +
+        (categoryType ? `&type=${encodeURIComponent(categoryType)}` : "");
+
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+        next: { revalidate: 0 },
+      });
 
       if (!response.ok) throw new Error("Erro ao buscar categorias");
       const data = await response.json();
@@ -79,7 +89,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [categoryType, user?.id, user?.hasVerifiedEmailAddress]);
+  }, [categoryType, user?.id, user?.hasVerifiedEmailAddress, getToken]);
 
   useEffect(() => {
     fetchCategories();
@@ -104,19 +114,19 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     async (category: Category) => {
       try {
         const url = category.id
-          ? `/api/category/${category.id}`
-          : `/api/category`;
+          ? `${process.env.NEXT_PUBLIC_BASE_URL_API}/category/${category.id}`
+          : `${process.env.NEXT_PUBLIC_BASE_URL_API}/category`;
         const method = category.id ? "PATCH" : "POST";
 
         const response = await fetch(url, {
           method,
           headers: {
+            Authorization: `Bearer ${await getToken()}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             name: category.name,
             type: category.type,
-            userId: user?.id,
             color: category.color,
             icon: category.icon,
           }),
@@ -145,16 +155,22 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
         toast.error("Erro ao salvar categoria.");
       }
     },
-    [fetchCategories, user]
+    [fetchCategories, user, getToken]
   );
 
   const deleteCategory = useCallback(
     async (category: Category) => {
       setIsLoading(true);
       try {
-        const response = await fetch(`/api/category/${category.id}`, {
-          method: "DELETE",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/category/${category.id}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${await getToken()}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           toast.error("Erro ao excluir categoria");
@@ -170,7 +186,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(false);
       }
     },
-    [fetchCategories]
+    [fetchCategories, getToken]
   );
 
   const value = useMemo(
