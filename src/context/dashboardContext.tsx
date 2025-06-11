@@ -54,105 +54,97 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
     setIsLoading(true);
     try {
-      if (period) {
-        const transactionParams = {
-          date__gte: encodeURIComponent(getRelativeDate(period)),
-          limit: "5",
-          sort: "desc",
-        };
+      const transactionParams = {
+        date__gte: encodeURIComponent(getRelativeDate(period)),
+        limit: "5",
+        sort: "desc",
+      };
 
-        const transactionUrl = new URL(
-          "/transaction",
-          process.env.NEXT_PUBLIC_BASE_URL_API
-        );
-        Object.entries(transactionParams).forEach(([key, value]) => {
-          if (value !== undefined) {
-            transactionUrl.searchParams.append(key, value);
-          }
-        });
+      const transactionUrl = new URL(
+        "/transaction",
+        process.env.NEXT_PUBLIC_BASE_URL_API
+      );
+      Object.entries(transactionParams).forEach(([key, value]) => {
+        if (value !== undefined) {
+          transactionUrl.searchParams.append(key, value);
+        }
+      });
 
-        const [summaryRes, monthlyRes, categoryRes, transactionsRes] =
-          await Promise.all([
-            fetch(
-              `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/summary${
-                period
-                  ? `?period__gte=${encodeURIComponent(
-                      getRelativeDate(period)
-                    )}`
-                  : ""
-              }`,
-              {
-                headers: {
-                  Authorization: `Bearer ${await getToken()}`,
-                  "Content-Type": "application/json",
-                },
-                cache: "no-store",
-                next: { revalidate: 0 },
-              }
-            ),
-            fetch(
-              `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/monthly${
-                period
-                  ? `?period__gte=${encodeURIComponent(
-                      getRelativeDate(period)
-                    )}`
-                  : ""
-              }`,
-              {
-                headers: {
-                  Authorization: `Bearer ${await getToken()}`,
-                  "Content-Type": "application/json",
-                },
-                cache: "no-store",
-                next: { revalidate: 0 },
-              }
-            ),
-            fetch(
-              `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/categories${
-                period
-                  ? `?period__gte=${encodeURIComponent(
-                      getRelativeDate(period)
-                    )}`
-                  : ""
-              }`,
-              {
-                headers: {
-                  Authorization: `Bearer ${await getToken()}`,
-                  "Content-Type": "application/json",
-                },
-                cache: "no-store",
-                next: { revalidate: 0 },
-              }
-            ),
-            fetch(transactionUrl.toString(), {
+      const [summaryRes, monthlyRes, categoryRes, transactionsRes] =
+        await Promise.all([
+          fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/summary${
+              period
+                ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
+                : ""
+            }`,
+            {
               headers: {
                 Authorization: `Bearer ${await getToken()}`,
                 "Content-Type": "application/json",
               },
               cache: "no-store",
               next: { revalidate: 0 },
-            }),
-          ]);
+            }
+          ),
+          fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/monthly${
+              period
+                ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
+                : ""
+            }`,
+            {
+              headers: {
+                Authorization: `Bearer ${await getToken()}`,
+                "Content-Type": "application/json",
+              },
+              cache: "no-store",
+              next: { revalidate: 0 },
+            }
+          ),
+          fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/categories${
+              period
+                ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
+                : ""
+            }`,
+            {
+              headers: {
+                Authorization: `Bearer ${await getToken()}`,
+                "Content-Type": "application/json",
+              },
+              cache: "no-store",
+              next: { revalidate: 0 },
+            }
+          ),
+          fetch(transactionUrl.toString(), {
+            headers: {
+              Authorization: `Bearer ${await getToken()}`,
+              "Content-Type": "application/json",
+            },
+            cache: "no-store",
+            next: { revalidate: 0 },
+          }),
+        ]);
 
-        if (
-          !summaryRes.ok ||
-          !monthlyRes.ok ||
-          !categoryRes.ok ||
-          !transactionsRes.ok
-        ) {
-          throw new Error("Erro ao buscar dados do dashboard");
-        }
-
-        const summaryJson = await summaryRes.json();
-        const monthlyJson = await monthlyRes.json();
-        const categoryJson = await categoryRes.json();
-        const transactionsJson = await transactionsRes.json();
-
-        setSummary(summaryJson);
-        setMonthlyData(monthlyJson);
-        setCategory(categoryJson);
-        setRecentTransactions(transactionsJson);
+      if (
+        !summaryRes.ok ||
+        !monthlyRes.ok ||
+        !categoryRes.ok ||
+        !transactionsRes.ok
+      ) {
+        throw new Error("Erro ao buscar dados do dashboard");
       }
+
+      const summaryJson = await summaryRes.json();
+      const monthlyJson = await monthlyRes.json();
+      const categoryJson = await categoryRes.json();
+      const transactionsJson = await transactionsRes.json();
+
+      setSummary(summaryJson);
+      setMonthlyData(monthlyJson);
+      setCategory(categoryJson);
+      setRecentTransactions(transactionsJson);
     } catch (error) {
       toast.error(
         "Erro ao carregar dados do dashboard. Tente novamente mais tarde."

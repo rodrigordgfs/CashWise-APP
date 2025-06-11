@@ -69,7 +69,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     try {
       const url =
         `${process.env.NEXT_PUBLIC_BASE_URL_API}/category` +
-        (categoryType ? `&type=${encodeURIComponent(categoryType)}` : "");
+        (categoryType ? `?type=${encodeURIComponent(categoryType)}` : "");
 
       const response = await fetch(url, {
         headers: {

@@ -84,44 +84,39 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
 
     setIsLoading(true);
     try {
-      if (searchTerm || selectedDate || sortOrder !== "none") {
-        const params = {
-          search: searchTerm || undefined,
-          date: selectedDate ? selectedDate.toISOString() : undefined,
-          sort: sortOrder !== "none" ? sortOrder : undefined,
-          type:
-            transactionType !== TransactionTypeFilter.All
-              ? transactionType
-              : undefined,
-        };
+      const params = {
+        search: searchTerm || undefined,
+        date: selectedDate ? selectedDate.toISOString() : undefined,
+        sort: sortOrder !== "none" ? sortOrder : undefined,
+        type:
+          transactionType !== TransactionTypeFilter.All
+            ? transactionType
+            : undefined,
+      };
 
-        const url = new URL(
-          "/transaction",
-          process.env.NEXT_PUBLIC_BASE_URL_API
-        );
+      const url = new URL("/transaction", process.env.NEXT_PUBLIC_BASE_URL_API);
 
-        Object.entries(params).forEach(([key, value]) => {
-          if (value !== undefined) {
-            url.searchParams.append(key, value);
-          }
-        });
-
-        const response = await fetch(url.toString(), {
-          headers: {
-            Authorization: `Bearer ${await getToken()}`,
-            "Content-Type": "application/json",
-          },
-          cache: "no-store",
-          next: { revalidate: 0 },
-        });
-
-        if (!response.ok) {
-          toast.error("Erro ao buscar transações");
-          throw new Error("Erro ao buscar transações");
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined) {
+          url.searchParams.append(key, value);
         }
-        const data = await response.json();
-        setTransactions(data);
+      });
+
+      const response = await fetch(url.toString(), {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+        next: { revalidate: 0 },
+      });
+
+      if (!response.ok) {
+        toast.error("Erro ao buscar transações");
+        throw new Error("Erro ao buscar transações");
       }
+      const data = await response.json();
+      setTransactions(data);
     } catch (error) {
       toast.error("Erro ao carregar transações");
       console.error("Erro ao carregar transações:", error);

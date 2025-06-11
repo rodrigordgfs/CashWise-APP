@@ -56,69 +56,67 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
 
     setIsLoading(true);
     try {
-      if (period) {
-        const [monthlyRes, categoryRes, balanceRes] = await Promise.all([
-          fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/monthly${
-              period
-                ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
-                : ""
-            }`,
-            {
-              headers: {
-                Authorization: `Bearer ${await getToken()}`,
-                "Content-Type": "application/json",
-              },
-              cache: "no-store",
-              next: { revalidate: 0 },
-            }
-          ),
-          fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/categories${
-              period
-                ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
-                : ""
-            }`,
-            {
-              headers: {
-                Authorization: `Bearer ${await getToken()}`,
-                "Content-Type": "application/json",
-              },
-              cache: "no-store",
-              next: { revalidate: 0 },
-            }
-          ),
-          fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/balance${
-              period
-                ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
-                : ""
-            }`,
-            {
-              headers: {
-                Authorization: `Bearer ${await getToken()}`,
-                "Content-Type": "application/json",
-              },
-              cache: "no-store",
-              next: { revalidate: 0 },
-            }
-          ),
-        ]);
+      const [monthlyRes, categoryRes, balanceRes] = await Promise.all([
+        fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/monthly${
+            period
+              ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
+              : ""
+          }`,
+          {
+            headers: {
+              Authorization: `Bearer ${await getToken()}`,
+              "Content-Type": "application/json",
+            },
+            cache: "no-store",
+            next: { revalidate: 0 },
+          }
+        ),
+        fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/categories${
+            period
+              ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
+              : ""
+          }`,
+          {
+            headers: {
+              Authorization: `Bearer ${await getToken()}`,
+              "Content-Type": "application/json",
+            },
+            cache: "no-store",
+            next: { revalidate: 0 },
+          }
+        ),
+        fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/balance${
+            period
+              ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
+              : ""
+          }`,
+          {
+            headers: {
+              Authorization: `Bearer ${await getToken()}`,
+              "Content-Type": "application/json",
+            },
+            cache: "no-store",
+            next: { revalidate: 0 },
+          }
+        ),
+      ]);
 
-        if (!monthlyRes.ok || !categoryRes.ok || !balanceRes.ok) {
-          throw new Error("Erro ao buscar relatórios");
-        }
-
-        const [monthlyData, categoryData, balanceData] = await Promise.all([
-          monthlyRes.json(),
-          categoryRes.json(),
-          balanceRes.json(),
-        ]);
-
-        setMonthlyReports(monthlyData);
-        setCategoryReports(categoryData);
-        setBalanceReports(balanceData);
+      if (!monthlyRes.ok || !categoryRes.ok || !balanceRes.ok) {
+        throw new Error("Erro ao buscar relatórios");
       }
+
+      const [monthlyData, categoryData, balanceData] = await Promise.all([
+        monthlyRes.json(),
+        categoryRes.json(),
+        balanceRes.json(),
+      ]);
+
+      setMonthlyReports(monthlyData);
+      setCategoryReports(categoryData);
+      setBalanceReports(balanceData);
     } catch (error) {
       toast.error("Erro ao carregar relatórios. Tente novamente mais tarde.");
       console.error("Erro ao carregar relatórios:", error);
