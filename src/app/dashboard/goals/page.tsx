@@ -85,7 +85,7 @@ export default function GoalsPage() {
                   categoryId:
                     typeof editingGoal.category === "string"
                       ? editingGoal.category
-                      : editingGoal.category.id,
+                      : editingGoal.category?.id ?? "",
                 }
               : undefined
           }

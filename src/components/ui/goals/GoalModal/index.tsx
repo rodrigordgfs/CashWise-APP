@@ -173,7 +173,7 @@ export const GoalModal = ({
             <SelectField
               label={t("goals.categoryField")}
               options={categories.map((category) => ({
-                value: category.id,
+                value: category.id ?? "",
                 label: `${category.icon} ${category.name}`,
               }))}
               {...field}

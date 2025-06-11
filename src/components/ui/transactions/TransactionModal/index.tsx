@@ -190,7 +190,7 @@ export const TransactionModal = ({
               label={t("transactions.category")}
               {...field}
               options={categories.map((c) => ({
-                value: c.id,
+                value: c.id ?? "",
                 label: `${c.icon} ${c.name}`,
               }))}
               error={errors.category?.message}

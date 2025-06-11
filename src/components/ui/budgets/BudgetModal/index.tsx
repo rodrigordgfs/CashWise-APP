@@ -138,7 +138,7 @@ export const BudgetModal = ({
             <SelectField
               label={t("budgets.category")}
               options={categories.map((category) => ({
-                value: category.id,
+                value: category.id ?? "",
                 label: `${category.icon} ${category.name}`,
               }))}
               {...field}
