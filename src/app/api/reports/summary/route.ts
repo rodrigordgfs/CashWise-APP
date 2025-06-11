@@ -25,6 +25,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
+      cache: "no-store",
+      next: { revalidate: 0 },
     });
 
     if (!res.ok) {
