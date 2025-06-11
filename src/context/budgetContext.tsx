@@ -130,7 +130,7 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
         toast.error("Não foi possível salvar o orçamento.");
       }
     },
-    [user, fetchBudgets, getToken]
+    [fetchBudgets, getToken]
   );
 
   const handleDelete = useCallback(

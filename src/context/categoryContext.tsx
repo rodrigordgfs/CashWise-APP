@@ -155,7 +155,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
         toast.error("Erro ao salvar categoria.");
       }
     },
-    [fetchCategories, user, getToken]
+    [fetchCategories, getToken]
   );
 
   const deleteCategory = useCallback(

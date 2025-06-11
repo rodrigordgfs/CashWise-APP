@@ -161,7 +161,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [period, user?.id, user?.hasVerifiedEmailAddress]);
+  }, [period, user?.id, user?.hasVerifiedEmailAddress, getToken]);
 
   useEffect(() => {
     fetchData();
