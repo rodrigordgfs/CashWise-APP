@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 
-import { Button } from "@/components/shared/Button";
+import { Button } from "shinodalabs-ui";
 import { InputField } from "@/components/shared/InputField";
 import { useTranslation } from "react-i18next";
 

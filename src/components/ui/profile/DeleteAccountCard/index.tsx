@@ -3,7 +3,7 @@
 import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/shared/Button";
+import { Button } from "shinodalabs-ui";
 import { useTranslation } from "react-i18next";
 
 export const DeleteAccountCard = () => {

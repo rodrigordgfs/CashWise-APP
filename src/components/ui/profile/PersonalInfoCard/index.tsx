@@ -3,7 +3,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/shared/Button";
+import { Button } from "shinodalabs-ui";
 import { InputField } from "@/components/shared/InputField";
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";

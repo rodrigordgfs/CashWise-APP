@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 
 import { InputField } from "@/components/shared/InputField";
-import { Button } from "@/components/shared/Button";
+import { Button } from "shinodalabs-ui";
 import { useAuth } from "@/context/authContext";
 import { useTranslation } from "react-i18next";
 

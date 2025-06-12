@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/shared/Button";
+import { Button } from "shinodalabs-ui";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { DeleteAccountCard } from "@/components/ui/profile/DeleteAccountCard";
 import { PersonalInfoCard } from "@/components/ui/profile/PersonalInfoCard";
