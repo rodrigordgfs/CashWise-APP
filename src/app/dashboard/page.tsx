@@ -5,12 +5,12 @@ import { OverviewTiles } from "@/components/ui/dashboard/OverviewTiles";
 import { MonthlyEvolutionChart } from "@/components/ui/dashboard/MonthlyEvolutionChart";
 import { ExpensesByCategoryChart } from "@/components/ui/dashboard/ExpensesByCategoryChart";
 import { RecentTransactionsList } from "@/components/ui/dashboard/RecentTransactionsList";
-import { Tabs } from "shinodalabs-ui";
 import { DashboardSkeleton } from "@/components/ui/dashboard/DashboardSkeleton";
 import { useDashboard } from "@/context/dashboardContext";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { Period } from "@/types/Period.type";
 import { useTranslation } from "react-i18next";
+import { Tabs } from "shinodalabs-ui";
 
 export default function DashboardPage() {
   const {

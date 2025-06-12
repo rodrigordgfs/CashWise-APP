@@ -21,6 +21,7 @@ export default function GoalsPage() {
     saveGoal,
     editingGoal,
     setEditingGoal,
+    deleteGoal,
   } = useGoal();
 
   const hasGoals = goals.length > 0;
@@ -57,7 +58,7 @@ export default function GoalsPage() {
               key={goal.id}
               goal={goal}
               onEdit={() => handleEdit(goal)}
-              onDelete={() => {}}
+              onDelete={() => deleteGoal(goal)}
             />
           ))}
         </div>

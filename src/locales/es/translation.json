@@ -167,7 +167,11 @@
     "ammountMinValidation": "El valor debe ser mayor que cero",
     "dateRequiredValidation": "La fecha es obligatoria",
     "categoryRequiredValidation": "La categoría es obligatoria",
-    "accountRequiredValidation": "La cuenta es obligatoria"
+    "accountRequiredValidation": "La cuenta es obligatoria",
+    "dialogDeleteTitle": "Eliminar Transacción",
+    "dialogDeleteDescription": "¿Estás seguro de que deseas eliminar esta transacción? Esta acción no se puede deshacer.",
+    "dialogDeleteConfirm": "Sí, eliminar",
+    "dialogDeleteCancel": "Cancelar"
   },
   "categories": {
     "title": "Categorías",
@@ -192,7 +196,11 @@
     "nameRequiredValidation": "El nombre es obligatorio",
     "typeRequiredValidation": "El tipo es obligatorio",
     "colorRequiredValidation": "El color es obligatorio",
-    "iconRequiredValidation": "El ícono es obligatorio"
+    "iconRequiredValidation": "El ícono es obligatorio",
+    "dialogDeleteTitle": "Eliminar Categoría",
+    "dialogDeleteDescription": "¿Estás seguro de que deseas eliminar esta categoría? Esta acción no se puede deshacer.",
+    "dialogDeleteConfirm": "Sí, eliminar",
+    "dialogDeleteCancel": "Cancelar"
   },
   "budgets": {
     "title": "Presupuestos",
@@ -213,7 +221,11 @@
     "selectMonth": "Selecciona el mes",
     "categoryRequiredValidation": "La categoría es obligatoria",
     "limitMinValidation": "El límite debe ser mayor que cero",
-    "dateRequiredValidation": "La fecha es obligatoria"
+    "dateRequiredValidation": "La fecha es obligatoria",
+    "dialogDeleteTitle": "Eliminar Presupuesto",
+    "dialogDeleteDescription": "¿Estás seguro de que deseas eliminar este presupuesto? Esta acción no se puede deshacer.",
+    "dialogDeleteConfirm": "Sí, eliminar",
+    "dialogDeleteCancel": "Cancelar"
   },
   "goals": {
     "title": "Metas",
@@ -246,7 +258,11 @@
     "goalMinValidation": "La meta debe ser mayor que cero",
     "currentAmmountMinValidation": "El valor actual debe ser mayor que cero",
     "deadlineRequiredValidation": "La fecha límite es obligatoria",
-    "categoryRequiredValidation": "La categoría es obligatoria"
+    "categoryRequiredValidation": "La categoría es obligatoria",
+    "dialogDeleteTitle": "Eliminar Meta",
+    "dialogDeleteDescription": "¿Estás seguro de que deseas eliminar esta meta? Esta acción no se puede deshacer.",
+    "dialogDeleteConfirm": "Sí, eliminar",
+    "dialogDeleteCancel": "Cancelar"
   },
   "reports": {
     "title": "Informes",

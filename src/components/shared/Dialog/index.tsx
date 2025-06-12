@@ -50,7 +50,7 @@ export const Dialog = ({
           <Button onClick={onClose} disabled={isLoading} variant="neutral">
             {cancelLabel}
           </Button>
-          <Button onClick={onConfirm} disabled={isLoading}>
+          <Button onClick={onConfirm} loading={isLoading}>
             {confirmLabel}
           </Button>
         </div>

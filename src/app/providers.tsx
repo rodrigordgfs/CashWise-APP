@@ -14,6 +14,7 @@ import { DashboardProvider } from "@/context/dashboardContext";
 import { AppLoader } from "@/components/shared/AppLoader";
 import { GoalProvider } from "@/context/goalContext";
 import { AuthProvider } from "@/context/authContext";
+import { DialogProvider } from "@/context/dialogContext";
 
 export function Providers({ children }: { children: ReactNode }) {
   const { isLoaded } = useAuth();
@@ -33,8 +34,10 @@ export function Providers({ children }: { children: ReactNode }) {
                   <MenuProvider>
                     <SettingsProvider>
                       <AuthProvider>
-                        {children}
-                        <Toaster richColors />
+                        <DialogProvider>
+                          {children}
+                          <Toaster richColors />
+                        </DialogProvider>
                       </AuthProvider>
                     </SettingsProvider>
                   </MenuProvider>

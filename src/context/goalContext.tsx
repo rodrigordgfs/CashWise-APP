@@ -26,7 +26,7 @@ interface GoalContextProps {
   openModalToCreate: () => void;
   openModalToEdit: (goal: Goal) => void;
   saveGoal: (data: GoalFormData) => Promise<Goal | undefined>;
-  handleDelete: (goal: Goal) => Promise<void>;
+  deleteGoal: (goal: Goal) => Promise<void>;
   setEditingGoal: (goal: Goal | null) => void;
 }
 
@@ -48,7 +48,7 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL_API}/budget`,
+        `${process.env.NEXT_PUBLIC_BASE_URL_API}/goal`,
         {
           headers: {
             Authorization: `Bearer ${await getToken()}`,
@@ -90,8 +90,8 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
     async (data: GoalFormData): Promise<Goal | undefined> => {
       try {
         const url = data.id
-          ? `${process.env.NEXT_PUBLIC_BASE_URL_API}/goals/${data.id}`
-          : `${process.env.NEXT_PUBLIC_BASE_URL_API}/goals`;
+          ? `${process.env.NEXT_PUBLIC_BASE_URL_API}/goal/${data.id}`
+          : `${process.env.NEXT_PUBLIC_BASE_URL_API}/goal`;
         const method = data.id ? "PATCH" : "POST";
 
         const res = await fetch(url, {
@@ -135,11 +135,11 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
     [fetchGoals, getToken]
   );
 
-  const handleDelete = useCallback(
+  const deleteGoal = useCallback(
     async (goal: Goal) => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL_API}/goals/${goal.id}`,
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/goal/${goal.id}`,
           {
             method: "DELETE",
             headers: {
@@ -174,7 +174,7 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
       openModalToCreate,
       openModalToEdit,
       saveGoal,
-      handleDelete,
+      deleteGoal,
       setEditingGoal,
     }),
     [
@@ -184,7 +184,7 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
       editingGoal,
       isModalOpen,
       saveGoal,
-      handleDelete,
+      deleteGoal,
       openModalToCreate,
       openModalToEdit,
       setIsModalOpen,

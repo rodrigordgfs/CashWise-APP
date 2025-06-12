@@ -6,6 +6,7 @@ import { useCategory } from "@/context/categoryContext";
 import { useSettings } from "@/context/settingsContext";
 import { formatCurrency } from "@/utils/formatConvertCurrency";
 import { useTranslation } from "react-i18next";
+import { useDialog } from "@/context/dialogContext";
 
 interface TransactionTableRowProps {
   transaction: Transaction;
@@ -20,6 +21,7 @@ export const TransactionTableRow = ({
 }: TransactionTableRowProps) => {
   const { t } = useTranslation();
   const { categories } = useCategory();
+  const { showDialog } = useDialog();
   const { currency, language } = useSettings();
   const { description, category, date, account, amount, type } = transaction;
 
@@ -32,6 +34,20 @@ export const TransactionTableRow = ({
   const formattedAmount = formatCurrency(Math.abs(amount), currency, language);
   const amountClass =
     type === TransactionType.Income ? "text-green-500" : "text-red-500";
+
+  const handleDelete = () => {
+    showDialog({
+      title: t("transactions.dialogDeleteTitle"),
+      description: t("transactions.dialogDeleteDescription"),
+      confirmLabel: t("transactions.dialogDeleteConfirm"),
+      cancelLabel: t("transactions.dialogDeleteCancel"),
+      onConfirm: () => {
+        if (onClickDelete) {
+          onClickDelete(transaction);
+        }
+      },
+    });
+  };
 
   return (
     <tr className="border-b border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900">
@@ -69,11 +85,7 @@ export const TransactionTableRow = ({
             className="p-1 rounded-md text-zinc-500 hover:text-red-500 dark:text-zinc-400 dark:hover:text-red-400 cursor-pointer transition-all"
             aria-label={t("transactions.deleteTransaction")}
             title={t("transactions.deleteTransaction")}
-            onClick={() => {
-              if (onClickDelete) {
-                onClickDelete(transaction);
-              }
-            }}
+            onClick={() => handleDelete()}
           >
             <Trash className="h-4 w-4" />
           </button>

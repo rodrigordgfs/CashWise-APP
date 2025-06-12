@@ -4,6 +4,7 @@ import { parseISO } from "date-fns";
 import { useSettings } from "@/context/settingsContext";
 import { formatDate } from "@/utils/formatDate";
 import { useTranslation } from "react-i18next";
+import { useDialog } from "@/context/dialogContext";
 
 interface BudgetCardHeaderProps {
   budget: Budget;
@@ -17,10 +18,21 @@ export const BudgetCardHeader = ({
   onDelete,
 }: BudgetCardHeaderProps) => {
   const { language } = useSettings();
+  const { showDialog } = useDialog();
   const { t } = useTranslation();
 
   const date = budget.date ? parseISO(budget.date) : null;
   const isValidDate = date instanceof Date && !isNaN(date.getTime());
+
+  const handleDelete = () => {
+    showDialog({
+      title: t("budgets.dialogDeleteTitle"),
+      description: t("budgets.dialogDeleteDescription"),
+      confirmLabel: t("budgets.dialogDeleteConfirm"),
+      cancelLabel: t("budgets.dialogDeleteCancel"),
+      onConfirm: () => onDelete?.(budget),
+    });
+  };
 
   return (
     <div className="p-6 pb-2">
@@ -36,7 +48,7 @@ export const BudgetCardHeader = ({
           </button>
           <button
             title={t("budgets.deleteBudget")}
-            onClick={() => onDelete?.(budget)}
+            onClick={handleDelete}
             className="p-1 rounded-md text-zinc-500 hover:text-red-500 dark:text-zinc-400 dark:hover:text-red-400 cursor-pointer"
           >
             <Trash className="h-4 w-4" />

@@ -167,7 +167,11 @@
     "ammountMinValidation": "Valor deve ser maior que zero",
     "dateRequiredValidation": "Data é obrigatória",
     "categoryRequiredValidation": "Categoria é obrigatória",
-    "accountRequiredValidation": "Conta é obrigatória"
+    "accountRequiredValidation": "Conta é obrigatória",
+    "dialogDeleteTitle": "Excluir Transação",
+    "dialogDeleteDescription": "Você tem certeza que deseja excluir esta transação? Esta ação não pode ser desfeita.",
+    "dialogDeleteConfirm": "Sim, excluir",
+    "dialogDeleteCancel": "Cancelar"
   },
   "categories": {
     "title": "Categorias",
@@ -192,7 +196,11 @@
     "nameRequiredValidation": "Nome é obrigatório",
     "typeRequiredValidation": "Tipo é obrigatório",
     "colorRequiredValidation": "Cor é obrigatória",
-    "iconRequiredValidation": "Ícone é obrigatório"
+    "iconRequiredValidation": "Ícone é obrigatório",
+    "dialogDeleteTitle": "Excluir Categoria",
+    "dialogDeleteDescription": "Você tem certeza que deseja excluir esta categoria? Esta ação não pode ser desfeita.",
+    "dialogDeleteConfirm": "Sim, excluir",
+    "dialogDeleteCancel": "Cancelar"
   },
   "budgets": {
     "title": "Orçamentos",
@@ -213,7 +221,11 @@
     "selectMonth": "Selecione o mês",
     "categoryRequiredValidation": "Categoria é obrigatória",
     "limitMinValidation": "Limite deve ser maior que zero",
-    "dateRequiredValidation": "Data é obrigatória"
+    "dateRequiredValidation": "Data é obrigatória",
+    "dialogDeleteTitle": "Excluir Orçamento",
+    "dialogDeleteDescription": "Você tem certeza que deseja excluir este orçamento? Esta ação não pode ser desfeita.",
+    "dialogDeleteConfirm": "Sim, excluir",
+    "dialogDeleteCancel": "Cancelar"
   },
   "goals": {
     "title": "Metas",
@@ -246,7 +258,11 @@
     "goalMinValidation": "Meta deve ser maior que zero",
     "currentAmmountMinValidation": "Valor atual deve ser maior que zero",
     "deadlineRequiredValidation": "Data limite é obrigatória",
-    "categoryRequiredValidation": "Categoria é obrigatória"
+    "categoryRequiredValidation": "Categoria é obrigatória",
+    "dialogDeleteTitle": "Excluir Meta",
+    "dialogDeleteDescription": "Você tem certeza que deseja excluir esta meta? Esta ação não pode ser desfeita.",
+    "dialogDeleteConfirm": "Sim, excluir",
+    "dialogDeleteCancel": "Cancelar"
   },
   "reports": {
     "title": "Relatórios",

@@ -1,8 +1,8 @@
-import { ProgressBar } from "@/components/shared/ProgressBar";
 import { useSettings } from "@/context/settingsContext";
 import { Goal } from "@/types/Goal.type";
 import { formatCurrency } from "@/utils/formatConvertCurrency";
 import { useTranslation } from "react-i18next";
+import { ProgressBar } from "shinodalabs-ui";
 
 interface GoalCardContentProps {
   goal: Goal;
