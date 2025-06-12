@@ -7,9 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import { Category } from "@/types/Category.type";
-import { SelectField } from "@/components/shared/SelectField";
+import { Select } from "shinodalabs-ui";
 import { Input } from "shinodalabs-ui";
-import { Modal } from "@/components/shared/Modal";
+import { Modal } from "shinodalabs-ui";
 import { TransactionType } from "@/types/Transaction.type";
 import { useTranslation } from "react-i18next";
 
@@ -133,7 +133,7 @@ export function CategoryModal({
           name="type"
           control={control}
           render={({ field }) => (
-            <SelectField
+            <Select
               label={t("categories.type")}
               error={errors.type?.message}
               options={[

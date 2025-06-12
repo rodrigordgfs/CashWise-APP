@@ -1,8 +1,8 @@
 "use client";
 
 import { Input } from "shinodalabs-ui";
-import { Modal } from "@/components/shared/Modal";
-import { SelectField } from "@/components/shared/SelectField";
+import { Modal } from "shinodalabs-ui";
+import { Select } from "shinodalabs-ui";
 import { Category } from "@/types/Category.type";
 import { useEffect, useState } from "react";
 
@@ -10,7 +10,7 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Budget } from "@/types/Budge.type";
-import { MonthDatePicker } from "@/components/shared/MonthPicker";
+import { MonthDatePicker } from "shinodalabs-ui";
 import { useTranslation } from "react-i18next";
 import { formatDate } from "@/utils/formatDate";
 import { useSettings } from "@/context/settingsContext";
@@ -135,7 +135,7 @@ export const BudgetModal = ({
           control={control}
           name="category"
           render={({ field }) => (
-            <SelectField
+            <Select
               label={t("budgets.category")}
               options={categories.map((category) => ({
                 value: category.id ?? "",

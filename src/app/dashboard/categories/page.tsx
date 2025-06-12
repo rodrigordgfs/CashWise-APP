@@ -2,7 +2,7 @@
 
 import { FilterCard } from "@/components/shared/FilterCard";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { Tabs } from "@/components/shared/Tabs";
+import { Tabs } from "shinodalabs-ui";
 import { CategoryList } from "@/components/ui/categories/CategoryList";
 import { CategoryModal } from "@/components/ui/categories/CategoryModal";
 import { useCategory } from "@/context/categoryContext";

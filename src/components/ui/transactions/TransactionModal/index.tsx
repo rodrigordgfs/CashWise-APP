@@ -7,10 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import { Input } from "shinodalabs-ui";
-import { SelectField } from "@/components/shared/SelectField";
+import { Select } from "shinodalabs-ui";
 import { Transaction, TransactionType } from "@/types/Transaction.type";
-import { Modal } from "@/components/shared/Modal";
-import { DatePickerField } from "@/components/shared/DatePickerField";
+import { Modal } from "shinodalabs-ui";
+import { DatePicker } from "shinodalabs-ui";
 import { useCategory } from "@/context/categoryContext";
 import { useTransaction } from "@/context/transactionsContext";
 import { useTranslation } from "react-i18next";
@@ -138,7 +138,7 @@ export const TransactionModal = ({
           control={control}
           name="type"
           render={({ field }) => (
-            <SelectField
+            <Select
               label={t("transactions.type")}
               {...field}
               options={[
@@ -190,7 +190,7 @@ export const TransactionModal = ({
           control={control}
           name="category"
           render={({ field }) => (
-            <SelectField
+            <Select
               label={t("transactions.category")}
               {...field}
               options={categories.map((c) => ({
@@ -206,7 +206,7 @@ export const TransactionModal = ({
           control={control}
           name="account"
           render={({ field }) => (
-            <SelectField
+            <Select
               label={t("transactions.account")}
               {...field}
               options={accounts.map((a) => ({
@@ -222,7 +222,7 @@ export const TransactionModal = ({
           control={control}
           name="date"
           render={({ field }) => (
-            <DatePickerField<FormData>
+            <DatePicker<FormData>
               label={t("transactions.date")}
               placeholder={t("transactions.datePlaceholder")}
               {...field}

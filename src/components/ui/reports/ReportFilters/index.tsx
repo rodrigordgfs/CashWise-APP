@@ -1,8 +1,8 @@
 "use client";
 
 import { ReportType, ReportTypeEnum } from "@/types/Report.type";
-import { SelectField } from "@/components/shared/SelectField";
-import { Tabs } from "@/components/shared/Tabs";
+import { Select } from "shinodalabs-ui";
+import { Tabs } from "shinodalabs-ui";
 import { useState } from "react";
 import { FilterCard } from "@/components/shared/FilterCard";
 import { Period } from "@/types/Period.type";
@@ -63,7 +63,7 @@ export const ReportFilters = ({
           />
         </div>
         <div className="w-full md:w-[200px]">
-          <SelectField
+          <Select
             label={t("reports.period")}
             value={period}
             onChange={(e) => handlePeriodChange(e.target.value)}

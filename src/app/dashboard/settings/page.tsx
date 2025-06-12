@@ -1,9 +1,9 @@
 "use client";
 
 import { PageHeader } from "@/components/shared/PageHeader";
-import { RadioGroupField } from "@/components/shared/RadioGroupField";
-import { SelectField } from "@/components/shared/SelectField";
-import { ToggleSwitchField } from "@/components/shared/ToggleSwitchField";
+import { RadioGroup } from "shinodalabs-ui";
+import { Select } from "shinodalabs-ui";
+import { ToggleSwitch } from "shinodalabs-ui";
 import { SettingCard } from "@/components/ui/settings/SettingsCard";
 import { useSettings } from "@/context/settingsContext";
 import { useEffect } from "react";
@@ -45,7 +45,7 @@ export default function SettingsPage() {
           title={t("settings.appearance")}
           description={t("settings.appearanceDescription")}
         >
-          <RadioGroupField
+          <RadioGroup
             name="theme"
             value={isDarkMode ? "dark" : "light"}
             onChange={(theme) => {
@@ -65,7 +65,7 @@ export default function SettingsPage() {
           title={t("settings.currency")}
           description={t("settings.currencyDescription")}
         >
-          <SelectField
+          <Select
             label={t("settings.currency")}
             value={currency}
             onChange={(e) => setCurrency(e.target.value)}
@@ -78,7 +78,7 @@ export default function SettingsPage() {
           title={t("settings.language")}
           description={t("settings.languageDescription")}
         >
-          <SelectField
+          <Select
             label={t("settings.language")}
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
@@ -97,7 +97,7 @@ export default function SettingsPage() {
             </p>
           </div>
           <div className="p-6 pt-0 space-y-4">
-            <ToggleSwitchField
+            <ToggleSwitch
               label={t("settings.budgetAlerts")}
               description={t("settings.budgetAlertsDescription")}
               checked={notifications.budgetAlerts}
@@ -105,7 +105,7 @@ export default function SettingsPage() {
                 setNotifications({ ...notifications, budgetAlerts: checked })
               }
             />
-            <ToggleSwitchField
+            <ToggleSwitch
               label={t("settings.weaklyReport")}
               description={t("settings.weaklyReportDescription")}
               checked={notifications.weeklyReports}
@@ -113,7 +113,7 @@ export default function SettingsPage() {
                 setNotifications({ ...notifications, weeklyReports: checked })
               }
             />
-            <ToggleSwitchField
+            <ToggleSwitch
               label={t("settings.financialTips")}
               description={t("settings.financialTipsDescription")}
               checked={notifications.tips}

@@ -4,7 +4,7 @@ import { useMenu } from "@/context/menuContext";
 import { useSidebar } from "@/context/sidebarContext";
 import { Menu, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
-import { IconButton } from "../IconButton";
+import { IconButton } from "shinodalabs-ui";
 import { LogoButton } from "../LogoButton";
 
 export const Header = () => {

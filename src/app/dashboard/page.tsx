@@ -5,7 +5,7 @@ import { OverviewTiles } from "@/components/ui/dashboard/OverviewTiles";
 import { MonthlyEvolutionChart } from "@/components/ui/dashboard/MonthlyEvolutionChart";
 import { ExpensesByCategoryChart } from "@/components/ui/dashboard/ExpensesByCategoryChart";
 import { RecentTransactionsList } from "@/components/ui/dashboard/RecentTransactionsList";
-import { Tabs } from "@/components/shared/Tabs";
+import { Tabs } from "shinodalabs-ui";
 import { DashboardSkeleton } from "@/components/ui/dashboard/DashboardSkeleton";
 import { useDashboard } from "@/context/dashboardContext";
 import { EmptyState } from "@/components/shared/EmptyState";

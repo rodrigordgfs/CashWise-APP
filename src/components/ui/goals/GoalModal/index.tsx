@@ -4,10 +4,10 @@ import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Modal } from "@/components/shared/Modal";
+import { Modal } from "shinodalabs-ui";
 import { Input } from "shinodalabs-ui";
-import { SelectField } from "@/components/shared/SelectField";
-import { DatePickerField } from "@/components/shared/DatePickerField";
+import { Select } from "shinodalabs-ui";
+import { DatePicker } from "shinodalabs-ui";
 import { useCategory } from "@/context/categoryContext";
 import { useTranslation } from "react-i18next";
 import { useSettings } from "@/context/settingsContext";
@@ -174,7 +174,7 @@ export const GoalModal = ({
           name="categoryId"
           control={control}
           render={({ field }) => (
-            <SelectField
+            <Select
               label={t("goals.categoryField")}
               options={categories.map((category) => ({
                 value: category.id ?? "",
@@ -190,7 +190,7 @@ export const GoalModal = ({
           name="deadline"
           control={control}
           render={({ field }) => (
-            <DatePickerField
+            <DatePicker
               field={field}
               label={t("goals.deadlineField")}
               error={errors.deadline?.message}
