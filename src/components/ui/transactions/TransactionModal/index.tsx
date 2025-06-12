@@ -6,7 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
-import { InputField } from "@/components/shared/InputField";
+import { Input } from "shinodalabs-ui";
 import { SelectField } from "@/components/shared/SelectField";
 import { Transaction, TransactionType } from "@/types/Transaction.type";
 import { Modal } from "@/components/shared/Modal";
@@ -14,6 +14,7 @@ import { DatePickerField } from "@/components/shared/DatePickerField";
 import { useCategory } from "@/context/categoryContext";
 import { useTransaction } from "@/context/transactionsContext";
 import { useTranslation } from "react-i18next";
+import { useSettings } from "@/context/settingsContext";
 
 type Account = {
   id: number;
@@ -36,6 +37,7 @@ export const TransactionModal = ({
   const { categories } = useCategory();
   const { saveOrUpdateTransaction } = useTransaction();
   const { t } = useTranslation();
+  const { currency, language } = useSettings();
 
   const schema = z.object({
     type: z.nativeEnum(TransactionType, {
@@ -158,7 +160,7 @@ export const TransactionModal = ({
           control={control}
           name="description"
           render={({ field }) => (
-            <InputField
+            <Input
               label={t("transactions.description")}
               placeholder={t("transactions.descriptionPlaceholder")}
               {...field}
@@ -171,9 +173,11 @@ export const TransactionModal = ({
           control={control}
           name="amount"
           render={({ field }) => (
-            <InputField
+            <Input
               label={t("transactions.amount")}
               type="money"
+              currency={currency}
+              language={language}
               placeholder={t("transactions.amountPlaceholder")}
               {...field}
               onChange={(val) => field.onChange(val)}

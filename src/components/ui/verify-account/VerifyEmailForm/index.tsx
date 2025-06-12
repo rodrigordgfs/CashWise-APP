@@ -6,7 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "shinodalabs-ui";
-import { InputField } from "@/components/shared/InputField";
+import { Input } from "shinodalabs-ui";
 import { useAuth } from "@/context/authContext";
 import { useTranslation } from "react-i18next";
 
@@ -98,7 +98,7 @@ export function VerifyEmailForm({
             name="code"
             control={control}
             render={({ field }) => (
-              <InputField
+              <Input
                 label={t("verifyEmail.verificationCode")}
                 placeholder={t("verifyEmail.codePlaceholder")}
                 type="number"

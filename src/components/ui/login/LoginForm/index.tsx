@@ -5,7 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 
-import { InputField } from "@/components/shared/InputField";
+import { Input } from "shinodalabs-ui";
 import { Button } from "shinodalabs-ui";
 import { useAuth } from "@/context/authContext";
 import { useTranslation } from "react-i18next";
@@ -48,7 +48,7 @@ export function LoginForm() {
           name="email"
           control={control}
           render={({ field }) => (
-            <InputField
+            <Input
               id="email"
               label={t("login.email")}
               type="email"
@@ -63,7 +63,7 @@ export function LoginForm() {
           name="password"
           control={control}
           render={({ field }) => (
-            <InputField
+            <Input
               label={t("login.password")}
               placeholder={t("login.passwordPlaceholder")}
               type="password"

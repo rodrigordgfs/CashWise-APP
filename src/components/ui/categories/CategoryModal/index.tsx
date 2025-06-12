@@ -8,7 +8,7 @@ import { toast } from "sonner";
 
 import { Category } from "@/types/Category.type";
 import { SelectField } from "@/components/shared/SelectField";
-import { InputField } from "@/components/shared/InputField";
+import { Input } from "shinodalabs-ui";
 import { Modal } from "@/components/shared/Modal";
 import { TransactionType } from "@/types/Transaction.type";
 import { useTranslation } from "react-i18next";
@@ -155,7 +155,7 @@ export function CategoryModal({
           name="name"
           control={control}
           render={({ field }) => (
-            <InputField
+            <Input
               label={t("categories.name")}
               placeholder={t("categories.namePlaceholder")}
               error={errors.name?.message}

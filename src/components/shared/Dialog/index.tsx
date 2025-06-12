@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { Button } from "../Button";
+import { Button } from "shinodalabs-ui";
 
 interface DialogProps {
   isOpen: boolean;

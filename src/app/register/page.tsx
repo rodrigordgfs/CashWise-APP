@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { AuthHeader } from "@/components/ui/register/AuthHeader";
 import { AuthCard } from "@/components/ui/register/AuthCard";
-import { InputField } from "@/components/shared/InputField";
+import { Input } from "shinodalabs-ui";
 import { Button } from "shinodalabs-ui";
 import { useAuth } from "@/context/authContext";
 import { useTranslation } from "react-i18next";
@@ -76,7 +76,7 @@ export default function RegisterPage() {
               control={control}
               name="name"
               render={({ field }) => (
-                <InputField
+                <Input
                   id="name"
                   label={t("register.fullName")}
                   placeholder={t("register.fullNamePlaceholder")}
@@ -89,7 +89,7 @@ export default function RegisterPage() {
               control={control}
               name="email"
               render={({ field }) => (
-                <InputField
+                <Input
                   id="email"
                   label={t("register.email")}
                   type="email"
@@ -103,7 +103,7 @@ export default function RegisterPage() {
               control={control}
               name="password"
               render={({ field }) => (
-                <InputField
+                <Input
                   id="password"
                   label={t("register.password")}
                   placeholder={t("register.passwordPlaceholder")}
@@ -117,7 +117,7 @@ export default function RegisterPage() {
               control={control}
               name="confirmPassword"
               render={({ field }) => (
-                <InputField
+                <Input
                   id="confirmPassword"
                   label={t("register.confirmPassword")}
                   placeholder={t("register.confirmPasswordPlaceholder")}

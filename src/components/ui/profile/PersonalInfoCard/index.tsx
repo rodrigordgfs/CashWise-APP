@@ -4,7 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "shinodalabs-ui";
-import { InputField } from "@/components/shared/InputField";
+import { Input } from "shinodalabs-ui";
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -67,7 +67,7 @@ export const PersonalInfoCard = () => {
               control={control}
               name="name"
               render={({ field }) => (
-                <InputField
+                <Input
                   label={t("profile.name")}
                   {...field}
                   error={errors.name?.message}
@@ -78,7 +78,7 @@ export const PersonalInfoCard = () => {
               control={control}
               name="email"
               render={({ field }) => (
-                <InputField
+                <Input
                   label={t("profile.email")}
                   type="email"
                   disabled

@@ -5,11 +5,12 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "@/components/shared/Modal";
-import { InputField } from "@/components/shared/InputField";
+import { Input } from "shinodalabs-ui";
 import { SelectField } from "@/components/shared/SelectField";
 import { DatePickerField } from "@/components/shared/DatePickerField";
 import { useCategory } from "@/context/categoryContext";
 import { useTranslation } from "react-i18next";
+import { useSettings } from "@/context/settingsContext";
 
 export interface GoalFormData {
   id?: string;
@@ -36,6 +37,7 @@ export const GoalModal = ({
 }: GoalModalProps) => {
   const { categories } = useCategory();
   const { t } = useTranslation();
+  const { currency, language } = useSettings();
 
   const schema = z.object({
     title: z.string().min(1, t("goals.titleRequiredValidation")),
@@ -118,7 +120,7 @@ export const GoalModal = ({
           name="title"
           control={control}
           render={({ field }) => (
-            <InputField
+            <Input
               label={t("goals.titleField")}
               placeholder={t("goals.titlePlaceholder")}
               {...field}
@@ -131,7 +133,7 @@ export const GoalModal = ({
           name="description"
           control={control}
           render={({ field }) => (
-            <InputField
+            <Input
               label={t("goals.descriptionField")}
               placeholder={t("goals.descriptionPlaceholder")}
               {...field}
@@ -144,9 +146,11 @@ export const GoalModal = ({
           name="targetAmount"
           control={control}
           render={({ field }) => (
-            <InputField
+            <Input
               label={t("goals.goal")}
               type="money"
+              currency={currency}
+              language={language}
               {...field}
               error={errors.targetAmount?.message}
             />
@@ -157,7 +161,7 @@ export const GoalModal = ({
           name="currentAmount"
           control={control}
           render={({ field }) => (
-            <InputField
+            <Input
               label={t("goals.currentAmmount")}
               type="money"
               {...field}

@@ -8,7 +8,7 @@ import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 
 import { Button } from "shinodalabs-ui";
-import { InputField } from "@/components/shared/InputField";
+import { Input } from "shinodalabs-ui";
 import { useTranslation } from "react-i18next";
 
 const schema = z
@@ -74,7 +74,7 @@ export const SecurityCard = () => {
             name="newPassword"
             control={control}
             render={({ field }) => (
-              <InputField
+              <Input
                 label={t("profile.newPassword")}
                 type="password"
                 {...field}
@@ -87,7 +87,7 @@ export const SecurityCard = () => {
             name="confirmPassword"
             control={control}
             render={({ field }) => (
-              <InputField
+              <Input
                 label={t("profile.confirmPassword")}
                 type="password"
                 {...field}

@@ -1,6 +1,6 @@
 "use client";
 
-import { InputField } from "@/components/shared/InputField";
+import { Input } from "shinodalabs-ui";
 import { Modal } from "@/components/shared/Modal";
 import { SelectField } from "@/components/shared/SelectField";
 import { Category } from "@/types/Category.type";
@@ -36,7 +36,7 @@ export const BudgetModal = ({
   initialData,
 }: BudgetModalProps) => {
   const { t } = useTranslation();
-  const { language } = useSettings();
+  const { language, currency } = useSettings();
 
   const initialDate = initialData
     ? parseYearMonth(initialData.date)
@@ -152,9 +152,11 @@ export const BudgetModal = ({
           control={control}
           name="limit"
           render={({ field }) => (
-            <InputField
+            <Input
               label={t("budgets.limit")}
               type="money"
+              currency={currency}
+              language={language}
               value={field.value}
               onChange={(val) => field.onChange(val)}
               placeholder="R$ 0,00"
