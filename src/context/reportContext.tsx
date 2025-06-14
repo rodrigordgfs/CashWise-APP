@@ -51,6 +51,8 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
   const [balanceReports, setBalanceReports] = useState<BalanceReport[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const date = getRelativeDate(period);
+
   const fetchReports = useCallback(async () => {
     if (!user?.id || !user.hasVerifiedEmailAddress) return;
 
@@ -60,7 +62,9 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
         fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/monthly${
             period
-              ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
+              ? `?period__gte=${encodeURIComponent(
+                  date.initial
+                )}&period__lte=${encodeURIComponent(date.final)}`
               : ""
           }`,
           {
@@ -75,7 +79,9 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
         fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/categories${
             period
-              ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
+              ? `?period__gte=${encodeURIComponent(
+                  date.initial
+                )}&period__lte=${encodeURIComponent(date.final)}`
               : ""
           }`,
           {
@@ -90,7 +96,9 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
         fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/balance${
             period
-              ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
+              ? `?period__gte=${encodeURIComponent(
+                  date.initial
+                )}&period__lte=${encodeURIComponent(date.final)}`
               : ""
           }`,
           {

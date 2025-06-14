@@ -54,8 +54,10 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
     setIsLoading(true);
     try {
+      const date = getRelativeDate(period);
+
       const transactionParams = {
-        date__gte: encodeURIComponent(getRelativeDate(period)),
+        date__gte: encodeURIComponent(date.initial),
         limit: "5",
         sort: "desc",
       };
@@ -75,7 +77,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
           fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/summary${
               period
-                ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
+                ? `?period__gte=${encodeURIComponent(
+                    date.initial
+                  )}&period__lte=${encodeURIComponent(date.final)}`
                 : ""
             }`,
             {
@@ -90,7 +94,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
           fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/monthly${
               period
-                ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
+                ? `?period__gte=${encodeURIComponent(
+                    date.initial
+                  )}&period__lte=${encodeURIComponent(date.final)}`
                 : ""
             }`,
             {
@@ -105,7 +111,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
           fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/categories${
               period
-                ? `?period__gte=${encodeURIComponent(getRelativeDate(period))}`
+                ? `?period__gte=${encodeURIComponent(
+                    date.initial
+                  )}&period__lte=${encodeURIComponent(date.final)}`
                 : ""
             }`,
             {
