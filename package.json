@@ -27,7 +27,7 @@
     "react-hot-toast": "^2.5.2",
     "react-i18next": "^15.5.2",
     "recharts": "^2.15.3",
-    "shinodalabs-ui": "^1.11.0",
+    "shinodalabs-ui": "^1.11.1",
     "sonner": "^2.0.3",
     "zod": "^3.25.32"
   },
