@@ -1,38 +1,44 @@
 import { Period } from "@/types/Period.type";
-import { startOfMonth, subMonths, subYears, format } from "date-fns";
+import {
+  startOfMonth,
+  endOfMonth,
+  subMonths,
+  startOfYear,
+  endOfYear,
+  format,
+} from "date-fns";
 
-// Tipo que será retornado pela função
 interface RelativeDate {
   initial: string;
   final: string;
 }
 
-// Função utilitária para retornar o intervalo de datas com base no período
 export const getRelativeDate = (period: string): RelativeDate => {
   const now = new Date();
 
-  // Não definir tipo explícito aqui, pois o objeto ainda contém `Date`
   const date = (() => {
     switch (period) {
       case Period.MONTH:
         return {
           initial: startOfMonth(now),
-          final: now,
+          final: endOfMonth(now),
         };
-      case Period.TRIMESTER:
+      case Period.TRIMESTER: {
         return {
-          initial: subMonths(now, 3),
-          final: now,
+          initial: startOfMonth(subMonths(now, 2)),
+          final: endOfMonth(now),
         };
-      case Period.SEMESTER:
+      }
+      case Period.SEMESTER: {
         return {
-          initial: subMonths(now, 6),
-          final: now,
+          initial: startOfMonth(subMonths(now, 5)),
+          final: endOfMonth(now),
         };
+      }
       case Period.YEAR:
         return {
-          initial: subYears(now, 1),
-          final: now,
+          initial: startOfYear(now),
+          final: endOfYear(now),
         };
       default:
         return {
@@ -42,7 +48,6 @@ export const getRelativeDate = (period: string): RelativeDate => {
     }
   })();
 
-  // Retorna os valores como string formatada
   return {
     initial: format(date.initial, "yyyy-MM-dd"),
     final: format(date.final, "yyyy-MM-dd"),
