@@ -33,15 +33,13 @@ export default function TransactionsPage() {
     handleEditTransaction,
     handleDeleteTransaction,
   } = useTransaction();
-    const { t } = useTranslation();
+  const { t } = useTranslation();
 
   const accounts: Account[] = [
     { id: 1, name: "Nubank" },
     { id: 2, name: "Itaú" },
     { id: 3, name: "Carteira" },
   ];
-
-  if (isLoading) return <TransactionsPageSkeleton />;
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -66,11 +64,15 @@ export default function TransactionsPage() {
         sortOrder={sortOrder}
       />
 
-      <TransactionTable
-        transactions={transactions}
-        onClickDelete={handleDeleteTransaction}
-        onClickEdit={handleEditTransaction}
-      />
+      {isLoading ? (
+        <TransactionsPageSkeleton />
+      ) : (
+        <TransactionTable
+          transactions={transactions}
+          onClickDelete={handleDeleteTransaction}
+          onClickEdit={handleEditTransaction}
+        />
+      )}
 
       {isAddDialogOpen && (
         <TransactionModal

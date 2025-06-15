@@ -52,20 +52,23 @@ export const TransactionTableRow = ({
   return (
     <tr className="border-b border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900">
       <td className="py-3 px-4 font-medium">{description}</td>
-      <td className="py-3 px-4">{formattedCategory}</td>
-      <td className="py-3 px-4">{formattedDate}</td>
-      <td className="py-3 px-4">{formattedAccount}</td>
-      <td className="py-3 px-4">
+
+      <td className="py-3 px-4 hidden md:table-cell">{formattedCategory}</td>
+      <td className="py-3 px-4 hidden md:table-cell">{formattedDate}</td>
+      <td className="py-3 px-4 hidden md:table-cell">{formattedAccount}</td>
+      <td className="py-3 px-4 hidden md:table-cell">
         {transaction.type === TransactionType.Expense
           ? transaction.paid
             ? "Sim"
             : "Não"
           : "-"}
       </td>
+
       <td className={`py-3 px-4 text-right font-medium ${amountClass}`}>
         {type === TransactionType.Income ? "" : "- "}
         {formattedAmount}
       </td>
+
       <td className="py-3 px-4 text-right">
         <div className="flex justify-end gap-2">
           <button
@@ -85,7 +88,7 @@ export const TransactionTableRow = ({
             className="p-1 rounded-md text-zinc-500 hover:text-red-500 dark:text-zinc-400 dark:hover:text-red-400 cursor-pointer transition-all"
             aria-label={t("transactions.deleteTransaction")}
             title={t("transactions.deleteTransaction")}
-            onClick={() => handleDelete()}
+            onClick={handleDelete}
           >
             <Trash className="h-4 w-4" />
           </button>

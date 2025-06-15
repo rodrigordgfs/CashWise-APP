@@ -42,6 +42,14 @@ interface TransactionContextProps {
   period: Period;
   setPeriod: (period: Period) => void;
   fetchTransactions: () => Promise<void>;
+  page: number;
+  setPage: (page: number) => void;
+  perPage: number;
+  setPerPage: (perPage: number) => void;
+  totalItems: number;
+  setTotalItems: (total: number) => void;
+  totalPages: number;
+  setTotalPages: (total: number) => void;
 }
 
 const TransactionContext = createContext<TransactionContextProps | undefined>(
@@ -51,6 +59,11 @@ const TransactionContext = createContext<TransactionContextProps | undefined>(
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
   const { getToken } = useAuth();
+
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
@@ -85,6 +98,8 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     try {
       const params = {
+        page: String(page),
+        perPage: String(perPage),
         search: searchTerm || undefined,
         date: selectedDate ? selectedDate.toISOString() : undefined,
         sort: sortOrder !== "none" ? sortOrder : undefined,
@@ -115,6 +130,12 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
         toast.error("Erro ao buscar transações");
         throw new Error("Erro ao buscar transações");
       }
+
+      setTotalItems(Number(response.headers.get("x-total-count")) || 0);
+      setTotalPages(Number(response.headers.get("x-total-pages")) || 0);
+      setPage(Number(response.headers.get("x-current-page")) || 1);
+      setPerPage(Number(response.headers.get("x-per-page")) || 10);
+
       const data = await response.json();
       setTransactions(data);
     } catch (error) {
@@ -131,6 +152,8 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     transactionType,
     user?.hasVerifiedEmailAddress,
     getToken,
+    page,
+    perPage,
   ]);
 
   const handleDeleteTransaction = useCallback(
@@ -234,6 +257,14 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       period,
       setPeriod,
       fetchTransactions,
+      page,
+      setPage,
+      perPage,
+      setPerPage,
+      totalItems,
+      setTotalItems,
+      totalPages,
+      setTotalPages,
     }),
     [
       searchTerm,
@@ -250,6 +281,14 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       periodTabs,
       period,
       fetchTransactions,
+      page,
+      setPage,
+      perPage,
+      setPerPage,
+      totalItems,
+      setTotalItems,
+      totalPages,
+      setTotalPages,
     ]
   );
 

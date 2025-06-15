@@ -3,7 +3,16 @@
     "save": "Save",
     "cancel": "Cancel",
     "loading": "Loading...",
-    "loadingDescription": "We are getting everything ready for you."
+    "loadingDescription": "We are getting everything ready for you.",
+    "pagination": {
+      "showing": "Showing",
+      "of": "of",
+      "results": "results",
+      "page": "Page",
+      "previous": "Previous",
+      "next": "Next",
+      "itemsPerPage": "Items per page"
+    }
   },
   "home": {
     "header": {
