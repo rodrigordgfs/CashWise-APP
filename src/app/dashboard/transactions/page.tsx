@@ -32,6 +32,7 @@ export default function TransactionsPage() {
     setTransactionToEdit,
     handleEditTransaction,
     handleDeleteTransaction,
+    resetFilters,
   } = useTransaction();
   const { t } = useTranslation();
 
@@ -62,6 +63,7 @@ export default function TransactionsPage() {
         setTransactionType={setTransactionType}
         setSortOrder={setSortOrder}
         sortOrder={sortOrder}
+        resetFilters={resetFilters}
       />
 
       {isLoading ? (

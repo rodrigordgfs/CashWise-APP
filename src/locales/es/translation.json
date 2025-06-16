@@ -12,7 +12,8 @@
       "previous": "Anterior",
       "next": "Siguiente",
       "itemsPerPage": "Elementos por página"
-    }
+    },
+    "clearFilters": "Limpiar Filtros"
   },
   "home": {
     "header": {

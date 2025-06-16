@@ -12,7 +12,8 @@
       "previous": "Previous",
       "next": "Next",
       "itemsPerPage": "Items per page"
-    }
+    },
+    "clearFilters": "Clear Filters"
   },
   "home": {
     "header": {

@@ -50,6 +50,7 @@ interface TransactionContextProps {
   setTotalItems: (total: number) => void;
   totalPages: number;
   setTotalPages: (total: number) => void;
+  resetFilters: () => void;
 }
 
 const TransactionContext = createContext<TransactionContextProps | undefined>(
@@ -77,6 +78,13 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   const [transactionToEdit, setTransactionToEdit] =
     useState<Transaction | null>(null);
   const [period, setPeriod] = useState<Period>(Period.MONTH);
+
+  useEffect(() => {
+    setPage(1);
+    setPerPage(10);
+    setTotalItems(0);
+    setTotalPages(0);
+  }, [period]);
 
   const periodTabs = useMemo(
     () => [
@@ -146,15 +154,20 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [
     user?.id,
-    searchTerm,
-    selectedDate,
-    sortOrder,
-    transactionType,
     user?.hasVerifiedEmailAddress,
     getToken,
     page,
     perPage,
+    searchTerm,
+    selectedDate,
+    sortOrder,
+    transactionType,
   ]);
+
+  // ✅ Corrigido: buscar transações ao montar o provider
+  useEffect(() => {
+    fetchTransactions();
+  }, [fetchTransactions]);
 
   const handleDeleteTransaction = useCallback(
     async (transaction: Transaction) => {
@@ -216,11 +229,11 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
 
         await fetchTransactions();
 
-        if (data.id) {
-          toast.success("Transação atualizada com sucesso!");
-        } else {
-          toast.success("Transação salva com sucesso!");
-        }
+        toast.success(
+          data.id
+            ? "Transação atualizada com sucesso!"
+            : "Transação salva com sucesso!"
+        );
       } catch (err) {
         toast.error("Erro ao salvar transação");
         console.error(err);
@@ -230,7 +243,11 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     [getToken, fetchTransactions]
   );
 
-  useEffect(() => {
+  const resetFilters = useCallback(() => {
+    setSearchTerm("");
+    setSelectedDate(undefined);
+    setTransactionType(TransactionTypeFilter.All);
+    setSortOrder("none");
     fetchTransactions();
   }, [fetchTransactions]);
 
@@ -265,6 +282,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       setTotalItems,
       totalPages,
       setTotalPages,
+      resetFilters,
     }),
     [
       searchTerm,
@@ -282,13 +300,10 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       period,
       fetchTransactions,
       page,
-      setPage,
       perPage,
-      setPerPage,
       totalItems,
-      setTotalItems,
       totalPages,
-      setTotalPages,
+      resetFilters,
     ]
   );
 

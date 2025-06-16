@@ -7,6 +7,8 @@ import { TransactionTypeSelector } from "../TransactionTypeSelector";
 import { TransactionTypeFilter } from "@/types/Transaction.type";
 import { FilterCard } from "@/components/shared/FilterCard";
 import { useTranslation } from "react-i18next";
+import { Button } from "shinodalabs-ui";
+import { BrushCleaning } from "lucide-react";
 interface TransactionFiltersProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
@@ -16,6 +18,7 @@ interface TransactionFiltersProps {
   setTransactionType: (type: TransactionTypeFilter) => void;
   setSortOrder: (order: "none" | "asc" | "desc") => void;
   sortOrder: "none" | "asc" | "desc";
+  resetFilters?: () => void;
 }
 
 export const TransactionFilters = ({
@@ -27,6 +30,7 @@ export const TransactionFilters = ({
   setTransactionType,
   setSortOrder,
   sortOrder,
+  resetFilters,
 }: TransactionFiltersProps) => {
   const { t } = useTranslation();
   return (
@@ -44,6 +48,10 @@ export const TransactionFilters = ({
             setTransactionType={setTransactionType}
           />
         </div>
+
+        <Button icon={BrushCleaning} onClick={resetFilters}>
+          {t("app.clearFilters")}
+        </Button>
       </div>
     </FilterCard>
   );
