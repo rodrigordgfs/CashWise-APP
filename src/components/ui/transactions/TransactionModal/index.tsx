@@ -8,9 +8,10 @@ import { toast } from "sonner";
 
 import { Input } from "shinodalabs-ui";
 import { Select } from "shinodalabs-ui";
-import { Transaction, TransactionType } from "@/types/Transaction.type";
 import { Modal } from "shinodalabs-ui";
 import { DatePicker } from "shinodalabs-ui";
+
+import { Transaction, TransactionType } from "@/types/Transaction.type";
 import { useCategory } from "@/context/categoryContext";
 import { useTransaction } from "@/context/transactionsContext";
 import { useTranslation } from "react-i18next";
@@ -138,7 +139,7 @@ export const TransactionModal = ({
       cancelLabel={t("app.cancel")}
       isLoading={isLoading}
     >
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl w-full">
         <Controller
           control={control}
           name="type"
