@@ -131,7 +131,14 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [period, user?.id, user?.hasVerifiedEmailAddress, getToken]);
+  }, [
+    period,
+    user?.id,
+    user?.hasVerifiedEmailAddress,
+    getToken,
+    date.final,
+    date.initial,
+  ]);
 
   useEffect(() => {
     fetchReports();
