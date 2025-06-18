@@ -4,7 +4,7 @@ import { SearchInput } from "../SearchInput";
 import { SortButton } from "../SortButton";
 import { TransactionTypeSelector } from "../TransactionTypeSelector";
 import { TransactionTypeFilter } from "@/types/Transaction.type";
-import { FilterCard } from "@/components/shared/FilterCard";
+import { FilterCard } from "shinodalabs-ui";
 import { useTranslation } from "react-i18next";
 import { Button, DateRange } from "shinodalabs-ui";
 import { BrushCleaning } from "lucide-react";

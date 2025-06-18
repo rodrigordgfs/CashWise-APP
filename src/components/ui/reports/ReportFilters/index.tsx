@@ -4,7 +4,7 @@ import { ReportType, ReportTypeEnum } from "@/types/Report.type";
 import { Select } from "shinodalabs-ui";
 import { Tabs } from "shinodalabs-ui";
 import { useState } from "react";
-import { FilterCard } from "@/components/shared/FilterCard";
+import { FilterCard } from "shinodalabs-ui";
 import { Period } from "@/types/Period.type";
 import { useTranslation } from "react-i18next";
 
@@ -17,7 +17,7 @@ interface FiltersCardProps {
 
 export const ReportFilters = ({
   initialReportType = ReportTypeEnum.INCOME_EXPENSE,
-  initialPeriod = Period.MONTH,
+  initialPeriod = Period.WEEK,
   onReportTypeChange,
   onPeriodChange,
 }: FiltersCardProps) => {
@@ -36,6 +36,7 @@ export const ReportFilters = ({
   ];
 
   const periodOptions = [
+    { label: t("reports.lastWeek"), value: Period.WEEK },
     { label: t("reports.lastMonth"), value: Period.MONTH },
     { label: t("reports.lastThreeMonths"), value: Period.TRIMESTER },
     { label: t("reports.lastSixMonths"), value: Period.SEMESTER },

@@ -290,6 +290,7 @@
     "income": "Income",
     "expense": "Expenses",
     "period": "Period",
+    "lastWeek": "Last Week",
     "lastMonth": "Last Month",
     "lastThreeMonths": "Last 3 Months",
     "lastSixMonths": "Last 6 Months",

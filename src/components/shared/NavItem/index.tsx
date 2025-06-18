@@ -7,7 +7,7 @@ interface NavItemProps {
   icon: React.ElementType;
   title: string;
   isActive: boolean;
-  onClick?: () => void; // opcional
+  onClick?: () => void;
 }
 
 export const NavItem = ({
