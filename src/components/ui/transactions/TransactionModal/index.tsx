@@ -127,6 +127,11 @@ export const TransactionModal = ({
           ? t("transactions.editTransaction")
           : t("transactions.newTransaction")
       }
+      description={
+        initialData
+          ? t("transactions.descriptionEdit")
+          : t("transactions.descriptionAdd")
+      }
       onClose={onClose}
       onConfirm={handleSubmit(onSubmit)}
       confirmLabel={t("app.save")}

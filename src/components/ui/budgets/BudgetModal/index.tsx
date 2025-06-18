@@ -120,15 +120,14 @@ export const BudgetModal = ({
     <Modal
       isOpen={isOpen}
       title={initialData ? t("budgets.editBudget") : t("budgets.newBudget")}
+      description={
+        initialData ? t("budgets.descriptionEdit") : t("budgets.descriptionNew")
+      }
       onClose={onClose}
       onConfirm={handleSubmit(onSubmit)}
       confirmLabel={t("app.save")}
       cancelLabel={t("app.cancel")}
     >
-      <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">
-        {t("budgets.description")}
-      </p>
-
       <div className="space-y-4 relative">
         {/* Categoria */}
         <Controller

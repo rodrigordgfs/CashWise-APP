@@ -100,6 +100,9 @@ export const GoalModal = ({
     <Modal
       isOpen={isOpen}
       title={initialData ? t("goals.editGoal") : t("goals.newGoal")}
+      description={
+        initialData ? t("goals.descriptionEdit") : t("goals.descriptionAdd")
+      }
       onClose={() => {
         onClose();
         reset({

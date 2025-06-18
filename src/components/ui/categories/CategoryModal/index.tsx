@@ -116,18 +116,17 @@ export function CategoryModal({
       title={
         initialData ? t("categories.editCategory") : t("categories.newCategory")
       }
+      description={
+        initialData
+          ? t("categories.descriptionEdit")
+          : t("categories.descriptionAdd")
+      }
       onClose={onClose}
       onConfirm={handleSubmit(onSubmit)}
       confirmLabel={t("app.save")}
       cancelLabel={t("app.cancel")}
       isLoading={isLoading}
     >
-      <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">
-        {initialData
-          ? t("categories.descriptionEdit")
-          : t("categories.descriptionAdd")}
-      </p>
-
       <div className="space-y-4">
         <Controller
           name="type"

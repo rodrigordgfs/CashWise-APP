@@ -181,7 +181,9 @@
     "dialogDeleteTitle": "Eliminar Transacción",
     "dialogDeleteDescription": "¿Estás seguro de que deseas eliminar esta transacción? Esta acción no se puede deshacer.",
     "dialogDeleteConfirm": "Sí, eliminar",
-    "dialogDeleteCancel": "Cancelar"
+    "dialogDeleteCancel": "Cancelar",
+    "descriptionEdit": "Edita los datos de la transacción seleccionada.",
+    "descriptionAdd": "Agrega una nueva transacción para mantener tus finanzas organizadas."
   },
   "categories": {
     "title": "Categorías",
@@ -224,7 +226,8 @@
     "withinBudget": "Dentro del presupuesto",
     "invalidDate": "Fecha inválida",
     "spentLimit": "Gasto / Límite",
-    "description": "Establece un límite de gastos para una categoría",
+    "descriptionNew": "Agrega un nuevo presupuesto para controlar tus gastos mensuales.",
+    "descriptionEdit": "Edita los datos del presupuesto seleccionado.",
     "category": "Categoría",
     "limit": "Límite",
     "month": "Mes",
@@ -254,6 +257,8 @@
     "deadelineExpired": "Fecha límite expirada",
     "titleField": "Título",
     "titlePlaceholder": "Ej: Viaje a París",
+    "descriptionEdit": "Edita los datos de la meta seleccionada.",
+    "descriptionAdd": "Agrega una nueva meta para alcanzar tus objetivos financieros.",
     "descriptionField": "Descripción",
     "descriptionPlaceholder": "Ej: Ahorrar para las vacaciones",
     "goal": "Meta",

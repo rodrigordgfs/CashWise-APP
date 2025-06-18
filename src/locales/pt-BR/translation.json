@@ -181,7 +181,9 @@
     "dialogDeleteTitle": "Excluir Transação",
     "dialogDeleteDescription": "Você tem certeza que deseja excluir esta transação? Esta ação não pode ser desfeita.",
     "dialogDeleteConfirm": "Sim, excluir",
-    "dialogDeleteCancel": "Cancelar"
+    "dialogDeleteCancel": "Cancelar",
+    "descriptionEdit": "Altere os dados da transação selecionada.",
+    "descriptionAdd": "Adicione uma nova transação para manter suas finanças organizadas."
   },
   "categories": {
     "title": "Categorias",
@@ -224,7 +226,8 @@
     "withinBudget": "Dentro do orçamento",
     "invalidDate": "Data inválida",
     "spentLimit": "Gasto / Limite",
-    "description": "Defina um limite de gastos para uma categoria",
+    "descriptionNew": "Crie um novo orçamento para gerenciar suas despesas.",
+    "descriptionEdit": "Altere os dados do orçamento selecionado.",
     "category": "Categoria",
     "limit": "Limite",
     "month": "Mês",
@@ -257,6 +260,8 @@
     "descriptionField": "Descrição",
     "descriptionPlaceholder": "Ex: Economizar para a viagem de férias",
     "goal": "Meta",
+    "descriptionEdit": "Altere os dados da meta selecionada.",
+    "descriptionAdd": "Adicione uma nova meta para alcançar seus objetivos financeiros.",
     "goalPlaceholder": "Ex: R$ 5.000,00",
     "currentAmmount": "Valor Atual",
     "currentAmmountPlaceholder": "Ex: R$ 1.000,00",
