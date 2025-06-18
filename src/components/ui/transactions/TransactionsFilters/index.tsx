@@ -1,19 +1,22 @@
 "use client";
 
 import { SearchInput } from "../SearchInput";
-import { DateFilter } from "../DateFilter";
 import { SortButton } from "../SortButton";
 import { TransactionTypeSelector } from "../TransactionTypeSelector";
 import { TransactionTypeFilter } from "@/types/Transaction.type";
 import { FilterCard } from "@/components/shared/FilterCard";
 import { useTranslation } from "react-i18next";
-import { Button } from "shinodalabs-ui";
+import { Button, DateRange } from "shinodalabs-ui";
 import { BrushCleaning } from "lucide-react";
+
 interface TransactionFiltersProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  setSelectedDate: (date: Date | undefined) => void;
-  selectedDate?: Date;
+  selectedRange?: { from: Date | undefined; to: Date | undefined };
+  setSelectedRange: (range: {
+    from: Date | undefined;
+    to: Date | undefined;
+  }) => void;
   transactionType: TransactionTypeFilter;
   setTransactionType: (type: TransactionTypeFilter) => void;
   setSortOrder: (order: "none" | "asc" | "desc") => void;
@@ -24,8 +27,8 @@ interface TransactionFiltersProps {
 export const TransactionFilters = ({
   searchTerm,
   setSearchTerm,
-  selectedDate,
-  setSelectedDate,
+  selectedRange,
+  setSelectedRange,
   transactionType,
   setTransactionType,
   setSortOrder,
@@ -35,23 +38,40 @@ export const TransactionFilters = ({
   const { t } = useTranslation();
   return (
     <FilterCard title={t("transactions.filters")}>
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
-        <div className="flex-1">
-          <SearchInput value={searchTerm} onChange={setSearchTerm} />
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
+          <div className="flex-1">
+            <SearchInput value={searchTerm} onChange={setSearchTerm} />
+          </div>
+
+          <div className="flex flex-wrap gap-2 items-center">
+            <DateRange
+              selectedRange={selectedRange}
+              onChange={setSelectedRange}
+              labels={{
+                filterByDate: t("transactions.filterByDate"),
+                clear: t("transactions.clear"),
+                selectDate: t("transactions.selectDate"),
+                closeCalendar: t("transactions.closeCalendar"),
+              }}
+            />
+            <SortButton setSortOrder={setSortOrder} sortOrder={sortOrder} />
+            <TransactionTypeSelector
+              transactionType={transactionType}
+              setTransactionType={setTransactionType}
+            />
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 items-center">
-          <DateFilter selectedDate={selectedDate} onChange={setSelectedDate} />
-          <SortButton setSortOrder={setSortOrder} sortOrder={sortOrder} />
-          <TransactionTypeSelector
-            transactionType={transactionType}
-            setTransactionType={setTransactionType}
-          />
+        <div className="flex justify-end">
+          <Button
+            icon={BrushCleaning}
+            onClick={resetFilters}
+            className="w-full sm:w-auto"
+          >
+            {t("app.clearFilters")}
+          </Button>
         </div>
-
-        <Button icon={BrushCleaning} onClick={resetFilters}>
-          {t("app.clearFilters")}
-        </Button>
       </div>
     </FilterCard>
   );

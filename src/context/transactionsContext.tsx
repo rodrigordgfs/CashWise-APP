@@ -14,12 +14,19 @@ import { toast } from "sonner";
 import { Transaction, TransactionTypeFilter } from "@/types/Transaction.type";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { Period } from "@/types/Period.type";
+import { useReports } from "./reportContext";
 
 interface TransactionContextProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  selectedDate?: Date;
-  setSelectedDate: (date?: Date) => void;
+  selectedDate?: {
+    from: Date | undefined;
+    to: Date | undefined;
+  };
+  setSelectedDate: (range: {
+    from: Date | undefined;
+    to: Date | undefined;
+  }) => void;
   sortOrder: "none" | "asc" | "desc";
   setSortOrder: (order: "none" | "asc" | "desc") => void;
   transactionType: TransactionTypeFilter;
@@ -60,6 +67,7 @@ const TransactionContext = createContext<TransactionContextProps | undefined>(
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
   const { getToken } = useAuth();
+  const { fetchReports } = useReports();
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
@@ -67,7 +75,10 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   const [totalPages, setTotalPages] = useState(0);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [selectedDate, setSelectedDate] = useState<{
+    from: Date | undefined;
+    to: Date | undefined;
+  }>({ from: undefined, to: undefined });
   const [sortOrder, setSortOrder] = useState<"none" | "asc" | "desc">("none");
   const [transactionType, setTransactionType] = useState<TransactionTypeFilter>(
     TransactionTypeFilter.All
@@ -109,7 +120,10 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
         page: String(page),
         perPage: String(perPage),
         search: searchTerm || undefined,
-        date: selectedDate ? selectedDate.toISOString() : undefined,
+        date__gte: selectedDate?.from
+          ? selectedDate.from.toISOString()
+          : undefined,
+        date__lte: selectedDate?.to ? selectedDate.to.toISOString() : undefined,
         sort: sortOrder !== "none" ? sortOrder : undefined,
         type:
           transactionType !== TransactionTypeFilter.All
@@ -164,7 +178,6 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     transactionType,
   ]);
 
-  // ✅ Corrigido: buscar transações ao montar o provider
   useEffect(() => {
     fetchTransactions();
   }, [fetchTransactions]);
@@ -228,6 +241,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
         }
 
         await fetchTransactions();
+        await fetchReports();
 
         toast.success(
           data.id
@@ -240,12 +254,12 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
         return null;
       }
     },
-    [getToken, fetchTransactions]
+    [getToken, fetchTransactions, fetchReports]
   );
 
   const resetFilters = useCallback(() => {
     setSearchTerm("");
-    setSelectedDate(undefined);
+    setSelectedDate({ from: undefined, to: undefined });
     setTransactionType(TransactionTypeFilter.All);
     setSortOrder("none");
     fetchTransactions();

@@ -57,8 +57,8 @@ export default function TransactionsPage() {
       <TransactionFilters
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
-        selectedDate={selectedDate}
-        setSelectedDate={setSelectedDate}
+        selectedRange={selectedDate}
+        setSelectedRange={setSelectedDate}
         transactionType={transactionType}
         setTransactionType={setTransactionType}
         setSortOrder={setSortOrder}
