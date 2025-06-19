@@ -6,10 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
-import { Input } from "shinodalabs-ui";
-import { Select } from "shinodalabs-ui";
-import { Modal } from "shinodalabs-ui";
-import { DatePicker } from "shinodalabs-ui";
+import { Input, Select, Modal, DatePicker } from "shinodalabs-ui";
 
 import { Transaction, TransactionType } from "@/types/Transaction.type";
 import { useCategory } from "@/context/categoryContext";
@@ -59,6 +56,8 @@ export const TransactionModal = ({
     control,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -67,14 +66,20 @@ export const TransactionModal = ({
       description: initialData?.description ?? "",
       amount: initialData?.amount ?? 0,
       date: initialData?.date ?? "",
-      category: initialData?.category.id ?? categories[0]?.id ?? "",
+      category: initialData?.category.id ?? "",
       account: initialData?.account ?? accounts[0]?.name ?? "",
     },
   });
 
+  const type = watch("type");
   const [isLoading, setIsLoading] = useState(false);
 
+  const filteredCategories = categories.filter((c) => c.type === type);
+
+  // ⚠️ Reset dos dados iniciais
   useEffect(() => {
+    if (!isOpen) return;
+
     if (initialData) {
       reset({
         type: initialData.type,
@@ -90,11 +95,18 @@ export const TransactionModal = ({
         description: "",
         amount: 0,
         date: "",
-        category: categories[0]?.id ?? "",
+        category: "",
         account: accounts[0]?.name ?? "",
       });
     }
-  }, [initialData, isOpen, reset, categories, accounts]);
+  }, [initialData, isOpen, reset, accounts]);
+
+  // ✅ Atualiza a categoria quando o tipo muda
+  useEffect(() => {
+    if (filteredCategories.length > 0) {
+      setValue("category", filteredCategories[0]?.id ?? "");
+    }
+  }, [type, filteredCategories, setValue]);
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
@@ -199,7 +211,7 @@ export const TransactionModal = ({
             <Select
               label={t("transactions.category")}
               {...field}
-              options={categories.map((c) => ({
+              options={filteredCategories.map((c) => ({
                 value: c.id ?? "",
                 label: `${c.icon} ${c.name}`,
               }))}
