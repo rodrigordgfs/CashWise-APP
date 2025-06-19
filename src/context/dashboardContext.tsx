@@ -37,7 +37,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
   const { getToken } = useAuth();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [period, setPeriod] = useState<Period>(Period.WEEK);
+  const [period, setPeriod] = useState<Period>(Period.MONTH);
   const [summary, setSummary] = useState<Summary>({
     income: 0,
     expense: 0,
