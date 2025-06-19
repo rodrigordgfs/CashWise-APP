@@ -66,11 +66,18 @@ export const viewport = {
   themeColor: "#10b981",
 };
 
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <ClerkProvider appearance={{ baseTheme: dark }}>
       <html lang="pt-BR" className="dark" suppressHydrationWarning>
+        <head>
+          <link rel="manifest" href="/site.webmanifest" />
+          <meta name="theme-color" content="#2563eb" />
+        </head>
         <body
           className={`${inter.className} bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100`}
           suppressHydrationWarning
