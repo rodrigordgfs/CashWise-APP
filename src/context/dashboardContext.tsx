@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { CategoryReport, MonthlyReport } from "@/types/Report.type";
 import { Period } from "@/types/Period.type";
 import { getRelativeDate } from "@/utils/relativeDate";
+import * as Sentry from "@sentry/nextjs";
 
 interface DashboardContextProps {
   isLoading: boolean;
@@ -154,6 +155,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
       setCategory(categoryJson);
       setRecentTransactions(transactionsJson);
     } catch (error) {
+      Sentry.captureException(error);
       toast.error(
         "Erro ao carregar dados do dashboard. Tente novamente mais tarde."
       );

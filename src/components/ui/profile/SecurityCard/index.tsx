@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Button } from "shinodalabs-ui";
 import { Input } from "shinodalabs-ui";
 import { useTranslation } from "react-i18next";
+import * as Sentry from "@sentry/nextjs";
 
 const schema = z
   .object({
@@ -52,6 +53,7 @@ export const SecurityCard = () => {
       toast.success("Senha alterada com sucesso");
       reset();
     } catch (err: unknown) {
+      Sentry.captureException(err);
       const error = err as { errors?: { message: string }[] };
       console.error("Erro ao alterar a senha:", err);
       toast.error(error.errors?.[0]?.message || "Erro ao alterar a senha.");

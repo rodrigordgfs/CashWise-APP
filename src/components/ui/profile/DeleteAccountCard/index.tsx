@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "shinodalabs-ui";
 import { useTranslation } from "react-i18next";
+import * as Sentry from "@sentry/nextjs";
 
 export const DeleteAccountCard = () => {
   const { t } = useTranslation();
@@ -18,6 +19,7 @@ export const DeleteAccountCard = () => {
       toast.success("Conta excluída com sucesso.");
       window.location.href = "/";
     } catch (err) {
+      Sentry.captureException(err);
       console.error(err);
       toast.error("Erro ao excluir a conta. Tente novamente.");
     } finally {

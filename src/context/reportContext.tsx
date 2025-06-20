@@ -21,6 +21,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { getRelativeDate } from "@/utils/relativeDate";
+import * as Sentry from "@sentry/nextjs";
 
 interface ReportsContextProps {
   period: Period;
@@ -126,6 +127,7 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
       setCategoryReports(categoryData);
       setBalanceReports(balanceData);
     } catch (error) {
+      Sentry.captureException(error);
       toast.error("Erro ao carregar relatórios. Tente novamente mais tarde.");
       console.error("Erro ao carregar relatórios:", error);
     } finally {

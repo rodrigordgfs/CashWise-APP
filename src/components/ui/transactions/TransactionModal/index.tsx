@@ -13,6 +13,7 @@ import { useCategory } from "@/context/categoryContext";
 import { useTransaction } from "@/context/transactionsContext";
 import { useTranslation } from "react-i18next";
 import { useSettings } from "@/context/settingsContext";
+import * as Sentry from "@sentry/nextjs";
 
 type Account = {
   id: number;
@@ -125,6 +126,7 @@ export const TransactionModal = ({
       reset();
       onClose();
     } catch (error) {
+      Sentry.captureException(error);
       console.log(error);
       toast.error("Erro ao salvar transação");
     } finally {

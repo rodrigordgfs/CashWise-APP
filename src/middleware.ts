@@ -1,6 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { clerkClient } from "@clerk/clerk-sdk-node";
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 
 const isDashboardRoute = createRouteMatcher(["/dashboard(.*)"]);
 const isPublicAuthRoute = createRouteMatcher(["/login", "/register"]);
@@ -32,6 +33,7 @@ export default clerkMiddleware(async (auth, req) => {
       return NextResponse.next();
     }
   } catch (err) {
+    Sentry.captureException(err);
     console.error("Erro ao buscar usuário:", err);
     return NextResponse.next();
   }
