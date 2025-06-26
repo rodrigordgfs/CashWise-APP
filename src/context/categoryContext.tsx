@@ -176,7 +176,9 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
         );
 
         if (!response.ok) {
-          toast.error("Erro ao excluir categoria");
+          const json = await response.json();
+          const message = json?.message || "Erro ao excluir categoria";
+          toast.error(message);
           return;
         }
 
