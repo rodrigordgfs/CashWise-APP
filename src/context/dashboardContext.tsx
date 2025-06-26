@@ -59,6 +59,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
       const transactionParams = {
         date__gte: encodeURIComponent(date.initial),
+        date__lte: encodeURIComponent(date.final),
         perPage: "5",
         sort: "desc",
       };
