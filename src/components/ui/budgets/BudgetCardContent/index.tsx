@@ -1,5 +1,5 @@
 import { Budget } from "@/types/Budge.type";
-import { ProgressBar } from "shinodalabs-ui";
+import { ProgressBar } from "@/components/shared/ProgressBar";
 import { colorOptions } from "../../categories/CategoryModal";
 import { useSettings } from "@/context/settingsContext";
 import { formatCurrency } from "@/utils/formatConvertCurrency";
