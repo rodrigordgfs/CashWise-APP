@@ -15,22 +15,25 @@ const TableRoot = ({ children }: TableProps) => (
   </div>
 );
 
-interface HeaderColumn<T> {
-  key: keyof T | "actions";
+export interface HeaderColumn<
+  T extends object,
+  K extends keyof T = keyof T
+> {
+  key: K | "actions";
   label: React.ReactNode;
   align?: "left" | "right" | "center";
   hidden?: boolean;
-  render?: (value: any, row: T) => React.ReactNode;
-  format?: (value: any, row: T) => React.ReactNode;
-  style?: (value: any, row: T) => string;
+  render?: (value: T[K], row: T) => React.ReactNode;
+  format?: (value: T[K], row: T) => React.ReactNode;
+  style?: (value: T[K], row: T) => string;
   showMobile?: boolean;
 }
 
-interface TableHeaderProps<T> {
+interface TableHeaderProps<T extends object> {
   columns: HeaderColumn<T>[];
 }
 
-const TableHeader = <T,>({ columns }: TableHeaderProps<T>) => (
+const TableHeader = <T extends object>({ columns }: TableHeaderProps<T>) => (
   <thead>
     <tr className="border-b border-zinc-200 dark:border-zinc-800">
       {columns.map(({ key, label, align, hidden, showMobile }) =>
@@ -59,14 +62,14 @@ const TableBody = ({ children }: { children: React.ReactNode }) => (
   <tbody>{children}</tbody>
 );
 
-interface TableRowProps<T> {
+interface TableRowProps<T extends object> {
   data: T;
   columns: HeaderColumn<T>[];
   onClickEdit?: () => void;
   onClickDelete?: () => void;
 }
 
-function TableRow<T extends Record<string, any>>({
+function TableRow<T extends object>({
   data,
   columns,
   onClickEdit,
@@ -120,12 +123,12 @@ function TableRow<T extends Record<string, any>>({
           }
 
           const value = data[key as keyof T];
-          const content = render
-            ? render(value, data)
-            : format
-            ? format(value, data)
-            : String(value);
-          const cellStyle = style ? style(value, data) : "";
+          const content =
+            render?.(value, data) ??
+            format?.(value, data) ??
+            String(value);
+
+          const cellStyle = style?.(value, data) ?? "";
 
           return (
             <td

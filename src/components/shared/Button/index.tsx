@@ -42,6 +42,7 @@ export const Button: FC<ButtonProps> = ({
   ...props
 }) => {
   const isDisabled = disabled || loading;
+  const hasIcon = Boolean(Icon) || loading;
 
   return (
     <button
@@ -61,7 +62,7 @@ export const Button: FC<ButtonProps> = ({
         Icon && <Icon className="h-4 w-4" />
       )}
       {children && (
-        <span className={Icon || loading ? "md:ml-2" : "mr-2"}>{children}</span>
+        <span className={hasIcon ? "ml-2" : ""}>{children}</span>
       )}
     </button>
   );
