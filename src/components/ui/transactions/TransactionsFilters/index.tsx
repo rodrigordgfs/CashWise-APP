@@ -6,7 +6,8 @@ import { TransactionTypeSelector } from "../TransactionTypeSelector";
 import { TransactionTypeFilter } from "@/types/Transaction.type";
 import { FilterCard } from "shinodalabs-ui";
 import { useTranslation } from "react-i18next";
-import { Button, DateRange } from "shinodalabs-ui";
+import { Button } from "@/components/shared/Button";
+import { DateRange } from "shinodalabs-ui";
 import { BrushCleaning } from "lucide-react";
 
 interface TransactionFiltersProps {

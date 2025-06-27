@@ -1,5 +1,5 @@
 import { LucideIcon } from "lucide-react";
-import { Button } from "shinodalabs-ui";
+import { Button } from "@/components/shared/Button";
 
 type PageHeaderProps =
   | { title: string }

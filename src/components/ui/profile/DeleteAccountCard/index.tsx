@@ -3,7 +3,7 @@
 import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Button } from "shinodalabs-ui";
+import { Button } from "@/components/shared/Button";
 import { useTranslation } from "react-i18next";
 import * as Sentry from "@sentry/nextjs";
 
