@@ -2,7 +2,7 @@
 
 import { PageHeader } from "@/components/shared/PageHeader";
 import { RadioGroup } from "shinodalabs-ui";
-import { Select } from "shinodalabs-ui";
+import { Select } from "@/components/shared/Select";
 import { ToggleSwitch } from "shinodalabs-ui";
 import { SettingCard } from "@/components/ui/settings/SettingsCard";
 import { useSettings } from "@/context/settingsContext";

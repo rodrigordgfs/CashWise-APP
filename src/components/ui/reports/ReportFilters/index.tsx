@@ -1,7 +1,7 @@
 "use client";
 
 import { ReportType, ReportTypeEnum } from "@/types/Report.type";
-import { Select } from "shinodalabs-ui";
+import { Select } from "@/components/shared/Select";
 import { Tabs } from "shinodalabs-ui";
 import { useState } from "react";
 import { FilterCard } from "shinodalabs-ui";

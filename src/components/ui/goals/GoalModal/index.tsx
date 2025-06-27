@@ -6,7 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "shinodalabs-ui";
 import { Input } from "@/components/shared/Input";
-import { Select } from "shinodalabs-ui";
+import { Select } from "@/components/shared/Select";
 import { DatePicker } from "shinodalabs-ui";
 import { useCategory } from "@/context/categoryContext";
 import { useTranslation } from "react-i18next";

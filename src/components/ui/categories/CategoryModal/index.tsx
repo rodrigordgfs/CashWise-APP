@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import { Category } from "@/types/Category.type";
-import { Select } from "shinodalabs-ui";
+import { Select } from "@/components/shared/Select";
 import { Input } from "@/components/shared/Input";
 import { Modal } from "shinodalabs-ui";
 import { TransactionType } from "@/types/Transaction.type";

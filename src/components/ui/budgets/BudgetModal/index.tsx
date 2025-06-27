@@ -2,9 +2,12 @@
 
 import {
   Modal,
-  Select,
   MonthDatePicker
 } from "shinodalabs-ui";
+
+import {
+  Select
+} from "@/components/shared/Select";
 
 import {
   Input
