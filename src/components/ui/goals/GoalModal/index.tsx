@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Modal } from "shinodalabs-ui";
+import { Modal } from "@/components/shared/Modal";
 import { Input } from "@/components/shared/Input";
 import { Select } from "@/components/shared/Select";
 import { DatePicker } from "@/components/shared/DatePicker";

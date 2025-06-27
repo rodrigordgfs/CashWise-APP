@@ -2,7 +2,7 @@
 
 import {
   Modal
-} from "shinodalabs-ui";
+} from "@/components/shared/Modal";
 
 import {
   MonthDatePicker

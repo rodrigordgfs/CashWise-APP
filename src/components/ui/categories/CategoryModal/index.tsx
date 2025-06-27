@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Category } from "@/types/Category.type";
 import { Select } from "@/components/shared/Select";
 import { Input } from "@/components/shared/Input";
-import { Modal } from "shinodalabs-ui";
+import { Modal } from "@/components/shared/Modal";
 import { TransactionType } from "@/types/Transaction.type";
 import { useTranslation } from "react-i18next";
 import * as Sentry from "@sentry/nextjs";
