@@ -4,10 +4,10 @@ import { SearchInput } from "../SearchInput";
 import { SortButton } from "../SortButton";
 import { TransactionTypeSelector } from "../TransactionTypeSelector";
 import { TransactionTypeFilter } from "@/types/Transaction.type";
-import { FilterCard } from "shinodalabs-ui";
+import { FilterCard } from "@/components/shared/FilterCard";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/shared/Button";
-import { DateRange } from "shinodalabs-ui";
+import { DateRange } from "@/components/shared/DateRange";
 import { BrushCleaning } from "lucide-react";
 
 interface TransactionFiltersProps {

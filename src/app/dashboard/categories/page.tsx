@@ -1,6 +1,6 @@
 "use client";
 
-import { FilterCard } from "shinodalabs-ui";
+import { FilterCard } from "@/components/shared/FilterCard";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Tabs } from "shinodalabs-ui";
 import { CategoryList } from "@/components/ui/categories/CategoryList";

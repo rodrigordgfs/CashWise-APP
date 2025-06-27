@@ -4,7 +4,7 @@ import { ReportType, ReportTypeEnum } from "@/types/Report.type";
 import { Select } from "@/components/shared/Select";
 import { Tabs } from "@/components/shared/Tabs";
 import { useState } from "react";
-import { FilterCard } from "shinodalabs-ui";
+import { FilterCard } from "@/components/shared/FilterCard";
 import { Period } from "@/types/Period.type";
 import { useTranslation } from "react-i18next";
 
