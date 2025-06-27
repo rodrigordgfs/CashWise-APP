@@ -1,7 +1,7 @@
 "use client";
 
 import { PageHeader } from "@/components/shared/PageHeader";
-import { RadioGroup } from "shinodalabs-ui";
+import { RadioGroup } from "@/components/shared/RadioGroup";
 import { Select } from "@/components/shared/Select";
 import { ToggleSwitch } from "shinodalabs-ui";
 import { SettingCard } from "@/components/ui/settings/SettingsCard";
