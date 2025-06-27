@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { dark } from "@clerk/themes";
 
 import "./globals.css";
 import "react-day-picker/dist/style.css";
+
 import { ClerkProvider } from "@clerk/nextjs";
 import { I18nextProviderWrapper } from "./I18nextProviderWrapper";
 import { Providers } from "./providers";
@@ -72,11 +72,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider appearance={{ baseTheme: dark }}>
-      <html lang="pt-BR" className="dark" suppressHydrationWarning>
+    <ClerkProvider>
+      <html lang="pt-BR" suppressHydrationWarning>
         <head>
           <link rel="manifest" href="/site.webmanifest" />
-          <meta name="theme-color" content="#2563eb" />
+          <meta name="theme-color" content="#10b981" />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  try {
+                    var theme = localStorage.getItem('theme');
+                    if (
+                      theme === 'dark' ||
+                      (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)
+                    ) {
+                      document.documentElement.classList.add('dark');
+                    } else {
+                      document.documentElement.classList.remove('dark');
+                    }
+                  } catch (e) {}
+                })()
+              `,
+            }}
+          />
         </head>
         <body
           className={`${inter.className} bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100`}

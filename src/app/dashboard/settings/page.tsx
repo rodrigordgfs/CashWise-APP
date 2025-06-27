@@ -6,35 +6,23 @@ import { Select } from "@/components/shared/Select";
 import { ToggleSwitch } from "@/components/shared/ToggleSwitch";
 import { SettingCard } from "@/components/ui/settings/SettingsCard";
 import { useSettings } from "@/context/settingsContext";
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function SettingsPage() {
   const { t } = useTranslation();
 
   const {
-    isDarkMode,
-    setDarkMode,
+    theme,
+    setTheme,
     currency,
     language,
     notifications,
-    toggleTheme,
     setCurrency,
     setLanguage,
     setNotifications,
     currencies,
     languages,
   } = useSettings();
-
-  useEffect(() => {
-    if (
-      localStorage.theme === "dark" ||
-      (!("theme" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      setDarkMode();
-    }
-  }, [setDarkMode]);
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -47,15 +35,14 @@ export default function SettingsPage() {
         >
           <RadioGroup
             name="theme"
-            value={isDarkMode ? "dark" : "light"}
-            onChange={(theme) => {
-              if (theme === "light" && isDarkMode) toggleTheme();
-              if (theme === "dark" && !isDarkMode) toggleTheme();
-            }}
+            value={theme}
+            onChange={(newTheme) =>
+              setTheme(newTheme as "light" | "dark" | "system")
+            }
             options={[
-              { value: "light", label: t("settings.lightMode") },
-              { value: "dark", label: t("settings.darkMode") },
-              { value: "system", label: t("settings.systemDefault") },
+              { value: "light", label: "Light" },
+              { value: "dark", label: "Dark" },
+              { value: "system", label: "System Default" },
             ]}
           />
         </SettingCard>
