@@ -30,15 +30,15 @@ export const metadata: Metadata = {
     { name: "Rodrigo Shinoda", url: "https://github.com/rodrigordgfs" },
   ],
   creator: "CashWise",
-  metadataBase: new URL("https://cash-wise-one.vercel.app/"),
+  metadataBase: new URL("https://appcashwise.com.br/"),
   openGraph: {
     title: "CashWise - Gerenciamento Financeiro",
     description: "Controle suas finanças de forma inteligente com o CashWise.",
-    url: "https://cash-wise-one.vercel.app/",
+    url: "https://appcashwise.com.br/",
     siteName: "CashWise",
     images: [
       {
-        url: "/og-image.png",
+        url: "/screenshots/dashboard.png",
         width: 1200,
         height: 630,
         alt: "CashWise - Gerenciamento Financeiro",
@@ -51,13 +51,13 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "CashWise - Gerenciamento Financeiro",
     description: "Controle suas finanças de forma inteligente com o CashWise.",
-    images: ["/og-image.png"],
+    images: ["/screenshots/dashboard.png"],
     creator: "@cashwise_app",
   },
   icons: {
     icon: "/favicon.png",
-    shortcut: "/shortcut-icon.png",
-    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
   },
   manifest: "/site.webmanifest",
 };

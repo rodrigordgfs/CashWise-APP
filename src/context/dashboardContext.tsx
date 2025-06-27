@@ -111,9 +111,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             }
           ),
           fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/categories${
+            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/categories?limit=5${
               period
-                ? `?period__gte=${encodeURIComponent(
+                ? `&period__gte=${encodeURIComponent(
                     date.initial
                   )}&period__lte=${encodeURIComponent(date.final)}`
                 : ""
