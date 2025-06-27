@@ -3,7 +3,7 @@
 import { PageHeader } from "@/components/shared/PageHeader";
 import { RadioGroup } from "@/components/shared/RadioGroup";
 import { Select } from "@/components/shared/Select";
-import { ToggleSwitch } from "shinodalabs-ui";
+import { ToggleSwitch } from "@/components/shared/ToggleSwitch";
 import { SettingCard } from "@/components/ui/settings/SettingsCard";
 import { useSettings } from "@/context/settingsContext";
 import { useEffect } from "react";
