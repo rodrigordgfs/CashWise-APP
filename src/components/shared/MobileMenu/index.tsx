@@ -16,7 +16,7 @@ import { NavItem } from "../NavItem";
 import { usePathname, useRouter } from "next/navigation";
 import { useMenu } from "@/context/menuContext";
 import { LogoButton } from "../LogoButton";
-import { IconButton } from "shinodalabs-ui";
+import { IconButton } from "@/components/shared/IconButton";
 import { useAuth } from "@clerk/nextjs";
 import { useTranslation } from "react-i18next";
 
