@@ -3,7 +3,8 @@
 import { EmptyState } from "@/components/shared/EmptyState";
 import { Transaction } from "@/types/Transaction.type";
 import { useTranslation } from "react-i18next";
-import { Pagination, Table } from "shinodalabs-ui";
+import { Pagination } from "@/components/shared/Pagination";
+import Table from "@/components/shared/Table";
 import { useTransaction } from "@/context/transactionsContext";
 import { useCategory } from "@/context/categoryContext";
 import { formatCurrency } from "@/utils/formatConvertCurrency";

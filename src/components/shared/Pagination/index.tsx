@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Select } from "../Select";
 import { IconButton } from "../IconButton";
+import { Select } from "../Select";
 
 interface PaginationProps {
   currentPage: number;
@@ -52,16 +52,17 @@ export const Pagination = ({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between py-4 px-6 border-t border-zinc-200 dark:border-zinc-800 text-sm text-zinc-600 dark:text-zinc-400 gap-2">
+    <div className="flex flex-row sm:flex-col items-center justify-between p-6 border-zinc-200 dark:border-zinc-800 text-sm text-zinc-600 dark:text-zinc-400 gap-2">
       <span className="hidden sm:inline">
         {labels.showing} {(currentPage - 1) * itemsPerPage + 1} -{" "}
         {Math.min(currentPage * itemsPerPage, totalItems)} {labels.of}{" "}
         {totalItems} {labels.results}
       </span>
 
-      <div className="flex flex-col sm:flex-row items-center gap-2">
+      <div className="flex flex-row sm:flex-col items-center justify-center gap-2">
         <Select
           id="itemsPerPageSelect"
+          className="flex-1"
           value={itemsPerPage}
           onChange={(e) => setItemsPerPage(Number(e.target.value))}
           aria-label={labels.itemsPerPage}
@@ -93,5 +94,3 @@ export const Pagination = ({
     </div>
   );
 };
-
-export default Pagination;
