@@ -4,7 +4,6 @@ import { Button } from "@/components/shared/Button";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { DeleteAccountCard } from "@/components/ui/profile/DeleteAccountCard";
 import { PersonalInfoCard } from "@/components/ui/profile/PersonalInfoCard";
-import { SecurityCard } from "@/components/ui/profile/SecurityCard";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
@@ -25,7 +24,6 @@ export default function ProfilePage() {
 
       <div className="grid gap-4 md:grid-cols-2">
         <PersonalInfoCard />
-        <SecurityCard />
         <DeleteAccountCard />
       </div>
 

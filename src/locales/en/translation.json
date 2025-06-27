@@ -13,7 +13,13 @@
       "next": "Next",
       "itemsPerPage": "Items per page"
     },
-    "clearFilters": "Clear Filters"
+    "clearFilters": "Clear Filters",
+    "dialogDeleteAccountTitle": "Delete Account",
+    "dialogDeleteAccountDescription": "Are you sure you want to delete your account? This action cannot be undone.",
+    "dialogDeleteAccountConfirm": "Yes, delete",
+    "dialogDeleteAccountCancel": "Cancel",
+    "dialogDeleteAccountSuccess": "Account deleted successfully!",
+    "dialogDeleteAccountError": "Error deleting account. Please try again later."
   },
   "home": {
     "header": {

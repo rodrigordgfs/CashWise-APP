@@ -7,6 +7,7 @@ import "react-day-picker/dist/style.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { I18nextProviderWrapper } from "./I18nextProviderWrapper";
 import { Providers } from "./providers";
+import { SettingsProvider } from "@/context/settingsContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -73,7 +74,7 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="pt-BR" suppressHydrationWarning>
+      <html lang="pt-BR" data-theme="dark" suppressHydrationWarning>
         <head>
           <link rel="manifest" href="/site.webmanifest" />
           <meta name="theme-color" content="#10b981" />
@@ -102,7 +103,9 @@ export default function RootLayout({
           suppressHydrationWarning
         >
           <I18nextProviderWrapper>
-            <Providers>{children}</Providers>
+            <SettingsProvider>
+              <Providers>{children}</Providers>
+            </SettingsProvider>
           </I18nextProviderWrapper>
         </body>
       </html>

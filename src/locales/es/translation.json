@@ -13,7 +13,13 @@
       "next": "Siguiente",
       "itemsPerPage": "Elementos por página"
     },
-    "clearFilters": "Limpiar Filtros"
+    "clearFilters": "Limpiar Filtros",
+    "dialogDeleteAccountTitle": "Eliminar Cuenta",
+    "dialogDeleteAccountDescription": "¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.",
+    "dialogDeleteAccountConfirm": "Sí, eliminar",
+    "dialogDeleteAccountCancel": "Cancelar",
+    "dialogDeleteAccountSuccess": "Cuenta eliminada con éxito!",
+    "dialogDeleteAccountError": "Error al eliminar la cuenta. Inténtalo de nuevo más tarde."
   },
   "home": {
     "header": {

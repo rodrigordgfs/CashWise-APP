@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import {
   createContext,
   useContext,
@@ -9,6 +10,7 @@ import {
   useMemo,
   useCallback,
 } from "react";
+import { useTranslation } from "react-i18next";
 
 type Theme = "light" | "dark" | "system";
 
@@ -53,6 +55,10 @@ const SettingsContext = createContext<SettingsContextProps | undefined>(
 );
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
+  const { i18n, t } = useTranslation();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [isLoaded, setIsLoaded] = useState(false);
 
   const [theme, setThemeState] = useState<Theme>("system");
@@ -63,6 +69,14 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     weeklyReports: true,
     tips: false,
   });
+
+  useEffect(() => {
+    i18n.changeLanguage(language).then(() => {
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.set("locale", language);
+      router.push(`${pathname}?${params.toString()}`);
+    });
+  }, [language, i18n, router, pathname, searchParams]);
 
   // Detecta se o usuário prefere dark no sistema
   const prefersDark =
@@ -102,9 +116,9 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     if (!isLoaded) return;
 
     if (isDarkMode) {
-      document.documentElement.classList.add("dark");
+      document.documentElement.setAttribute("data-theme", "dark");
     } else {
-      document.documentElement.classList.remove("dark");
+      document.documentElement.removeAttribute("data-theme");
     }
 
     localStorage.setItem("theme", theme);
@@ -127,60 +141,38 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   const setTheme = (newTheme: Theme) => setThemeState(newTheme);
 
   const toggleTheme = useCallback(() => {
-    if (theme === "dark") setThemeState("light");
-    else setThemeState("dark");
-  }, [theme]);
+    setThemeState((prev) => (prev === "dark" ? "light" : "dark"));
+  }, []);
 
-  const currencies: Currency[] = useMemo(
-    () => [
-      { value: "BRL", label: "Real" },
-      { value: "USD", label: "Dollar" },
-      { value: "EUR", label: "Euro" },
-      { value: "GBP", label: "Pound" },
-    ],
-    []
-  );
+  const value = useMemo(() => {
+    const currencies: Currency[] = [
+      { value: "BRL", label: t("settings.real") },
+      { value: "USD", label: t("settings.dollar") },
+      { value: "EUR", label: t("settings.euro") },
+      { value: "GBP", label: t("settings.libra") },
+    ];
 
-  const languages: Language[] = useMemo(
-    () => [
-      { value: "pt-BR", label: "Portuguese" },
-      { value: "en-US", label: "English" },
-      { value: "es", label: "Spanish" },
-    ],
-    []
-  );
+    const languages: Language[] = [
+      { value: "pt-BR", label: t("settings.portuguese") },
+      { value: "en-US", label: t("settings.english") },
+      { value: "es", label: t("settings.spanish") },
+    ];
 
-  const value = useMemo(
-    () => ({
-      theme,
+    return {
       isDarkMode,
-
       currency,
       currencies,
-
       language,
       languages,
-
       notifications,
-
+      theme,
       setTheme,
       toggleTheme,
-
       setCurrency: setCurrencyState,
       setLanguage: setLanguageState,
       setNotifications: setNotificationsState,
-    }),
-    [
-      theme,
-      isDarkMode,
-      currency,
-      language,
-      notifications,
-      currencies,
-      languages,
-      toggleTheme,
-    ]
-  );
+    };
+  }, [isDarkMode, currency, language, notifications, t, theme, toggleTheme]);
 
   if (!isLoaded) return null;
 

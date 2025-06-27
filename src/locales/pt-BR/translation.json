@@ -13,7 +13,14 @@
       "next": "Próxima",
       "itemsPerPage": "Itens por página"
     },
-    "clearFilters": "Limpar Filtros"
+    "clearFilters": "Limpar Filtros",
+    "dialogDeleteAccountTitle": "Excluir Conta",
+    "dialogDeleteAccountDescription": "Você tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.",
+    "dialogDeleteAccountConfirm": "Sim, excluir",
+    "dialogDeleteAccountCancel": "Cancelar",
+    "dialogDeleteAccountSuccess": "Conta excluída com sucesso!",
+    "dialogDeleteAccountError": "Erro ao excluir conta. Tente novamente mais tarde."
+
   },
   "home": {
     "header": {
