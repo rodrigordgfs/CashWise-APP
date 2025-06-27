@@ -1,11 +1,14 @@
 "use client";
 
 import {
-  Input,
   Modal,
   Select,
   MonthDatePicker
 } from "shinodalabs-ui";
+
+import {
+  Input
+} from "@/components/shared/Input";
 
 import { Category } from "@/types/Category.type";
 import { useEffect, useMemo, useState } from "react";

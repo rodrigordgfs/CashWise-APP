@@ -8,7 +8,7 @@ import { toast } from "sonner";
 
 import { Category } from "@/types/Category.type";
 import { Select } from "shinodalabs-ui";
-import { Input } from "shinodalabs-ui";
+import { Input } from "@/components/shared/Input";
 import { Modal } from "shinodalabs-ui";
 import { TransactionType } from "@/types/Transaction.type";
 import { useTranslation } from "react-i18next";

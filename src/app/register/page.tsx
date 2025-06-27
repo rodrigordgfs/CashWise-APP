@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { AuthHeader } from "@/components/ui/register/AuthHeader";
 import { AuthCard } from "@/components/ui/register/AuthCard";
-import { Input } from "shinodalabs-ui";
+import { Input } from "@/components/shared/Input";
 import { Button } from "@/components/shared/Button";
 import { useAuth } from "@/context/authContext";
 import { useTranslation } from "react-i18next";
