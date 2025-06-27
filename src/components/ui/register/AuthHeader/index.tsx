@@ -18,7 +18,7 @@ export function AuthHeader() {
 
       <button
         onClick={toggleTheme}
-        className="p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 focus:outline-none"
+        className="p-2 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 focus:outline-none cursor-pointer transition-colors duration-200"
       >
         {isDarkMode ? (
           <Sun className="h-5 w-5" />
