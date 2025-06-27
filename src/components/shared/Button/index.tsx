@@ -1,6 +1,6 @@
 "use client";
 
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, Loader } from "lucide-react";
 import React, { FC } from "react";
 import clsx from "clsx";
 
@@ -8,6 +8,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "emerald" | "blue" | "red" | "neutral";
   size?: "sm" | "md" | "lg";
   icon?: LucideIcon;
+  loading?: boolean;
   children: React.ReactNode;
   disabled?: boolean;
 }
@@ -34,25 +35,34 @@ export const Button: FC<ButtonProps> = ({
   variant = "emerald",
   size = "md",
   icon: Icon,
+  loading = false,
   children,
   disabled = false,
   className,
   ...props
 }) => {
+  const isDisabled = disabled || loading;
+
   return (
     <button
-      disabled={disabled}
+      disabled={isDisabled}
       className={clsx(
         baseStyles,
         variants[variant],
         sizes[size],
-        disabled && "opacity-50 cursor-not-allowed focus:ring-0 flex ",
+        isDisabled && "opacity-50 cursor-not-allowed focus:ring-0",
         className
       )}
       {...props}
     >
-      {Icon && <Icon className=" h-4 w-4" />}
-      {children && <span className={Icon ? "md:ml-2" : ""}>{children}</span>}
+      {loading ? (
+        <Loader className="h-4 w-4 animate-spin" />
+      ) : (
+        Icon && <Icon className="h-4 w-4" />
+      )}
+      {children && (
+        <span className={Icon || loading ? "md:ml-2" : "mr-2"}>{children}</span>
+      )}
     </button>
   );
 };
