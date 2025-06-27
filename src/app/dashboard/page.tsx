@@ -10,7 +10,7 @@ import { useDashboard } from "@/context/dashboardContext";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { Period } from "@/types/Period.type";
 import { useTranslation } from "react-i18next";
-import { Tabs } from "shinodalabs-ui";
+import { Tabs } from "@/components/shared/Tabs";
 
 export default function DashboardPage() {
   const {
