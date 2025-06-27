@@ -1,5 +1,7 @@
 import { Edit, Trash } from "lucide-react";
 import React from "react";
+import { useDialog } from "@/context/dialogContext";
+import { useTranslation } from "react-i18next";
 
 interface TableProps {
   children: React.ReactNode;
@@ -15,10 +17,7 @@ const TableRoot = ({ children }: TableProps) => (
   </div>
 );
 
-export interface HeaderColumn<
-  T extends object,
-  K extends keyof T = keyof T
-> {
+export interface HeaderColumn<T extends object, K extends keyof T = keyof T> {
   key: K | "actions";
   label: React.ReactNode;
   align?: "left" | "right" | "center";
@@ -75,6 +74,19 @@ function TableRow<T extends object>({
   onClickEdit,
   onClickDelete,
 }: TableRowProps<T>) {
+  const { showDialog } = useDialog();
+  const { t } = useTranslation();
+
+  const handleDelete = () => {
+    showDialog({
+      title: t("transactions.dialogDeleteTitle"),
+      description: t("transactions.dialogDeleteDescription"),
+      confirmLabel: t("transactions.dialogDeleteConfirm"),
+      cancelLabel: t("transactions.dialogDeleteCancel"),
+      onConfirm: () => onClickDelete?.(),
+    });
+  };
+
   return (
     <tr className="border-b border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900">
       {columns.map(
@@ -99,7 +111,7 @@ function TableRow<T extends object>({
                 <div className="flex justify-end gap-2">
                   {onClickEdit && (
                     <button
-                      className="p-1 rounded-md text-zinc-500 hover:text-emerald-500 dark:text-zinc-400 dark:hover:text-emerald-500 transition-all"
+                      className="p-1 rounded-md text-zinc-500 hover:text-emerald-500 dark:text-zinc-400 dark:hover:text-emerald-500 transition-all cursor-pointer"
                       aria-label="Editar"
                       title="Editar"
                       onClick={onClickEdit}
@@ -109,10 +121,10 @@ function TableRow<T extends object>({
                   )}
                   {onClickDelete && (
                     <button
-                      className="p-1 rounded-md text-zinc-500 hover:text-red-500 dark:text-zinc-400 dark:hover:text-red-400 transition-all"
+                      className="p-1 rounded-md text-zinc-500 hover:text-red-500 dark:text-zinc-400 dark:hover:text-red-400 transition-all cursor-pointer"
                       aria-label="Excluir"
                       title="Excluir"
-                      onClick={onClickDelete}
+                      onClick={handleDelete}
                     >
                       <Trash className="w-4 h-4" />
                     </button>
@@ -124,9 +136,7 @@ function TableRow<T extends object>({
 
           const value = data[key as keyof T];
           const content =
-            render?.(value, data) ??
-            format?.(value, data) ??
-            String(value);
+            render?.(value, data) ?? format?.(value, data) ?? String(value);
 
           const cellStyle = style?.(value, data) ?? "";
 

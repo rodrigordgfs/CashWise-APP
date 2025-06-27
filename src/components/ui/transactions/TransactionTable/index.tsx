@@ -18,6 +18,7 @@ interface HeaderColumn<T> {
   render?: (value: T[keyof T], row: T) => React.ReactNode;
   format?: (value: T[keyof T], row: T) => React.ReactNode;
   style?: (value: T[keyof T], row: T) => string;
+  /** true → apenas mobile, false → apenas desktop, undefined → ambos */
   showMobile?: boolean;
 }
 
@@ -38,16 +39,21 @@ export const TransactionTable = ({
   const { page, setPage, totalItems, totalPages, setPerPage, perPage } =
     useTransaction();
 
+  /* ------------------------------------------------------------------
+     MARQUE showMobile: false nas colunas que devem sumir em mobile
+     ------------------------------------------------------------------ */
   const columns: HeaderColumn<Transaction>[] = [
     {
       key: "description",
       label: t("transactions.description"),
+      /* visível em todas as telas (mobile + desktop) */
     },
     {
       key: "category",
       label: t("transactions.category"),
       format: (_value, row) =>
         categories.find((c) => c.id === row.category?.id)?.name ?? "-",
+      showMobile: false, // ← só desktop
     },
     {
       key: "date",
@@ -64,37 +70,37 @@ export const TransactionTable = ({
         }
         return "-";
       },
+      showMobile: false, // ← só desktop
     },
     {
       key: "account",
       label: t("transactions.account"),
       format: (_value, row) => row.account ?? "-",
-    },
-    {
-      key: "paid",
-      label: t("transactions.paid"),
-      align: "right",
-      format: (value) => (value ? "✅" : "❌"),
+      showMobile: false, // ← só desktop
     },
     {
       key: "amount",
       label: t("transactions.amount"),
       align: "right",
-      format: (value) => {
-        if (typeof value === "number") {
-          return formatCurrency(Math.abs(value), currency, language);
-        }
-        return formatCurrency(0, currency, language);
-      },
-      style: (_value, row) =>
+      format: (value) =>
+        formatCurrency(
+          typeof value === "number" ? Math.abs(value) : 0,
+          currency,
+          language
+        ),
+      style: (_v, row) =>
         row.type === "INCOME" ? "text-green-500" : "text-red-500",
+      /* visível em todas as telas */
     },
     {
       key: "actions",
       label: t("transactions.actions"),
       align: "right",
+      /* visível em todas as telas */
     },
   ];
+
+  /* ------------------------------------------------------------------ */
 
   if (transactions.length === 0) {
     return (
@@ -108,10 +114,11 @@ export const TransactionTable = ({
   return (
     <div className="flex flex-col gap-4">
       <Table>
-        <Table.Header columns={columns} />
+        <Table.Header<Transaction> columns={columns} />
+
         <Table.Body>
           {transactions.map((t) => (
-            <Table.Row
+            <Table.Row<Transaction>
               key={t.id}
               data={t}
               columns={columns}
@@ -121,6 +128,7 @@ export const TransactionTable = ({
           ))}
         </Table.Body>
       </Table>
+
       <Pagination
         currentPage={page}
         totalPages={totalPages}
