@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "shinodalabs-ui";
 import { Input } from "@/components/shared/Input";
 import { Select } from "@/components/shared/Select";
-import { DatePicker } from "shinodalabs-ui";
+import { DatePicker } from "@/components/shared/DatePicker";
 import { useCategory } from "@/context/categoryContext";
 import { useTranslation } from "react-i18next";
 import { useSettings } from "@/context/settingsContext";

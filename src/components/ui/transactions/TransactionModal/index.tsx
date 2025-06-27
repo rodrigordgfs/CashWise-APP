@@ -7,7 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import { Select } from "@/components/shared/Select";
-import { Modal, DatePicker } from "shinodalabs-ui";
+import { Modal } from "shinodalabs-ui";
+import { DatePicker } from "@/components/shared/DatePicker";
 import { Input } from "@/components/shared/Input";
 
 import { Transaction, TransactionType } from "@/types/Transaction.type";
