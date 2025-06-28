@@ -46,6 +46,14 @@ interface TransactionContextProps {
       id?: string;
     }
   ) => Promise<Transaction | null | undefined>;
+  createOfxTransactions?: (
+    transactions: Array<{
+      description: string;
+      date: string;
+      amount: string;
+      type: "EXPENSE" | "INCOME";
+    }>
+  ) => Promise<void>;
   periodTabs: { label: string; value: string }[];
   period: Period;
   setPeriod: (period: Period) => void;
@@ -261,6 +269,44 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     [getToken, fetchTransactions, fetchReports]
   );
 
+  const createOfxTransactions = useCallback(
+    async (
+      transactions: Array<{
+        description: string;
+        date: string;
+        amount: string;
+        type: "EXPENSE" | "INCOME";
+      }>
+    ) => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/transaction/import-ofx`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${await getToken()}`,
+            },
+            body: JSON.stringify(transactions),
+          }
+        );
+
+        if (!response.ok) {
+          toast.error("Erro ao importar transações OFX");
+          throw new Error("Erro ao importar transações OFX");
+        }
+
+        await fetchTransactions();
+        toast.success("Transações OFX importadas com sucesso!");
+      } catch (error) {
+        Sentry.captureException(error);
+        toast.error("Erro ao importar transações OFX");
+        console.error("Erro ao importar transações OFX:", error);
+      }
+    },
+    [getToken, fetchTransactions]
+  );
+
   const resetFilters = useCallback(() => {
     setSearchTerm("");
     setSelectedDate({ from: undefined, to: undefined });
@@ -301,6 +347,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       totalPages,
       setTotalPages,
       resetFilters,
+      createOfxTransactions,
     }),
     [
       searchTerm,
@@ -322,6 +369,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       totalItems,
       totalPages,
       resetFilters,
+      createOfxTransactions,
     ]
   );
 

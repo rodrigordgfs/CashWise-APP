@@ -62,7 +62,7 @@ export const Button: FC<ButtonProps> = ({
         Icon && <Icon className="h-4 w-4" />
       )}
       {children && (
-        <span className={hasIcon ? "ml-2" : ""}>{children}</span>
+        <span className={hasIcon ? "ml-0 sm:ml-2" : "ml-0"}>{children}</span>
       )}
     </button>
   );

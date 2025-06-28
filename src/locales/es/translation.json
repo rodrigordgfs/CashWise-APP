@@ -145,6 +145,7 @@
   },
   "transactions": {
     "title": "Transacciones",
+    "importData": "Importar Datos",
     "newTransaction": "Nueva Transacción",
     "editTransaction": "Editar Transacción",
     "deleteTransaction": "Eliminar Transacción",
@@ -189,7 +190,14 @@
     "dialogDeleteConfirm": "Sí, eliminar",
     "dialogDeleteCancel": "Cancelar",
     "descriptionEdit": "Edita los datos de la transacción seleccionada.",
-    "descriptionAdd": "Agrega una nueva transacción para mantener tus finanzas organizadas."
+    "descriptionAdd": "Agrega una nueva transacción para mantener tus finanzas organizadas.",
+    "dialogImportDataTitle": "Importar Archivo OFX",
+    "dialogImportDataDescription": "Importa un archivo OFX para registrar automáticamente tus transacciones bancarias. Descarga el extracto en formato OFX desde la app o banca en línea de tu banco y súbelo aquí. Las transacciones importadas no tendrán categorías asignadas, por lo que podrás organizarlas manualmente después.",
+    "dialogImportDataConfirm": "Sí, importar",
+    "dialogImportDataCancel": "Cancelar",
+    "invalidOfx": "Selecciona un archivo OFX válido.",
+    "importSuccess": "Importación completada con éxito!",
+    "importError": "Error al importar el archivo OFX. Inténtalo de nuevo."
   },
   "categories": {
     "title": "Categorías",
