@@ -22,7 +22,7 @@ export const TransactionItem = ({ transaction }: TransactionItemProps) => {
       <div>
         <p className="font-medium">{transaction.description}</p>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          {transaction.category.name} •{" "}
+          {transaction.category?.name ? transaction.category.name : "Sem categoria"} •{" "}
           {new Date(transaction.date).toLocaleDateString("pt-BR")}
         </p>
       </div>

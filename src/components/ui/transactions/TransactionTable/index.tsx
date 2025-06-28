@@ -46,7 +46,12 @@ export const TransactionTable = ({
     {
       key: "description",
       label: t("transactions.description"),
-      /* visível em todas as telas (mobile + desktop) */
+      format: (value) => {
+        if (typeof value === "string") {
+          return value.length > 40 ? `${value.slice(0, 40)}...` : value;
+        }
+        return String(value);
+      },
     },
     {
       key: "category",

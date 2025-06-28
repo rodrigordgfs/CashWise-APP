@@ -70,8 +70,8 @@ export const TransactionModal = ({
       description: initialData?.description ?? "",
       amount: initialData?.amount ?? 0,
       date: initialData?.date ?? "",
-      category: initialData?.category.id ?? "",
-      account: initialData?.account ?? accounts[0]?.name ?? "",
+      category: initialData?.category?.id || "",
+      account: initialData?.account || accounts[0]?.name || "",
     },
   });
 
@@ -80,7 +80,7 @@ export const TransactionModal = ({
 
   const filteredCategories = categories.filter((c) => c.type === type);
 
-  // ⚠️ Reset dos dados iniciais
+  // Reset dos dados iniciais
   useEffect(() => {
     if (!isOpen) return;
 
@@ -90,8 +90,8 @@ export const TransactionModal = ({
         description: initialData.description,
         amount: initialData.amount,
         date: initialData.date,
-        category: initialData.category.id,
-        account: initialData.account,
+        category: initialData.category?.id || "",
+        account: initialData.account || "",
       });
     } else {
       reset({
@@ -100,15 +100,15 @@ export const TransactionModal = ({
         amount: 0,
         date: "",
         category: "",
-        account: accounts[0]?.name ?? "",
+        account: accounts[0]?.name || "",
       });
     }
   }, [initialData, isOpen, reset, accounts]);
 
-  // ✅ Atualiza a categoria quando o tipo muda
+  // Atualiza a categoria quando o tipo muda
   useEffect(() => {
     if (filteredCategories.length > 0) {
-      setValue("category", filteredCategories[0]?.id ?? "");
+      setValue("category", filteredCategories[0]?.id || "");
     }
   }, [type, filteredCategories, setValue]);
 
@@ -130,7 +130,7 @@ export const TransactionModal = ({
       onClose();
     } catch (error) {
       Sentry.captureException(error);
-      console.log(error);
+      console.error(error);
       toast.error("Erro ao salvar transação");
     } finally {
       setIsLoading(false);
