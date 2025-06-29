@@ -77,7 +77,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
       const [summaryRes, monthlyRes, categoryRes, transactionsRes] =
         await Promise.all([
           fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/summary${
+            `${process.env.NEXT_PUBLIC_BASE_URL_API}/report/summary${
               period
                 ? `?period__gte=${encodeURIComponent(
                     date.initial
@@ -94,7 +94,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             }
           ),
           fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/monthly${
+            `${process.env.NEXT_PUBLIC_BASE_URL_API}/report/monthly${
               period
                 ? `?period__gte=${encodeURIComponent(
                     date.initial
@@ -111,7 +111,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             }
           ),
           fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/categories?limit=5${
+            `${process.env.NEXT_PUBLIC_BASE_URL_API}/report/categories?limit=5${
               period
                 ? `&period__gte=${encodeURIComponent(
                     date.initial

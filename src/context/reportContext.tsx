@@ -61,7 +61,7 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
     try {
       const [monthlyRes, categoryRes, balanceRes] = await Promise.all([
         fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/monthly${
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/report/monthly${
             period
               ? `?period__gte=${encodeURIComponent(
                   date.initial
@@ -78,7 +78,7 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
           }
         ),
         fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/categories${
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/report/categories${
             period
               ? `?period__gte=${encodeURIComponent(
                   date.initial
@@ -95,7 +95,7 @@ export const ReportsProvider = ({ children }: { children: ReactNode }) => {
           }
         ),
         fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/balance${
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/report/balance${
             period
               ? `?period__gte=${encodeURIComponent(
                   date.initial
