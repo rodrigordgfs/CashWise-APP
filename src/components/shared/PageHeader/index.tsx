@@ -2,9 +2,10 @@ import { LucideIcon } from "lucide-react";
 import { Button } from "@/components/shared/Button";
 
 type PageHeaderProps =
-  | { title: string }
+  | { title: string; subtitle?: string }
   | {
       title: string;
+      subtitle?: string;
       actionTitle: string;
       actionIcon: LucideIcon;
       actionDisabled?: boolean;
@@ -18,7 +19,12 @@ type PageHeaderProps =
 export const PageHeader = (props: PageHeaderProps) => {
   return (
     <div className="flex items-center justify-between">
-      <h2 className="text-3xl font-bold tracking-tight">{props.title}</h2>
+      <div className="flex flex-col gap-1">
+        <h2 className="text-3xl font-bold tracking-tight">{props.title}</h2>
+        {props.subtitle && (
+          <p className="text-muted-foreground text-sm">{props.subtitle}</p>
+        )}
+      </div>
       <div className="flex flex-row items-center gap-2">
         {"secondActionTitle" in props &&
           "secondActionIcon" in props &&
