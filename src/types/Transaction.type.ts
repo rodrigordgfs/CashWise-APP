@@ -1,3 +1,5 @@
+
+import { RecurrenceInterval } from "@/components/ui/transactions/TransactionModal";
 import { Category } from "./Category.type";
 
 export enum TransactionType {
@@ -21,4 +23,6 @@ export interface Transaction {
   date: string;
   account: string;
   amount: number;
+  recurrenceInterval?: RecurrenceInterval | undefined;
+  recurrenceCount?: number | undefined;
 }

@@ -197,7 +197,39 @@
     "dialogImportDataCancel": "Cancelar",
     "invalidOfx": "Selecciona un archivo OFX válido.",
     "importSuccess": "Importación completada con éxito!",
-    "importError": "Error al importar el archivo OFX. Inténtalo de nuevo."
+    "importError": "Error al importar el archivo OFX. Inténtalo de nuevo.",
+    "recurringTransaction": "Transacción Recurrente",
+    "recurringDescription": "Transacción repetida según la frecuencia seleccionada.",
+    "recurrenceFrequency": "Frecuencia",
+    "recurrenceRepetitions": "Repeticiones",
+    "recurrenceRepetitionsPlaceholder": "Ej: 12",
+    "recurrenceEndDate": "Fecha de Finalización",
+    "recurrenceEndDatePlaceholder": "Seleccione la fecha",
+    "recurrenceOptions": {
+      "daily": "Diariamente",
+      "weekly": "Semanalmente",
+      "monthly": "Mensualmente",
+      "yearly": "Anualmente"
+    },
+    "reminderServiceOptions": {
+      "google": "Google Calendar",
+      "outlook": "Outlook Calendar",
+      "apple": "Apple Calendar"
+    },
+    "reminderTimeOptions": {
+      "atTime": "En el momento",
+      "fifteenMinBefore": "15 minutos antes",
+      "oneHourBefore": "1 hora antes",
+      "oneDayBefore": "1 día antes",
+      "oneWeekBefore": "1 semana antes"
+    },
+    "calendarReminder": "Recordatorio en el Calendario",
+    "reminderDescription": "Configure un recordatorio para esta transacción recurrente.",
+    "reminderService": "Servicio",
+    "reminderTime": "Recordar",
+    "setReminder": "Configurar Recordatorio",
+    "reminderDownloadSuccess": "Recordatorio descargado con éxito! Abre el archivo .ics en tu calendario.",
+    "reminderSuccess": "Recordatorio configurado con éxito!"
   },
   "categories": {
     "title": "Categorías",

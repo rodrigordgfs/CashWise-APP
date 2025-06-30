@@ -198,7 +198,42 @@
     "dialogImportDataCancel": "Cancelar",
     "invalidOfx": "Selecione um arquivo OFX válido.",
     "importSuccess": "Importação concluída com sucesso!",
-    "importError": "Erro ao importar o arquivo OFX."
+    "importError": "Erro ao importar o arquivo OFX.",
+    "recurringTransaction": "Transação Recorrente",
+    "recurringDescription": "Transação repetida conforme a frequência escolhida.",
+    "recurrenceFrequency": "Frequência",
+    "recurrenceRepetitions": "Repetições",
+    "recurrenceRepetitionsPlaceholder": "Ex: 12",
+    "recurrenceEndDate": "Data de Término",
+    "recurrenceEndDatePlaceholder": "Selecione a data",
+    "recurrenceOptions": {
+      "daily": "Diariamente",
+      "weekly": "Semanalmente",
+      "monthly": "Mensalmente",
+      "yearly": "Anualmente"
+    },
+    "reminderServiceOptions": {
+      "google": "Google Calendar",
+      "outlook": "Outlook Calendar",
+      "apple": "Apple Calendar"
+    },
+    "reminderTimeOptions": {
+      "atTime": "No Momento",
+      "fifteenMinBefore": "15 minutos antes",
+      "oneHourBefore": "1 hora antes",
+      "oneDayBefore": "1 dia antes",
+      "oneWeekBefore": "1 semana antes"
+    },
+    "calendarReminder": "Lembrete no Calendário",
+    "reminderDescription": "Configure um lembrete para esta transação recorrente.",
+    "reminderService": "Serviço",
+    "reminderTime": "Lembrar",
+    "setReminder": "Configurar Lembrete",
+    "reminderTextTitle": "Lembrete de transação",
+    "reminderTextDescription1": "Transação: ",
+    "reminderTextDescription2": " no valor de ",
+    "reminderDownloadSuccess": "Lembrete baixado com sucesso! Abra o arquivo .ics no seu calendário.",
+    "riminderSuccess": "Lembrete configurado com sucesso!"
   },
   "categories": {
     "title": "Categorias",

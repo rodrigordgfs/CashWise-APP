@@ -197,7 +197,39 @@
     "dialogImportDataCancel": "Cancel",
     "invalidOfx": "Please select a valid OFX file.",
     "importSuccess": "Import completed successfully!",
-    "importError": "Error importing OFX file."
+    "importError": "Error importing OFX file.",
+    "recurringTransaction": "Recurring Transaction",
+    "recurringDescription": "Transaction repeated based on the selected frequency.",
+    "recurrenceFrequency": "Frequency",
+    "recurrenceRepetitions": "Repetitions",
+    "recurrenceRepetitionsPlaceholder": "E.g., 12",
+    "recurrenceEndDate": "End Date",
+    "recurrenceEndDatePlaceholder": "Select a date",
+    "recurrenceOptions": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "reminderServiceOptions": {
+      "google": "Google Calendar",
+      "outlook": "Outlook Calendar",
+      "apple": "Apple Calendar"
+    },
+    "reminderTimeOptions": {
+      "atTime": "At Time",
+      "fifteenMinBefore": "15 minutes before",
+      "oneHourBefore": "1 hour before",
+      "oneDayBefore": "1 day before",
+      "oneWeekBefore": "1 week before"
+    },
+    "calendarReminder": "Calendar Reminder",
+    "reminderDescription": "Set a reminder for this recurring transaction.",
+    "reminderService": "Service",
+    "reminderTime": "Remind",
+    "setReminder": "Set Reminder",
+    "reminderDownloadSuccess": "Reminder downloaded successfully! Open the .ics file in your calendar.",
+    "reminderSuccess": "Reminder set successfully!"
   },
   "categories": {
     "title": "Categories",
