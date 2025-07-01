@@ -52,11 +52,13 @@ export const DateRange = ({ selectedRange, onChange, labels }: DateRangeProps) =
       {showCalendar && (
         <>
           <div
+            data-testid="backdrop"
             className="fixed inset-0 z-40 bg-black/10 backdrop-blur-sm"
             onClick={() => setShowCalendar(false)}
           />
 
           <div
+            data-testid="calendar-container"
             className="
               fixed z-50 p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 shadow-lg
               flex flex-col gap-4 items-start w-auto max-w-sm
