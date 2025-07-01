@@ -13,7 +13,7 @@ export const Header = () => {
   const { toggleSidebar } = useSidebar();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur">
+    <header role="banner" className="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur">
       <div className="flex h-14 items-center pl-4 pr-6">
         <div className="space-x-2 flex items-center">
           <div className="hidden md:block">
