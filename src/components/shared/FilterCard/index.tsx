@@ -34,7 +34,7 @@ export const FilterCard = ({ children, title = "Filtros" }: FilterCardProps) => 
         <IconButton
           icon={isOpen ? ChevronUp : ChevronDown}
           onClick={() => setIsOpen((prev) => !prev)}
-          aria-label={isOpen ? "Ocultar filtros" : "Mostrar filtros"}
+          aria-label={isOpen ? "Ocultar filtros" : "Mostrar filtros"} // 👍 label correto aqui
           name="toggle-filters"
         />
       </div>

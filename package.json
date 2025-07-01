@@ -8,11 +8,11 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:coverage:watch": "jest --coverage --watch",
-    "test:ci": "jest --ci --coverage",
-    "test:ci:watch": "jest --ci --coverage --watch"
+    "test:watch": "jest --watch --env=jsdom",
+    "test:coverage": "jest --coverage --env=jsdom",
+    "test:coverage:watch": "jest --coverage --watch --env=jsdom",
+    "test:ci": "jest --ci --coverage --env=jsdom",
+    "test:ci:watch": "jest --ci --coverage --watch --env=jsdom"
   },
   "dependencies": {
     "@clerk/clerk-sdk-node": "^5.1.6",
