@@ -11,6 +11,7 @@ import { EmptyState } from "@/components/shared/EmptyState";
 import { Period } from "@/types/Period.type";
 import { useTranslation } from "react-i18next";
 import { Tabs } from "@/components/shared/Tabs";
+import { useUser } from "@clerk/nextjs";
 
 export default function DashboardPage() {
   const {
@@ -23,6 +24,7 @@ export default function DashboardPage() {
     setPeriod,
   } = useDashboard();
   const { t } = useTranslation();
+  const user = useUser();
 
   const periodTabs = [
     { label: t("dashboard.week"), value: Period.WEEK },
@@ -34,7 +36,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      <PageHeader title={t("dashboard.title")} />
+      <PageHeader title={t("dashboard.title")} subtitle={user.user?.id} />
 
       <div className="space-y-4">
         <Tabs tabs={periodTabs} selectedValue={period} onChange={setPeriod} />
