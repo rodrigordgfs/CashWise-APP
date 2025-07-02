@@ -1,3 +1,5 @@
+"use client";
+
 import { FileX2 } from "lucide-react";
 
 interface EmptyStateProps {
@@ -10,18 +12,14 @@ export const EmptyState = ({
   description = "Você ainda não adicionou nenhuma informação por aqui.",
 }: EmptyStateProps) => {
   return (
-    <div className="flex flex-col items-center justify-center py-20 px-10 text-center">
-      <div className="flex items-center justify-center h-20 w-20 rounded-full bg-emerald-100 dark:bg-emerald-900 mb-6 shadow-sm">
-        <FileX2 className="h-10 w-10 text-emerald-600 dark:text-emerald-300" />
-      </div>
-
-      <h3 className="text-xl font-semibold text-zinc-700 dark:text-zinc-100">
-        {title}
-      </h3>
-
-      <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 max-w-xs">
-        {description}
-      </p>
+    <div className="flex flex-col items-center justify-center mt-16 gap-2 text-center text-zinc-700 dark:text-zinc-300">
+      <FileX2
+        role="img"
+        aria-label="Ícone de arquivo vazio"
+        className="h-10 w-10 text-emerald-600 dark:text-emerald-400"
+      />
+      <h3 className="text-lg font-semibold">{title}</h3>
+      <p className="max-w-xs text-zinc-600 dark:text-zinc-400">{description}</p>
     </div>
   );
 };

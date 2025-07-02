@@ -46,10 +46,12 @@ export const MobileMenu = () => {
 
   return (
     <div
+     data-testid="mobile-menu-overlay"
       className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm md:hidden animate-in fade-in duration-200"
       onClick={handleOverlayClick}
     >
       <div
+        data-testid="mobile-menu-content"
         className="fixed inset-y-0 left-0 w-[240px] bg-white dark:bg-zinc-950 shadow-lg animate-in slide-in-from-left duration-300"
         onClick={handleMenuClick}
       >

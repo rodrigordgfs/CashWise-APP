@@ -21,7 +21,6 @@ export const NavItem = ({
     <Link href={href} passHref>
       <div
         onClick={onClick}
-        role="link"
         tabIndex={0}
         className={`w-full flex items-center px-3 py-2 rounded-md cursor-pointer ${
           isActive

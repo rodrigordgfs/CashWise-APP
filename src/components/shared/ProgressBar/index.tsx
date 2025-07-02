@@ -28,6 +28,7 @@ export const ProgressBar = ({ percentage }: ProgressBarProps) => {
     <>
       <div className={`w-full rounded-full h-2 ${progressBarBg}`}>
         <div
+          role="progressbar"
           className={`h-2 rounded-full transition-all duration-300 ${progressFillColor}`}
           style={{ width: `${Math.min(percentage, 100)}%` }}
         ></div>
