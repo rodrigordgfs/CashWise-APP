@@ -17,7 +17,6 @@ import { useCategory } from "@/context/categoryContext";
 import { useTransaction } from "@/context/transactionsContext";
 import { useTranslation } from "react-i18next";
 import { useSettings } from "@/context/settingsContext";
-import * as Sentry from "@sentry/nextjs";
 import { Bell, Repeat } from "lucide-react";
 import { ToggleSwitch } from "@/components/shared/ToggleSwitch";
 import { Button } from "@/components/shared/Button";
@@ -228,7 +227,6 @@ export const TransactionModal = ({
       reset();
       onClose();
     } catch (error) {
-      Sentry.captureException(error);
       console.error(error);
       toast.error("Erro ao salvar transação");
     } finally {

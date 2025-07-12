@@ -14,7 +14,6 @@ import { Category } from "@/types/Category.type";
 import { TransactionTypeFilter } from "@/types/Transaction.type";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { useTranslation } from "react-i18next";
-import * as Sentry from "@sentry/nextjs";
 
 interface CategoryContextProps {
   categories: Category[];
@@ -117,7 +116,6 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
       const data = await response.json();
       setCategories(data);
     } catch (error) {
-      Sentry.captureException(error);
       console.error("Erro ao carregar categorias:", error);
       toast.error("Erro ao carregar categorias");
     } finally {
@@ -192,7 +190,6 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
         setIsModalOpen(false);
         setCategoryToEdit(null);
       } catch (error) {
-        Sentry.captureException(error);
         console.error("Erro ao salvar categoria:", error);
         toast.error("Erro ao salvar categoria.");
       }
@@ -224,7 +221,6 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
         toast.success("Categoria excluída com sucesso!");
         await fetchCategories();
       } catch (error) {
-        Sentry.captureException(error);
         console.error("Erro ao excluir categoria:", error);
         toast.error("Erro ao excluir categoria");
       } finally {

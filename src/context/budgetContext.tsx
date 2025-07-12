@@ -14,7 +14,6 @@ import { Budget } from "@/types/Budge.type";
 import { Category } from "@/types/Category.type";
 import { useCategory } from "./categoryContext";
 import { useAuth, useUser } from "@clerk/nextjs";
-import * as Sentry from "@sentry/nextjs";
 
 interface BudgetContextProps {
   isLoading: boolean;
@@ -65,7 +64,6 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
       const budgetsData = await response.json();
       setBudgets(budgetsData);
     } catch (error) {
-      Sentry.captureException(error);
       console.error("Erro ao carregar dados:", error);
     } finally {
       setIsLoading(false);
@@ -128,7 +126,6 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
 
         return saved;
       } catch (error) {
-        Sentry.captureException(error);
         console.error("Erro no saveBudget:", error);
         toast.error("Não foi possível salvar o orçamento.");
       }
@@ -157,7 +154,6 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
         toast.success("Orçamento excluído com sucesso!");
         await fetchBudgets();
       } catch (error) {
-        Sentry.captureException(error);
         console.error("Erro ao excluir orçamento:", error);
         toast.error("Não foi possível excluir o orçamento.");
       }

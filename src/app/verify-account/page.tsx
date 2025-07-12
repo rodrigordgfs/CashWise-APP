@@ -9,7 +9,6 @@ import { AuthHeader } from "@/components/ui/register/AuthHeader";
 import { AuthCard } from "@/components/ui/register/AuthCard";
 import { useAuth } from "@/context/authContext";
 import { VerifyEmailForm } from "@/components/ui/verify-account/VerifyEmailForm";
-import * as Sentry from "@sentry/nextjs";
 
 export default function VerifyEmailPage() {
   const { t } = useTranslation();
@@ -25,7 +24,6 @@ export default function VerifyEmailPage() {
       await resendVerificationCode();
       toast.success(t("verifyEmail.codeResent"));
     } catch (err) {
-      Sentry.captureException(err);
       console.error(err);
       toast.error(t("verifyEmail.resendError"));
     } finally {

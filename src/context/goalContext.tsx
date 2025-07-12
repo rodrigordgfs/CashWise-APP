@@ -15,7 +15,6 @@ import { Category } from "@/types/Category.type";
 import { useCategory } from "./categoryContext";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { GoalFormData } from "@/components/ui/goals/GoalModal";
-import * as Sentry from "@sentry/nextjs";
 
 interface GoalContextProps {
   isLoading: boolean;
@@ -65,7 +64,6 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
       const goalsData = await response.json();
       setGoals(goalsData);
     } catch (error) {
-      Sentry.captureException(error);
       console.error("Erro ao carregar metas:", error);
     } finally {
       setIsLoading(false);
@@ -130,7 +128,6 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
 
         return saved;
       } catch (error) {
-        Sentry.captureException(error);
         console.error("Erro no saveGoal:", error);
         toast.error("Não foi possível salvar a meta.");
       }
@@ -159,7 +156,6 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
         toast.success("Meta excluída com sucesso!");
         await fetchGoals();
       } catch (error) {
-        Sentry.captureException(error);
         console.error("Erro ao excluir meta:", error);
         toast.error("Não foi possível excluir a meta.");
       }

@@ -5,7 +5,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/shared/Button";
 import { useTranslation } from "react-i18next";
-import * as Sentry from "@sentry/nextjs";
 import { useDialog } from "@/context/dialogContext";
 
 export const DeleteAccountCard = () => {
@@ -29,7 +28,6 @@ export const DeleteAccountCard = () => {
         },
       });
     } catch (err) {
-      Sentry.captureException(err);
       console.error(err);
       toast.error(t("app.dialogDeleteAccountError"));
     } finally {
