@@ -12,7 +12,6 @@ import { Input } from "@/components/shared/Input";
 import { Modal } from "@/components/shared/Modal";
 import { TransactionType } from "@/types/Transaction.type";
 import { useTranslation } from "react-i18next";
-import * as Sentry from "@sentry/nextjs";
 
 interface CategoryModalProps {
   isOpen: boolean;
@@ -104,7 +103,6 @@ export function CategoryModal({
         id: initialData?.id || undefined,
       });
     } catch (error) {
-      Sentry.captureException(error);
       console.error("Error saving category:", error);
       toast.error(t("categories.saveError"));
     } finally {

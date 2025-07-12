@@ -9,7 +9,6 @@ import { Button } from "@/components/shared/Button";
 import { Input } from "@/components/shared/Input";
 import { useAuth } from "@/context/authContext";
 import { useTranslation } from "react-i18next";
-import * as Sentry from "@sentry/nextjs";
 
 interface VerifyEmailFormProps {
   onResend: () => Promise<void>;
@@ -66,7 +65,6 @@ export function VerifyEmailForm({
       await verifyEmailCode(data.code);
       reset();
     } catch (error) {
-      Sentry.captureException(error);
       console.error("Erro na verificação:", error);
     } finally {
       setIsVerifying(false);

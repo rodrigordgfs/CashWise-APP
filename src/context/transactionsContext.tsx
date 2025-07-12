@@ -15,7 +15,6 @@ import { Transaction, TransactionTypeFilter } from "@/types/Transaction.type";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { Period } from "@/types/Period.type";
 import { useReports } from "./reportContext";
-import * as Sentry from "@sentry/nextjs";
 
 interface TransactionContextProps {
   searchTerm: string;
@@ -170,7 +169,6 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       const data = await response.json();
       setTransactions(data);
     } catch (error) {
-      Sentry.captureException(error);
       toast.error("Erro ao carregar transações");
       console.error("Erro ao carregar transações:", error);
     } finally {
@@ -213,7 +211,6 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
         setTransactions((prev) => prev.filter((t) => t.id !== transaction.id));
         toast.success("Transação excluída com sucesso!");
       } catch (error) {
-        Sentry.captureException(error);
         toast.error("Erro ao excluir transação");
         console.error(error);
       }
@@ -260,7 +257,6 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
             : "Transação salva com sucesso!"
         );
       } catch (err) {
-        Sentry.captureException(err);
         toast.error("Erro ao salvar transação");
         console.error(err);
         return null;
@@ -299,7 +295,6 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
         await fetchTransactions();
         toast.success("Transações OFX importadas com sucesso!");
       } catch (error) {
-        Sentry.captureException(error);
         toast.error("Erro ao importar transações OFX");
         console.error("Erro ao importar transações OFX:", error);
       }

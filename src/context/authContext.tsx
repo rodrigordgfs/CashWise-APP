@@ -4,7 +4,6 @@ import { ReactNode, createContext, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { useSignIn, useSignUp, useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
-import * as Sentry from "@sentry/nextjs";
 
 type AuthContextType = {
   resendVerificationCode: () => Promise<void>;
@@ -48,7 +47,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (err: unknown) {
       console.error(err);
-      Sentry.captureException(err);
       if (isClerkError(err)) {
         toast.error(err.errors?.[0]?.message || "Erro ao fazer login.");
       } else {
@@ -88,7 +86,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (err: unknown) {
       console.error(err);
-      Sentry.captureException(err);
       if (isClerkError(err)) {
         toast.error(err.errors?.[0]?.message || "Erro ao fazer cadastro.");
       } else {
@@ -113,7 +110,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error("Verificação não completada");
       }
     } catch (err: unknown) {
-      Sentry.captureException(err);
       console.error("Erro ao verificar código:", err);
       if (isClerkError(err)) {
         toast.error(err.errors?.[0]?.message || "Código inválido ou expirado.");
@@ -144,7 +140,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       throw new Error("Nenhum processo de verificação encontrado");
     } catch (err) {
-      Sentry.captureException(err);
       console.error("Erro ao reenviar código:", err);
       throw err;
     }
@@ -156,7 +151,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Exemplo: await clerk.signOut();
       router.push("/login");
     } catch (err) {
-      Sentry.captureException(err);
       console.error("Erro ao sair:", err);
       toast.error("Erro ao sair.");
     }
