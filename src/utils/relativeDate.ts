@@ -5,6 +5,8 @@ import {
   subMonths,
   startOfYear,
   endOfYear,
+  startOfWeek,
+  endOfWeek,
   format,
 } from "date-fns";
 
@@ -18,6 +20,12 @@ export const getRelativeDate = (period: string): RelativeDate => {
 
   const date = (() => {
     switch (period) {
+      case Period.WEEK: {
+        return {
+          initial: startOfWeek(now, { weekStartsOn: 1 }),
+          final: endOfWeek(now, { weekStartsOn: 1 }),
+        };
+      }
       case Period.MONTH:
         return {
           initial: startOfMonth(now),

@@ -5,8 +5,8 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Button } from "shinodalabs-ui";
-import { Input } from "shinodalabs-ui";
+import { Button } from "@/components/shared/Button";
+import { Input } from "@/components/shared/Input";
 import { useAuth } from "@/context/authContext";
 import { useTranslation } from "react-i18next";
 

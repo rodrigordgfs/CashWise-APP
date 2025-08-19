@@ -16,7 +16,7 @@ import { NavItem } from "../NavItem";
 import { usePathname, useRouter } from "next/navigation";
 import { useMenu } from "@/context/menuContext";
 import { LogoButton } from "../LogoButton";
-import { IconButton } from "shinodalabs-ui";
+import { IconButton } from "@/components/shared/IconButton";
 import { useAuth } from "@clerk/nextjs";
 import { useTranslation } from "react-i18next";
 
@@ -46,10 +46,12 @@ export const MobileMenu = () => {
 
   return (
     <div
+     data-testid="mobile-menu-overlay"
       className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm md:hidden animate-in fade-in duration-200"
       onClick={handleOverlayClick}
     >
       <div
+        data-testid="mobile-menu-content"
         className="fixed inset-y-0 left-0 w-[240px] bg-white dark:bg-zinc-950 shadow-lg animate-in slide-in-from-left duration-300"
         onClick={handleMenuClick}
       >

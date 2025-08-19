@@ -19,12 +19,12 @@ export function CtaSection() {
           </div>
           <div className="flex flex-col gap-2 min-[400px]:flex-row">
             <Link href="/register">
-              <button className="w-full sm:w-auto inline-flex items-center justify-center rounded-md bg-emerald-600 px-8 py-3 text-sm font-medium text-white hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600">
+              <button className="w-full cursor-pointer sm:w-auto inline-flex items-center justify-center rounded-md bg-emerald-600 px-8 py-3 text-sm font-medium text-white hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600">
                 {t("home.cta.startFree")}
               </button>
             </Link>
             <Link href="/pricing">
-              <button className="w-full sm:w-auto inline-flex items-center justify-center rounded-md border border-zinc-300 dark:border-zinc-700 px-8 py-3 text-sm font-medium hover:bg-zinc-100 dark:hover:bg-zinc-800">
+              <button className="w-full cursor-pointer sm:w-auto inline-flex items-center justify-center rounded-md border border-zinc-300 dark:border-zinc-700 px-8 py-3 text-sm font-medium hover:bg-zinc-100 dark:hover:bg-zinc-800">
                 {t("home.cta.viewPlans")}
               </button>
             </Link>

@@ -2,6 +2,7 @@
 
 import { ReactNode, useRef, useState, useEffect } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
+import { IconButton } from "../IconButton";
 
 interface FilterCardProps {
   title?: string;
@@ -30,13 +31,12 @@ export const FilterCard = ({ children, title = "Filtros" }: FilterCardProps) => 
     <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
       <div className="p-6 pb-3 flex items-center justify-between">
         <h3 className="text-lg font-semibold">{title}</h3>
-        <button
+        <IconButton
+          icon={isOpen ? ChevronUp : ChevronDown}
           onClick={() => setIsOpen((prev) => !prev)}
-          className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-all hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer p-2 rounded-full"
-          aria-label={isOpen ? "Ocultar filtros" : "Mostrar filtros"}
-        >
-          {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-        </button>
+          aria-label={isOpen ? "Ocultar filtros" : "Mostrar filtros"} // 👍 label correto aqui
+          name="toggle-filters"
+        />
       </div>
 
       <div

@@ -2,7 +2,7 @@ import { useSettings } from "@/context/settingsContext";
 import { Goal } from "@/types/Goal.type";
 import { formatCurrency } from "@/utils/formatConvertCurrency";
 import { useTranslation } from "react-i18next";
-import { ProgressBar } from "shinodalabs-ui";
+import { ProgressBar } from "@/components/shared/ProgressBar";
 
 interface GoalCardContentProps {
   goal: Goal;
@@ -19,10 +19,10 @@ export const GoalCardContent = ({ goal }: GoalCardContentProps) => {
       <div className="flex items-center gap-4 mb-4">
         <div
           className={`flex h-12 w-12 items-center justify-center rounded-full text-xl`}
-          style={{ backgroundColor: goal.category.color }}
-          aria-label={`Ícone da categoria ${goal.category.name}`}
+          style={{ backgroundColor: goal?.category?.color }}
+          aria-label={`Ícone da categoria ${goal?.category?.name}`}
         >
-          {goal.category.icon}
+          {goal?.category?.icon}
         </div>
 
         <div>

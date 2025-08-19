@@ -3,24 +3,25 @@
 import { useState, useEffect } from "react";
 import { Wallet, Moon, Sun, Check, X, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { formatCurrency } from "@/utils/formatConvertCurrency";
 
 const plans = [
   {
     name: "Starter",
-    price: "R$ 0",
+    price: 0,
     period: "/mês",
     description: "Perfeito para começar sua jornada financeira",
     features: [
-      "Até 50 transações/mês",
+      "Até 5 transações/mês",
       "3 categorias personalizadas",
       "Relatórios básicos",
-      "1 conta bancária",
       "Suporte por email",
       "Dashboard básico",
     ],
     limitations: [
       "Relatórios limitados",
       "Sem exportação",
+      "Sem importacão de dados",
       "Sem backup automático",
     ],
     cta: "Começar Grátis",
@@ -28,7 +29,7 @@ const plans = [
   },
   {
     name: "Pro",
-    price: "R$ 9,90",
+    price: 4.99,
     period: "/mês",
     description: "Para usuários que querem o máximo controle",
     features: [
@@ -49,7 +50,7 @@ const plans = [
   },
   {
     name: "Business",
-    price: "R$ 29,90",
+    price: 29.90,
     period: "/mês",
     description: "Para equipes e empresas que precisam de mais",
     features: [
@@ -204,13 +205,22 @@ export default function PricingPage() {
                 <div className="flex items-baseline">
                   <span className="text-4xl font-bold">
                     {isAnnual
-                      ? `R$ ${(
-                          parseFloat(plan.price.replace("R$ ", "")) * 10
-                        ).toFixed(2)}`
-                      : plan.price}
+                      ? formatCurrency(
+                          plan.price * 10,
+                          "BRL",
+                          "pt-BR"
+                        )
+                      : formatCurrency(
+                          plan.price,
+                          "BRL",
+                          "pt-BR"
+                        )}
                   </span>
-                  <span className="text-zinc-600 dark:text-zinc-400 ml-1">
-                    {isAnnual ? "/ano" : plan.period}
+                  <span className="text-lg text-zinc-600 dark:text-zinc-400 ml-1">
+                    {isAnnual ? "/ano"
+                      : plan.period === "/mês"
+                      ? "/mês"  
+                      : plan.price}
                   </span>
                 </div>
               </div>

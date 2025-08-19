@@ -37,7 +37,7 @@ export const BudgetCardHeader = ({
   return (
     <div className="p-6 pb-2">
       <div className="flex items-center justify-between">
-        <h3 className="text-md font-medium">{budget.category.name}</h3>
+        <h3 className="text-md font-medium">{budget?.category?.name}</h3>
         <div className="flex gap-1">
           <button
             title={t("budgets.editBudget")}

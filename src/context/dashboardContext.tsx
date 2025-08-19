@@ -37,7 +37,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
   const { getToken } = useAuth();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [period, setPeriod] = useState<Period>(Period.WEEK);
+  const [period, setPeriod] = useState<Period>(Period.MONTH);
   const [summary, setSummary] = useState<Summary>({
     income: 0,
     expense: 0,
@@ -58,7 +58,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
       const transactionParams = {
         date__gte: encodeURIComponent(date.initial),
-        limit: "5",
+        date__lte: encodeURIComponent(date.final),
+        perPage: "5",
         sort: "desc",
       };
 
@@ -75,7 +76,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
       const [summaryRes, monthlyRes, categoryRes, transactionsRes] =
         await Promise.all([
           fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/summary${
+            `${process.env.NEXT_PUBLIC_BASE_URL_API}/report/summary${
               period
                 ? `?period__gte=${encodeURIComponent(
                     date.initial
@@ -92,7 +93,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             }
           ),
           fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/monthly${
+            `${process.env.NEXT_PUBLIC_BASE_URL_API}/report/monthly${
               period
                 ? `?period__gte=${encodeURIComponent(
                     date.initial
@@ -109,9 +110,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             }
           ),
           fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL_API}/reports/categories${
+            `${process.env.NEXT_PUBLIC_BASE_URL_API}/report/categories?limit=5${
               period
-                ? `?period__gte=${encodeURIComponent(
+                ? `&period__gte=${encodeURIComponent(
                     date.initial
                   )}&period__lte=${encodeURIComponent(date.final)}`
                 : ""

@@ -4,10 +4,10 @@ import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Modal } from "shinodalabs-ui";
-import { Input } from "shinodalabs-ui";
-import { Select } from "shinodalabs-ui";
-import { DatePicker } from "shinodalabs-ui";
+import { Modal } from "@/components/shared/Modal";
+import { Input } from "@/components/shared/Input";
+import { Select } from "@/components/shared/Select";
+import { DatePicker } from "@/components/shared/DatePicker";
 import { useCategory } from "@/context/categoryContext";
 import { useTranslation } from "react-i18next";
 import { useSettings } from "@/context/settingsContext";
@@ -100,6 +100,9 @@ export const GoalModal = ({
     <Modal
       isOpen={isOpen}
       title={initialData ? t("goals.editGoal") : t("goals.newGoal")}
+      description={
+        initialData ? t("goals.descriptionEdit") : t("goals.descriptionAdd")
+      }
       onClose={() => {
         onClose();
         reset({
@@ -115,7 +118,7 @@ export const GoalModal = ({
       cancelLabel={t("app.cancel")}
       confirmLabel={t("app.save")}
     >
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Controller
           name="title"
           control={control}

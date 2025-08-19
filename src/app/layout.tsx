@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { dark } from "@clerk/themes";
 
 import "./globals.css";
 import "react-day-picker/dist/style.css";
+
 import { ClerkProvider } from "@clerk/nextjs";
 import { I18nextProviderWrapper } from "./I18nextProviderWrapper";
 import { Providers } from "./providers";
+import { SettingsProvider } from "@/context/settingsContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,15 +31,15 @@ export const metadata: Metadata = {
     { name: "Rodrigo Shinoda", url: "https://github.com/rodrigordgfs" },
   ],
   creator: "CashWise",
-  metadataBase: new URL("https://cash-wise-one.vercel.app/"),
+  metadataBase: new URL("https://appcashwise.com.br/"),
   openGraph: {
     title: "CashWise - Gerenciamento Financeiro",
     description: "Controle suas finanças de forma inteligente com o CashWise.",
-    url: "https://cash-wise-one.vercel.app/",
+    url: "https://appcashwise.com.br/",
     siteName: "CashWise",
     images: [
       {
-        url: "/og-image.png",
+        url: "/screenshots/dashboard.png",
         width: 1200,
         height: 630,
         alt: "CashWise - Gerenciamento Financeiro",
@@ -51,13 +52,13 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "CashWise - Gerenciamento Financeiro",
     description: "Controle suas finanças de forma inteligente com o CashWise.",
-    images: ["/og-image.png"],
+    images: ["/screenshots/dashboard.png"],
     creator: "@cashwise_app",
   },
   icons: {
     icon: "/favicon.png",
-    shortcut: "/shortcut-icon.png",
-    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
   },
   manifest: "/site.webmanifest",
 };
@@ -66,17 +67,45 @@ export const viewport = {
   themeColor: "#10b981",
 };
 
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <ClerkProvider appearance={{ baseTheme: dark }}>
-      <html lang="pt-BR" className="dark" suppressHydrationWarning>
+    <ClerkProvider>
+      <html lang="pt-BR" data-theme="dark" suppressHydrationWarning>
+        <head>
+          <link rel="manifest" href="/site.webmanifest" />
+          <meta name="theme-color" content="#10b981" />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  try {
+                    var theme = localStorage.getItem('theme');
+                    if (
+                      theme === 'dark' ||
+                      (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)
+                    ) {
+                      document.documentElement.classList.add('dark');
+                    } else {
+                      document.documentElement.classList.remove('dark');
+                    }
+                  } catch (e) {}
+                })()
+              `,
+            }}
+          />
+        </head>
         <body
           className={`${inter.className} bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100`}
           suppressHydrationWarning
         >
           <I18nextProviderWrapper>
-            <Providers>{children}</Providers>
+            <SettingsProvider>
+              <Providers>{children}</Providers>
+            </SettingsProvider>
           </I18nextProviderWrapper>
         </body>
       </html>

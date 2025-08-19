@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState } from "react";
 import { ReactNode } from "react";
-import { Dialog } from "shinodalabs-ui";
+import { Dialog } from "@/components/shared/Dialog";
 
 interface DialogOptions {
   title: string;

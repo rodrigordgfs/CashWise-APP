@@ -4,7 +4,6 @@ import { useAuth } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import { ReactNode } from "react";
 import { MenuProvider } from "@/context/menuContext";
-import { SettingsProvider } from "@/context/settingsContext";
 import { SidebarProvider } from "@/context/sidebarContext";
 import { TransactionProvider } from "@/context/transactionsContext";
 import { BudgetProvider } from "@/context/budgetContext";
@@ -32,14 +31,12 @@ export function Providers({ children }: { children: ReactNode }) {
               <GoalProvider>
                 <SidebarProvider>
                   <MenuProvider>
-                    <SettingsProvider>
-                      <AuthProvider>
-                        <DialogProvider>
-                          {children}
-                          <Toaster richColors />
-                        </DialogProvider>
-                      </AuthProvider>
-                    </SettingsProvider>
+                    <AuthProvider>
+                      <DialogProvider>
+                        {children}
+                        <Toaster richColors />
+                      </DialogProvider>
+                    </AuthProvider>
                   </MenuProvider>
                 </SidebarProvider>
               </GoalProvider>

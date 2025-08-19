@@ -5,21 +5,50 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { isBefore, startOfToday, parseISO } from "date-fns";
 
-import { Input } from "shinodalabs-ui";
-import { Select } from "shinodalabs-ui";
+import { Select } from "@/components/shared/Select";
+import { Modal } from "@/components/shared/Modal";
+import { DatePicker } from "@/components/shared/DatePicker";
+import { Input } from "@/components/shared/Input";
+
 import { Transaction, TransactionType } from "@/types/Transaction.type";
-import { Modal } from "shinodalabs-ui";
-import { DatePicker } from "shinodalabs-ui";
 import { useCategory } from "@/context/categoryContext";
 import { useTransaction } from "@/context/transactionsContext";
 import { useTranslation } from "react-i18next";
 import { useSettings } from "@/context/settingsContext";
+import { Bell, Repeat } from "lucide-react";
+import { ToggleSwitch } from "@/components/shared/ToggleSwitch";
+import { Button } from "@/components/shared/Button";
+import { formatCurrency } from "@/utils/formatConvertCurrency";
+import { getEventTimeRange } from "@/utils/getEventTimeRange";
+import { downloadICSReminder } from "@/utils/downloadICSReminder";
 
 type Account = {
   id: number;
   name: string;
 };
+
+export enum RecurrenceInterval {
+  Daily = "1",
+  Weekly = "7",
+  Monthly = "30",
+  Yearly = "365",
+}
+
+export enum ReminderService {
+  GoogleCalendar = "google-calendar",
+  OutlookCalendar = "outlook-calendar",
+  AppleCalendar = "apple-calendar",
+}
+
+export enum ReminderTime {
+  AtTime = "at-time",
+  FifteenMinBefore = "15-min-before",
+  OneHourBefore = "1-hour-before",
+  OneDayBefore = "1-day-before",
+  OneWeekBefore = "1-week-before",
+}
 
 interface TransactionModalProps {
   isOpen: boolean;
@@ -50,6 +79,19 @@ export const TransactionModal = ({
     date: z.string().min(1, t("transactions.dateRequiredValidation")),
     category: z.string().min(1, t("transactions.categoryRequiredValidation")),
     account: z.string().min(1, t("transactions.accountRequiredValidation")),
+    recurrenceInterval: z.nativeEnum(RecurrenceInterval).optional(),
+    recurrenceCount: z
+      .string()
+      .optional()
+      .refine(
+        (val) =>
+          val === undefined ||
+          (val !== "" &&
+            !isNaN(Number(val)) &&
+            Number(val) >= 1 &&
+            Number(val) <= 99),
+        { message: "O valor deve estar entre 1 e 99" }
+      ),
   });
 
   type FormData = z.infer<typeof schema>;
@@ -58,6 +100,8 @@ export const TransactionModal = ({
     control,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -66,34 +110,101 @@ export const TransactionModal = ({
       description: initialData?.description ?? "",
       amount: initialData?.amount ?? 0,
       date: initialData?.date ?? "",
-      category: initialData?.category.id ?? categories[0]?.id ?? "",
-      account: initialData?.account ?? accounts[0]?.name ?? "",
+      category: initialData?.category?.id || "",
+      account: initialData?.account || accounts[0]?.name || "",
+      recurrenceInterval:
+        initialData?.recurrenceInterval || RecurrenceInterval.Monthly,
+      recurrenceCount:
+        initialData?.recurrenceCount !== undefined
+          ? String(initialData.recurrenceCount)
+          : undefined,
     },
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  const type = watch("type");
+  const date = watch("date");
 
-  useEffect(() => {
-    if (initialData) {
-      reset({
-        type: initialData.type,
-        description: initialData.description,
-        amount: initialData.amount,
-        date: initialData.date,
-        category: initialData.category.id,
-        account: initialData.account,
-      });
-    } else {
-      reset({
-        type: TransactionType.Expense,
-        description: "",
-        amount: 0,
-        date: "",
-        category: categories[0]?.id ?? "",
-        account: accounts[0]?.name ?? "",
-      });
-    }
-  }, [initialData, isOpen, reset, categories, accounts]);
+  const [isDatePast, setIsDatePast] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRecurring, setIsRecurring] = useState(false);
+  const [hasReminder, setHasReminder] = useState(false);
+  const [reminderTime, setReminderTime] = useState<ReminderTime>(
+    ReminderTime.AtTime
+  );
+  const [reminderService, setReminderService] = useState<ReminderService>(
+    ReminderService.GoogleCalendar
+  );
+
+  const filteredCategories = categories.filter((c) => c.type === type);
+
+  const recurrenceOptions = [
+    {
+      value: RecurrenceInterval.Daily,
+      label: t("transactions.recurrenceOptions.daily"),
+    },
+    {
+      value: RecurrenceInterval.Weekly,
+      label: t("transactions.recurrenceOptions.weekly"),
+    },
+    {
+      value: RecurrenceInterval.Monthly,
+      label: t("transactions.recurrenceOptions.monthly"),
+    },
+    {
+      value: RecurrenceInterval.Yearly,
+      label: t("transactions.recurrenceOptions.yearly"),
+    },
+  ];
+
+  const reminderServiceOptions = [
+    {
+      value: ReminderService.GoogleCalendar,
+      label: t("transactions.reminderServiceOptions.google"),
+    },
+    {
+      value: ReminderService.OutlookCalendar,
+      label: t("transactions.reminderServiceOptions.outlook"),
+    },
+    {
+      value: ReminderService.AppleCalendar,
+      label: t("transactions.reminderServiceOptions.apple"),
+    },
+  ];
+
+  const reminderTimeOptions = [
+    {
+      value: ReminderTime.AtTime,
+      label: t("transactions.reminderTimeOptions.atTime"),
+    },
+    {
+      value: ReminderTime.FifteenMinBefore,
+      label: t("transactions.reminderTimeOptions.fifteenMinBefore"),
+    },
+    {
+      value: ReminderTime.OneHourBefore,
+      label: t("transactions.reminderTimeOptions.oneHourBefore"),
+    },
+    {
+      value: ReminderTime.OneDayBefore,
+      label: t("transactions.reminderTimeOptions.oneDayBefore"),
+    },
+    {
+      value: ReminderTime.OneWeekBefore,
+      label: t("transactions.reminderTimeOptions.oneWeekBefore"),
+    },
+  ];
+
+  const handleReminderTimeChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setReminderTime(e.target.value as ReminderTime);
+  };
+
+  const handleReminderServiceChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setReminderService(e.target.value as ReminderService);
+  };
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
@@ -107,17 +218,134 @@ export const TransactionModal = ({
         date: data.date,
         account: data.account,
         categoryId: data.category,
+        recurrenceInterval: isRecurring ? data.recurrenceInterval : undefined,
+        recurrenceCount: isRecurring && data.recurrenceCount
+          ? Number(data.recurrenceCount)
+          : undefined,
       });
 
       reset();
       onClose();
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Erro ao salvar transação");
     } finally {
       setIsLoading(false);
     }
   };
+
+  const setupReminder = () => {
+    const date = getEventTimeRange(watch("date"), reminderTime);
+
+    const encodedTitle = encodeURIComponent(
+      t("transactions.reminderTextTitle")
+    );
+    const encodedDescription = encodeURIComponent(
+      `${t("transactions.reminderTextDescription1")}${watch("description")}${t(
+        "transactions.reminderTextDescription2"
+      )}${formatCurrency(watch("amount"), currency, language)}`
+    );
+
+    switch (reminderService) {
+      case ReminderService.GoogleCalendar:
+        window.open(
+          `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodedTitle}&dates=${date.start}/${date.end}&details=${encodedDescription}`,
+          "_blank"
+        );
+        toast.success(t("transactions.riminderSuccess"));
+        break;
+      case ReminderService.OutlookCalendar:
+        window.open(
+          `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodedTitle}&body=${encodedDescription}&startdt=${date.start}&enddt=${date.end}`,
+          "_blank"
+        );
+        toast.success(t("transactions.riminderSuccess"));
+        break;
+      case ReminderService.AppleCalendar:
+        downloadICSReminder({
+          title: t("transactions.reminderTextTitle"),
+          description: `${t("transactions.reminderTextDescription1")}${watch(
+            "description"
+          )}${t("transactions.reminderTextDescription2")}${formatCurrency(
+            watch("amount"),
+            currency,
+            language
+          )}`,
+          startDate: new Date(date.start),
+          endDate: new Date(date.end),
+          reminderTime,
+        });
+        toast.success(t("transactions.reminderDownloadSuccess"));
+        break;
+      default:
+        toast.error(t("transactions.reminderNotImplemented"));
+    }
+  };
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (initialData) {
+      reset({
+        type: initialData.type,
+        description: initialData.description,
+        amount: initialData.amount,
+        date: initialData.date,
+        category: initialData.category?.id || "",
+        account: initialData.account || "",
+        recurrenceInterval:
+          initialData.recurrenceInterval || RecurrenceInterval.Monthly,
+        recurrenceCount:
+          initialData.recurrenceCount !== undefined
+            ? String(initialData.recurrenceCount)
+            : undefined,
+      });
+    } else {
+      reset({
+        type: TransactionType.Expense,
+        description: "",
+        amount: 0,
+        date: "",
+        category: "",
+        account: accounts[0]?.name || "",
+        recurrenceInterval: RecurrenceInterval.Monthly,
+        recurrenceCount: "1",
+      });
+    }
+  }, [initialData, isOpen, reset, accounts]);
+
+  useEffect(() => {
+    if (filteredCategories.length > 0) {
+      setValue("category", filteredCategories[0]?.id || "");
+    }
+  }, [type, filteredCategories, setValue]);
+
+  useEffect(() => {
+    if (!date) {
+      setIsDatePast(false);
+      return;
+    }
+
+    const selectedDate = parseISO(date);
+    const today = startOfToday();
+
+    const past = isBefore(selectedDate, today);
+    setIsDatePast(past);
+
+    if (past) {
+      setIsRecurring(false);
+    }
+  }, [date]);
+
+  useEffect(() => {
+    if (!isDatePast && isRecurring) {
+      setValue("recurrenceInterval", RecurrenceInterval.Monthly);
+      setValue("recurrenceCount", "1");
+    } else {
+      setValue("recurrenceInterval", undefined);
+      setValue("recurrenceCount", undefined);
+    }
+  }, [isRecurring, isDatePast, setValue]);
 
   return (
     <Modal
@@ -127,13 +355,18 @@ export const TransactionModal = ({
           ? t("transactions.editTransaction")
           : t("transactions.newTransaction")
       }
+      description={
+        initialData
+          ? t("transactions.descriptionEdit")
+          : t("transactions.descriptionAdd")
+      }
       onClose={onClose}
       onConfirm={handleSubmit(onSubmit)}
       confirmLabel={t("app.save")}
       cancelLabel={t("app.cancel")}
       isLoading={isLoading}
     >
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl w-full">
         <Controller
           control={control}
           name="type"
@@ -193,7 +426,7 @@ export const TransactionModal = ({
             <Select
               label={t("transactions.category")}
               {...field}
-              options={categories.map((c) => ({
+              options={filteredCategories.map((c) => ({
                 value: c.id ?? "",
                 label: `${c.icon} ${c.name}`,
               }))}
@@ -232,6 +465,113 @@ export const TransactionModal = ({
           )}
         />
       </div>
+
+      {!initialData && (
+        <div className="border-t border-zinc-200 dark:border-zinc-700 pt-3 mt-4">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <Repeat size={20} className="text-emerald-500" />
+            <div>
+              <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                {t("transactions.recurringTransaction")}
+              </h3>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                {t("transactions.recurringDescription")}
+              </p>
+            </div>
+          </div>
+          <ToggleSwitch
+            checked={isRecurring}
+            onChange={setIsRecurring}
+            disabled={isDatePast}
+          />
+        </div>
+
+        {isRecurring && (
+          <div className="ml-8 space-y-4 border-l-2 border-purple-200 dark:border-emerald-800 pl-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Controller
+                control={control}
+                name="recurrenceInterval"
+                render={({ field }) => (
+                  <Select
+                    label={t("transactions.recurrenceFrequency")}
+                    {...field}
+                    options={recurrenceOptions}
+                    error={errors.recurrenceInterval?.message}
+                  />
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="recurrenceCount"
+                render={({ field }) => (
+                  <Input
+                    label={t("transactions.recurrenceRepetitions")}
+                    placeholder={t(
+                      "transactions.recurrenceRepetitionsPlaceholder"
+                    )}
+                    type="number"
+                    {...field}
+                    error={errors.recurrenceCount?.message}
+                  />
+                )}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+      )}
+
+      {initialData && (
+        <div className="border-t border-zinc-200 dark:border-zinc-700 pt-3 mt-4">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <Bell size={20} className="text-emerald-500" />
+              <div>
+                <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                  {t("transactions.calendarReminder")}
+                </h3>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  {t("transactions.reminderDescription")}
+                </p>
+              </div>
+            </div>
+            <ToggleSwitch
+              checked={hasReminder}
+              onChange={setHasReminder}
+              disabled={isDatePast}
+            />
+          </div>
+
+          {hasReminder && (
+            <div className="ml-8 space-y-4 border-l-2 border-blue-200 dark:border-emerald-800 pl-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Select
+                  label={t("transactions.reminderTime")}
+                  options={reminderTimeOptions}
+                  value={reminderTime}
+                  onChange={handleReminderTimeChange}
+                />
+                <Select
+                  label={t("transactions.reminderService")}
+                  options={reminderServiceOptions}
+                  value={reminderService}
+                  onChange={handleReminderServiceChange}
+                />
+              </div>
+              <Button
+                variant="neutral"
+                className="w-full"
+                onClick={setupReminder}
+              >
+                {t("transactions.setReminder")}
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
     </Modal>
   );
 };

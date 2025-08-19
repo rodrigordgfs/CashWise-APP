@@ -13,7 +13,13 @@
       "next": "Siguiente",
       "itemsPerPage": "Elementos por página"
     },
-    "clearFilters": "Limpiar Filtros"
+    "clearFilters": "Limpiar Filtros",
+    "dialogDeleteAccountTitle": "Eliminar Cuenta",
+    "dialogDeleteAccountDescription": "¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.",
+    "dialogDeleteAccountConfirm": "Sí, eliminar",
+    "dialogDeleteAccountCancel": "Cancelar",
+    "dialogDeleteAccountSuccess": "Cuenta eliminada con éxito!",
+    "dialogDeleteAccountError": "Error al eliminar la cuenta. Inténtalo de nuevo más tarde."
   },
   "home": {
     "header": {
@@ -139,13 +145,14 @@
   },
   "transactions": {
     "title": "Transacciones",
+    "importData": "Importar Datos",
     "newTransaction": "Nueva Transacción",
     "editTransaction": "Editar Transacción",
     "deleteTransaction": "Eliminar Transacción",
     "filters": "Filtros",
     "searchTransactions": "Buscar Transacciones",
     "filterByDate": "Filtrar por Fecha",
-    "selectDate": "Selecciona una fecha",
+    "selectDate": "Selecciona las fechas",
     "clear": "Limpiar",
     "closeCalendar": "Cerrar Calendario",
     "ascending": "Ascendente",
@@ -181,7 +188,48 @@
     "dialogDeleteTitle": "Eliminar Transacción",
     "dialogDeleteDescription": "¿Estás seguro de que deseas eliminar esta transacción? Esta acción no se puede deshacer.",
     "dialogDeleteConfirm": "Sí, eliminar",
-    "dialogDeleteCancel": "Cancelar"
+    "dialogDeleteCancel": "Cancelar",
+    "descriptionEdit": "Edita los datos de la transacción seleccionada.",
+    "descriptionAdd": "Agrega una nueva transacción para mantener tus finanzas organizadas.",
+    "dialogImportDataTitle": "Importar Archivo OFX",
+    "dialogImportDataDescription": "Importa un archivo OFX para registrar automáticamente tus transacciones bancarias. Descarga el extracto en formato OFX desde la app o banca en línea de tu banco y súbelo aquí. Las transacciones importadas no tendrán categorías asignadas, por lo que podrás organizarlas manualmente después.",
+    "dialogImportDataConfirm": "Sí, importar",
+    "dialogImportDataCancel": "Cancelar",
+    "invalidOfx": "Selecciona un archivo OFX válido.",
+    "importSuccess": "Importación completada con éxito!",
+    "importError": "Error al importar el archivo OFX. Inténtalo de nuevo.",
+    "recurringTransaction": "Transacción Recurrente",
+    "recurringDescription": "Transacción repetida según la frecuencia seleccionada.",
+    "recurrenceFrequency": "Frecuencia",
+    "recurrenceRepetitions": "Repeticiones",
+    "recurrenceRepetitionsPlaceholder": "Ej: 12",
+    "recurrenceEndDate": "Fecha de Finalización",
+    "recurrenceEndDatePlaceholder": "Seleccione la fecha",
+    "recurrenceOptions": {
+      "daily": "Diariamente",
+      "weekly": "Semanalmente",
+      "monthly": "Mensualmente",
+      "yearly": "Anualmente"
+    },
+    "reminderServiceOptions": {
+      "google": "Google Calendar",
+      "outlook": "Outlook Calendar",
+      "apple": "Apple Calendar"
+    },
+    "reminderTimeOptions": {
+      "atTime": "En el momento",
+      "fifteenMinBefore": "15 minutos antes",
+      "oneHourBefore": "1 hora antes",
+      "oneDayBefore": "1 día antes",
+      "oneWeekBefore": "1 semana antes"
+    },
+    "calendarReminder": "Recordatorio en el Calendario",
+    "reminderDescription": "Configure un recordatorio para esta transacción recurrente.",
+    "reminderService": "Servicio",
+    "reminderTime": "Recordar",
+    "setReminder": "Configurar Recordatorio",
+    "reminderDownloadSuccess": "Recordatorio descargado con éxito! Abre el archivo .ics en tu calendario.",
+    "reminderSuccess": "Recordatorio configurado con éxito!"
   },
   "categories": {
     "title": "Categorías",
@@ -224,7 +272,8 @@
     "withinBudget": "Dentro del presupuesto",
     "invalidDate": "Fecha inválida",
     "spentLimit": "Gasto / Límite",
-    "description": "Establece un límite de gastos para una categoría",
+    "descriptionNew": "Agrega un nuevo presupuesto para controlar tus gastos mensuales.",
+    "descriptionEdit": "Edita los datos del presupuesto seleccionado.",
     "category": "Categoría",
     "limit": "Límite",
     "month": "Mes",
@@ -254,6 +303,8 @@
     "deadelineExpired": "Fecha límite expirada",
     "titleField": "Título",
     "titlePlaceholder": "Ej: Viaje a París",
+    "descriptionEdit": "Edita los datos de la meta seleccionada.",
+    "descriptionAdd": "Agrega una nueva meta para alcanzar tus objetivos financieros.",
     "descriptionField": "Descripción",
     "descriptionPlaceholder": "Ej: Ahorrar para las vacaciones",
     "goal": "Meta",
@@ -285,6 +336,7 @@
     "income": "Ingresos",
     "expense": "Gastos",
     "period": "Período",
+    "lastWeek": "Última Semana",
     "lastMonth": "Último Mes",
     "lastThreeMonths": "Últimos 3 Meses",
     "lastSixMonths": "Últimos 6 Meses",

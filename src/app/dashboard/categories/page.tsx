@@ -2,7 +2,8 @@
 
 import { FilterCard } from "@/components/shared/FilterCard";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { Tabs } from "shinodalabs-ui";
+import { Pagination } from "@/components/shared/Pagination";
+import { Tabs } from "@/components/shared/Tabs";
 import { CategoryList } from "@/components/ui/categories/CategoryList";
 import { CategoryModal } from "@/components/ui/categories/CategoryModal";
 import { useCategory } from "@/context/categoryContext";
@@ -24,6 +25,12 @@ export default function CategoriesPage() {
     categoryToEdit,
     setCategoryToEdit,
     categoriesTabs,
+    page,
+    setPage,
+    perPage,
+    setPerPage,
+    totalItems,
+    totalPages,
   } = useCategory();
   const { t } = useTranslation();
 
@@ -51,6 +58,29 @@ export default function CategoriesPage() {
         isLoading={isLoading}
         onEdit={openModalToEdit}
         onDelete={deleteCategory}
+      />
+
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        totalItems={totalItems}
+        perPage={perPage}
+        onPageChange={setPage}
+        onItemsPerPageChange={setPerPage}
+        labels={{
+          previous: t("app.pagination.previous"),
+          next: t("app.pagination.next"),
+          showing: t("app.pagination.showing"),
+          of: t("app.pagination.of"),
+          results: t("app.pagination.results"),
+          page: t("app.pagination.page"),
+          itemsPerPage: t("app.pagination.itemsPerPage"),
+        }}
+        optionsItemsPerPage={[
+          { label: `16 ${t("app.pagination.itemsPerPage")}`, value: "16" },
+          { label: `32 ${t("app.pagination.itemsPerPage")}`, value: "32" },
+          { label: `100 ${t("app.pagination.itemsPerPage")}`, value: "100" },
+        ]}
       />
 
       {isModalOpen && (

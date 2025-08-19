@@ -33,6 +33,14 @@ interface CategoryContextProps {
   deleteCategory: (category: Category) => Promise<void>;
   categoriesTabs: { label: string; value: string }[];
   fetchCategories: () => Promise<void>;
+  page: number;
+  setPage: (page: number) => void;
+  perPage: number;
+  setPerPage: (perPage: number) => void;
+  totalItems: number;
+  setTotalItems: (total: number) => void;
+  totalPages: number;
+  setTotalPages: (total: number) => void;
 }
 
 const CategoryContext = createContext<CategoryContextProps | undefined>(
@@ -43,6 +51,11 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
   const { t } = useTranslation();
   const { getToken } = useAuth();
+
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(16);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -67,11 +80,21 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
 
     setIsLoading(true);
     try {
-      const url =
-        `${process.env.NEXT_PUBLIC_BASE_URL_API}/category` +
-        (categoryType ? `?type=${encodeURIComponent(categoryType)}` : "");
+      const params = {
+        page: String(page),
+        perPage: String(perPage),
+        type: categoryType || undefined,
+      };
 
-      const response = await fetch(url, {
+      const url = new URL("category", process.env.NEXT_PUBLIC_BASE_URL_API);
+
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined) {
+          url.searchParams.append(key, value);
+        }
+      });
+
+      const response = await fetch(url.toString(), {
         headers: {
           Authorization: `Bearer ${await getToken()}`,
           "Content-Type": "application/json",
@@ -80,7 +103,16 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
         next: { revalidate: 0 },
       });
 
-      if (!response.ok) throw new Error("Erro ao buscar categorias");
+      if (!response.ok) {
+        toast.error("Erro ao buscar categorias");
+        throw new Error("Erro ao buscar categorias");
+      }
+
+      setTotalItems(Number(response.headers.get("x-total-count")) || 0);
+      setTotalPages(Number(response.headers.get("x-total-pages")) || 0);
+      setPage(Number(response.headers.get("x-current-page")) || 1);
+      setPerPage(Number(response.headers.get("x-per-page")) || 10);
+
       const data = await response.json();
       setCategories(data);
     } catch (error) {
@@ -89,7 +121,14 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [categoryType, user?.id, user?.hasVerifiedEmailAddress, getToken]);
+  }, [
+    categoryType,
+    user?.id,
+    user?.hasVerifiedEmailAddress,
+    getToken,
+    page,
+    perPage,
+  ]);
 
   useEffect(() => {
     fetchCategories();
@@ -173,7 +212,9 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
         );
 
         if (!response.ok) {
-          toast.error("Erro ao excluir categoria");
+          const json = await response.json();
+          const message = json?.message || "Erro ao excluir categoria";
+          toast.error(message);
           return;
         }
 
@@ -208,6 +249,14 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
       isDialogOpen,
       setIsDialogOpen,
       fetchCategories,
+      page,
+      setPage,
+      perPage,
+      setPerPage,
+      totalItems,
+      setTotalItems,
+      totalPages,
+      setTotalPages,
     }),
     [
       categoriesTabs,
@@ -224,6 +273,14 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
       isDialogOpen,
       setIsDialogOpen,
       fetchCategories,
+      page,
+      setPage,
+      perPage,
+      setPerPage,
+      totalItems,
+      setTotalItems,
+      totalPages,
+      setTotalPages,
     ]
   );
 

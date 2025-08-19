@@ -13,7 +13,13 @@
       "next": "Next",
       "itemsPerPage": "Items per page"
     },
-    "clearFilters": "Clear Filters"
+    "clearFilters": "Clear Filters",
+    "dialogDeleteAccountTitle": "Delete Account",
+    "dialogDeleteAccountDescription": "Are you sure you want to delete your account? This action cannot be undone.",
+    "dialogDeleteAccountConfirm": "Yes, delete",
+    "dialogDeleteAccountCancel": "Cancel",
+    "dialogDeleteAccountSuccess": "Account deleted successfully!",
+    "dialogDeleteAccountError": "Error deleting account. Please try again later."
   },
   "home": {
     "header": {
@@ -139,13 +145,14 @@
   },
   "transactions": {
     "title": "Transactions",
+    "importData": "Import Data",
     "newTransaction": "New Transaction",
     "editTransaction": "Edit Transaction",
     "deleteTransaction": "Delete Transaction",
     "filters": "Filters",
     "searchTransactions": "Search Transactions",
     "filterByDate": "Filter by Date",
-    "selectDate": "Select a date",
+    "selectDate": "Select dates",
     "clear": "Clear",
     "orderTransactions": "Sort Transactions",
     "ascending": "Ascending",
@@ -181,7 +188,48 @@
     "dialogDeleteTitle": "Delete Transaction",
     "dialogDeleteDescription": "Are you sure you want to delete this transaction? This action cannot be undone.",
     "dialogDeleteConfirm": "Yes, delete",
-    "dialogDeleteCancel": "Cancel"
+    "dialogDeleteCancel": "Cancel",
+    "descriptionEdit": "Edit the selected transaction's data.",
+    "descriptionAdd": "Add a new transaction to keep your finances organized.",
+    "dialogImportDataTitle": "Import OFX File",
+    "dialogImportDataDescription": "Import an OFX file to automatically register your bank transactions. Download the OFX statement from your bank's app or online banking, and upload it here. Imported transactions will have no categories assigned, so you can organize them manually afterward.",
+    "dialogImportDataConfirm": "Yes, import",
+    "dialogImportDataCancel": "Cancel",
+    "invalidOfx": "Please select a valid OFX file.",
+    "importSuccess": "Import completed successfully!",
+    "importError": "Error importing OFX file.",
+    "recurringTransaction": "Recurring Transaction",
+    "recurringDescription": "Transaction repeated based on the selected frequency.",
+    "recurrenceFrequency": "Frequency",
+    "recurrenceRepetitions": "Repetitions",
+    "recurrenceRepetitionsPlaceholder": "E.g., 12",
+    "recurrenceEndDate": "End Date",
+    "recurrenceEndDatePlaceholder": "Select a date",
+    "recurrenceOptions": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "reminderServiceOptions": {
+      "google": "Google Calendar",
+      "outlook": "Outlook Calendar",
+      "apple": "Apple Calendar"
+    },
+    "reminderTimeOptions": {
+      "atTime": "At Time",
+      "fifteenMinBefore": "15 minutes before",
+      "oneHourBefore": "1 hour before",
+      "oneDayBefore": "1 day before",
+      "oneWeekBefore": "1 week before"
+    },
+    "calendarReminder": "Calendar Reminder",
+    "reminderDescription": "Set a reminder for this recurring transaction.",
+    "reminderService": "Service",
+    "reminderTime": "Remind",
+    "setReminder": "Set Reminder",
+    "reminderDownloadSuccess": "Reminder downloaded successfully! Open the .ics file in your calendar.",
+    "reminderSuccess": "Reminder set successfully!"
   },
   "categories": {
     "title": "Categories",
@@ -224,7 +272,8 @@
     "withinBudget": "Within budget",
     "invalidDate": "Invalid date",
     "spentLimit": "Spent / Limit",
-    "description": "Set a spending limit for a category",
+    "descriptionNew": "Create a new budget to manage your expenses.",
+    "descriptionEdit": "Edit the selected budget's data.",
     "category": "Category",
     "limit": "Limit",
     "month": "Month",
@@ -251,6 +300,8 @@
     "goalAchieved": "Goal achieved! 🎉",
     "almostThere": "Almost there! Keep saving.",
     "daysLeft": "Days left to reach the goal",
+    "descriptionEdit": "Edit the selected goal's data.",
+    "descriptionAdd": "Create a new goal to save for your dreams.",
     "deadelineExpired": "Deadline expired",
     "titleField": "Title",
     "titlePlaceholder": "E.g. Trip to Paris",
@@ -285,6 +336,7 @@
     "income": "Income",
     "expense": "Expenses",
     "period": "Period",
+    "lastWeek": "Last Week",
     "lastMonth": "Last Month",
     "lastThreeMonths": "Last 3 Months",
     "lastSixMonths": "Last 6 Months",

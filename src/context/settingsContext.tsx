@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import {
   createContext,
   useContext,
@@ -7,10 +8,11 @@ import {
   useState,
   ReactNode,
   useMemo,
+  useCallback,
 } from "react";
+import { useTranslation } from "react-i18next";
 
-import { useTranslation } from "next-i18next";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+type Theme = "light" | "dark" | "system";
 
 interface Notifications {
   budgetAlerts: boolean;
@@ -29,16 +31,19 @@ interface Language {
 }
 
 interface SettingsContextProps {
+  theme: Theme;
   isDarkMode: boolean;
+
   currency: string;
   currencies: Currency[];
+
   language: string;
   languages: Language[];
+
   notifications: Notifications;
 
+  setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
-  setDarkMode: () => void;
-  setLightMode: () => void;
 
   setCurrency: (value: string) => void;
   setLanguage: (value: string) => void;
@@ -54,9 +59,9 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const [theme, setThemeState] = useState<Theme>("system");
   const [currency, setCurrencyState] = useState("BRL");
   const [language, setLanguageState] = useState("pt-BR");
   const [notifications, setNotificationsState] = useState<Notifications>({
@@ -66,15 +71,38 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   });
 
   useEffect(() => {
-    const theme = localStorage.getItem("theme");
+    i18n.changeLanguage(language).then(() => {
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.set("locale", language);
+      router.push(`${pathname}?${params.toString()}`);
+    });
+  }, [language, i18n, router, pathname, searchParams]);
+
+  // Detecta se o usuário prefere dark no sistema
+  const prefersDark =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  // Decide se o modo dark deve ser aplicado
+  const isDarkMode = theme === "dark" || (theme === "system" && prefersDark);
+
+  // Carrega preferências do localStorage no primeiro carregamento
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("theme") as Theme | null;
     const storedCurrency = localStorage.getItem("currency");
     const storedLanguage = localStorage.getItem("language");
     const storedNotifications = localStorage.getItem("notifications");
 
-    setIsDarkMode(
-      theme === "dark" ||
-        (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
-    );
+    if (
+      storedTheme === "light" ||
+      storedTheme === "dark" ||
+      storedTheme === "system"
+    ) {
+      setThemeState(storedTheme);
+    } else {
+      setThemeState("system");
+    }
+
     if (storedCurrency) setCurrencyState(storedCurrency);
     if (storedLanguage) setLanguageState(storedLanguage);
     if (storedNotifications)
@@ -83,18 +111,20 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     setIsLoaded(true);
   }, []);
 
+  // Atualiza a classe "dark" no <html> e salva no localStorage sempre que o tema muda
   useEffect(() => {
     if (!isLoaded) return;
 
-    localStorage.setItem("theme", isDarkMode ? "dark" : "light");
-
     if (isDarkMode) {
-      document.documentElement.classList.add("dark");
+      document.documentElement.setAttribute("data-theme", "dark");
     } else {
-      document.documentElement.classList.remove("dark");
+      document.documentElement.removeAttribute("data-theme");
     }
-  }, [isDarkMode, isLoaded]);
 
+    localStorage.setItem("theme", theme);
+  }, [isDarkMode, theme, isLoaded]);
+
+  // Sincroniza localStorage para os outros valores
   useEffect(() => {
     if (isLoaded) localStorage.setItem("currency", currency);
   }, [currency, isLoaded]);
@@ -108,13 +138,11 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("notifications", JSON.stringify(notifications));
   }, [notifications, isLoaded]);
 
-  useEffect(() => {
-    i18n.changeLanguage(language).then(() => {
-      const params = new URLSearchParams(Array.from(searchParams.entries()));
-      params.set("locale", language);
-      router.push(`${pathname}?${params.toString()}`);
-    });
-  }, [language, i18n, router, pathname, searchParams]);
+  const setTheme = (newTheme: Theme) => setThemeState(newTheme);
+
+  const toggleTheme = useCallback(() => {
+    setThemeState((prev) => (prev === "dark" ? "light" : "dark"));
+  }, []);
 
   const value = useMemo(() => {
     const currencies: Currency[] = [
@@ -137,14 +165,14 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
       language,
       languages,
       notifications,
-      toggleTheme: () => setIsDarkMode((prev) => !prev),
-      setDarkMode: () => setIsDarkMode(true),
-      setLightMode: () => setIsDarkMode(false),
+      theme,
+      setTheme,
+      toggleTheme,
       setCurrency: setCurrencyState,
       setLanguage: setLanguageState,
       setNotifications: setNotificationsState,
     };
-  }, [isDarkMode, currency, language, notifications, t]);
+  }, [isDarkMode, currency, language, notifications, t, theme, toggleTheme]);
 
   if (!isLoaded) return null;
 

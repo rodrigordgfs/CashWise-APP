@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Wallet } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
-import { Button } from "shinodalabs-ui";
+import { Button } from "@/components/shared/Button";
 import { useTranslation } from "react-i18next";
 
 export function Header() {

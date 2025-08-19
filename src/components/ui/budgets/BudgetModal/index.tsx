@@ -1,16 +1,27 @@
 "use client";
 
-import { Input } from "shinodalabs-ui";
-import { Modal } from "shinodalabs-ui";
-import { Select } from "shinodalabs-ui";
-import { Category } from "@/types/Category.type";
-import { useEffect, useState } from "react";
+import {
+  Modal
+} from "@/components/shared/Modal";
 
+import {
+  MonthDatePicker
+} from "@/components/shared/MonthDatePicker";
+
+import {
+  Select
+} from "@/components/shared/Select";
+
+import {
+  Input
+} from "@/components/shared/Input";
+
+import { Category } from "@/types/Category.type";
+import { useEffect, useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Budget } from "@/types/Budge.type";
-import { MonthDatePicker } from "shinodalabs-ui";
 import { useTranslation } from "react-i18next";
 import { formatDate } from "@/utils/formatDate";
 import { useSettings } from "@/context/settingsContext";
@@ -38,6 +49,11 @@ export const BudgetModal = ({
   const { t } = useTranslation();
   const { language, currency } = useSettings();
 
+  const expenseCategories = useMemo(
+    () => categories.filter((category) => category.type === "EXPENSE"),
+    [categories]
+  );
+
   const initialDate = initialData
     ? parseYearMonth(initialData.date)
     : new Date();
@@ -62,7 +78,7 @@ export const BudgetModal = ({
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      category: initialData?.category?.id || categories[0]?.id || "",
+      category: initialData?.category?.id || expenseCategories[0]?.id || "",
       limit: initialData?.limit || 0,
       date:
         initialData?.date ||
@@ -75,7 +91,7 @@ export const BudgetModal = ({
   useEffect(() => {
     if (initialData) {
       reset({
-        category: initialData?.category?.id || categories[0]?.id,
+        category: initialData?.category?.id || expenseCategories[0]?.id,
         limit: initialData.limit,
         date: initialData.date || new Date().toISOString().slice(0, 7),
       });
@@ -84,13 +100,13 @@ export const BudgetModal = ({
       );
     } else {
       reset({
-        category: categories[0]?.id || "",
+        category: expenseCategories[0]?.id || "",
         limit: 0,
         date: new Date().toISOString().slice(0, 7),
       });
       setSelectedDate(new Date());
     }
-  }, [initialData, isOpen, reset, categories]);
+  }, [initialData, isOpen, reset, expenseCategories]);
 
   useEffect(() => {
     if (dateValue) {
@@ -102,7 +118,7 @@ export const BudgetModal = ({
   }, [dateValue, selectedDate]);
 
   const onSubmit = (data: FormData) => {
-    const category = categories.find((c) => c.id === data.category);
+    const category = expenseCategories.find((c) => c.id === data.category);
     if (!category) return;
 
     onSave({
@@ -120,15 +136,14 @@ export const BudgetModal = ({
     <Modal
       isOpen={isOpen}
       title={initialData ? t("budgets.editBudget") : t("budgets.newBudget")}
+      description={
+        initialData ? t("budgets.descriptionEdit") : t("budgets.descriptionNew")
+      }
       onClose={onClose}
       onConfirm={handleSubmit(onSubmit)}
       confirmLabel={t("app.save")}
       cancelLabel={t("app.cancel")}
     >
-      <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">
-        {t("budgets.description")}
-      </p>
-
       <div className="space-y-4 relative">
         {/* Categoria */}
         <Controller
@@ -137,7 +152,7 @@ export const BudgetModal = ({
           render={({ field }) => (
             <Select
               label={t("budgets.category")}
-              options={categories.map((category) => ({
+              options={expenseCategories.map((category) => ({
                 value: category.id ?? "",
                 label: `${category.icon} ${category.name}`,
               }))}
